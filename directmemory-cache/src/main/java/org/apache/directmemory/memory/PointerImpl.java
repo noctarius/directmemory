@@ -22,6 +22,9 @@ package org.apache.directmemory.memory;
 import static java.lang.String.format;
 import static java.lang.System.currentTimeMillis;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
+
 import org.apache.directmemory.memory.buffer.MemoryBuffer;
 
 public class PointerImpl<T>
@@ -29,6 +32,8 @@ public class PointerImpl<T>
 {
 
     public final MemoryBuffer memoryBuffer;
+
+    public final int bufferNumber;
 
     public long created;
 
@@ -38,17 +43,16 @@ public class PointerImpl<T>
 
     public long hits;
 
-    public boolean free;
+    public AtomicBoolean free = new AtomicBoolean( true );
 
-    public long lastHit;
-
-    public int bufferNumber;
+    public AtomicLong lastHit = new AtomicLong();
 
     public Class<? extends T> clazz;
 
-    public PointerImpl( MemoryBuffer memoryBuffer )
+    public PointerImpl( MemoryBuffer memoryBuffer, int bufferNumber )
     {
         this.memoryBuffer = memoryBuffer;
+        this.bufferNumber = bufferNumber;
     }
 
     @Override
@@ -72,15 +76,15 @@ public class PointerImpl<T>
     @Override
     public String toString()
     {
-        return format( "%s[%s] %s free", getClass().getSimpleName(), getSize(), ( free ? "" : "not" ) );
+        return format( "%s[%s] %s free", getClass().getSimpleName(), getSize(), ( isFree() ? "" : "not" ) );
     }
 
     @Override
     public void reset()
     {
-        free = true;
+        free.set( true );
         created = 0;
-        lastHit = 0;
+        lastHit.set( 0 );
         hits = 0;
         expiresIn = 0;
         clazz = null;
@@ -90,7 +94,7 @@ public class PointerImpl<T>
     @Override
     public boolean isFree()
     {
-        return free;
+        return free.get();
     }
 
     @Override
@@ -118,7 +122,7 @@ public class PointerImpl<T>
     @Override
     public void hit()
     {
-        lastHit = System.currentTimeMillis();
+        lastHit.set( System.currentTimeMillis() );
         hits++;
     }
 
@@ -137,7 +141,7 @@ public class PointerImpl<T>
     @Override
     public void setFree( boolean free )
     {
-        this.free = free;
+        this.free.set( free );
     }
 
     @Override
@@ -150,12 +154,6 @@ public class PointerImpl<T>
     public void createdNow()
     {
         created = System.currentTimeMillis();
-    }
-
-    @Override
-    public void setBufferNumber( int bufferNumber )
-    {
-        this.bufferNumber = bufferNumber;
     }
 
     @Override
