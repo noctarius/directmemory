@@ -53,16 +53,24 @@ class ByteBufferPartitionSlice
     @Override
     public void put( byte[] array, int offset, int length )
     {
-        byteBuffer.put( array, offset, length );
+        int bytes = Math.min( array.length - offset, length );
+        byteBuffer.put( array, offset, bytes );
+        writerIndex += bytes;
     }
 
     @Override
     public void put( int position, byte[] array, int offset, int length )
     {
+        int bytes = Math.min( array.length - offset, length );
         int oldPosition = byteBuffer.position();
         byteBuffer.position( position );
-        byteBuffer.put( array, offset, length );
+        byteBuffer.put( array, offset, bytes );
         byteBuffer.position( oldPosition );
+        if ( oldPosition + bytes > writerIndex )
+        {
+            writerIndex = oldPosition + bytes;
+            byteBuffer.position( writerIndex );
+        }
     }
 
     @Override
@@ -80,16 +88,24 @@ class ByteBufferPartitionSlice
     @Override
     public void read( byte[] array, int offset, int length )
     {
+        int bytes = Math.min( array.length - offset, length );
         byteBuffer.get( array, offset, length );
+        readerIndex += bytes;
     }
 
     @Override
     public void read( int position, byte[] array, int offset, int length )
     {
+        int bytes = Math.min( array.length - offset, length );
         int oldPosition = byteBuffer.position();
         byteBuffer.position( position );
         byteBuffer.get( array, offset, length );
         byteBuffer.position( oldPosition );
+        if ( oldPosition + bytes > readerIndex )
+        {
+            readerIndex = oldPosition + bytes;
+            byteBuffer.position( readerIndex );
+        }
     }
 
     @Override

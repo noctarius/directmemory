@@ -25,4 +25,6 @@ public interface PartitionBufferPool
 
     void close();
 
+    boolean isPooled();
+
 }

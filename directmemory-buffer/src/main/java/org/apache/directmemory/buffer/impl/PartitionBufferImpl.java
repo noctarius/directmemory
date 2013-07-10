@@ -435,9 +435,23 @@ class PartitionBufferImpl
             {
                 resize( sliceIndex + 1 );
             }
-
-            int relativePosition = (int) ( sliceIndex == 0 ? position : position % sliceByteSize() );
-            slices[sliceIndex].put( relativePosition, buffer, 0, bufferPos );
+            int writableBytes = slices[sliceIndex].writeableBytes();
+            if ( bufferPos > writableBytes )
+            {
+                int offset = 0;
+                while ( offset < bufferPos )
+                {
+                    int bytes = Math.min( bufferPos, writableBytes );
+                    slices[sliceIndex].put( buffer, offset, bytes );
+                    offset += bytes;
+                    writableBytes = slices[++sliceIndex].writeableBytes();
+                }
+            }
+            else
+            {
+                int relativePosition = (int) ( sliceIndex == 0 ? position : position % sliceByteSize() );
+                slices[sliceIndex].put( relativePosition, buffer, 0, bufferPos );
+            }
             bufferPos = 0;
         }
     }
@@ -454,9 +468,13 @@ class PartitionBufferImpl
             flush();
         }
 
-        if ( position == writerIndex )
+        if ( position == writerIndex - 1 )
         {
             buffer[bufferPos++] = value;
+            if ( bufferPos == buffer.length )
+            {
+                flush();
+            }
         }
         else
         {

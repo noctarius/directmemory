@@ -15,7 +15,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-
 @RunWith( Parameterized.class )
 public class PartitionBufferTestCase
 {
@@ -59,6 +58,7 @@ public class PartitionBufferTestCase
             {
                 partitionBuffer.writeByte( 1 );
             }
+            partitionBuffer.flush();
             assertEquals( BufferUtils.descriptorToByteSize( "512k" ) * 3, partitionBuffer.maxCapacity() );
             assertEquals( BufferUtils.descriptorToByteSize( "512k" ) * 2 + 1, partitionBuffer.capacity() );
             System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getAllocatedMemory()
@@ -98,6 +98,7 @@ public class PartitionBufferTestCase
             {
                 partitionBuffer.writeByte( 1 );
             }
+            partitionBuffer.flush();
             assertEquals( BufferUtils.descriptorToByteSize( "256K" ) * 21, partitionBuffer.maxCapacity() );
             assertEquals( BufferUtils.descriptorToByteSize( "256K" ) * 20 + 1, partitionBuffer.capacity() );
             System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getAllocatedMemory()
@@ -128,6 +129,12 @@ public class PartitionBufferTestCase
 
         try
         {
+            // Unpooled pools will never overflow but can throw OOM
+            if ( !pool.isPooled() )
+            {
+                throw new RuntimeException( "Unpooled pools will never overflow but can throw OOM" );
+            }
+
             for ( int o = 0; o < 100; o++ )
             {
                 System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getAllocatedMemory()
@@ -144,6 +151,7 @@ public class PartitionBufferTestCase
                 {
                     partitionBuffer.writeByte( 1 );
                 }
+                partitionBuffer.flush();
                 assertEquals( BufferUtils.descriptorToByteSize( "256K" ) * 21, partitionBuffer.maxCapacity() );
                 assertEquals( BufferUtils.descriptorToByteSize( "256K" ) * 20 + 1, partitionBuffer.capacity() );
                 System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getAllocatedMemory()
@@ -190,6 +198,7 @@ public class PartitionBufferTestCase
                 {
                     partitionBuffer.writeByte( 1 );
                 }
+                partitionBuffer.flush();
                 assertEquals( BufferUtils.descriptorToByteSize( "256K" ) * 21, partitionBuffer.maxCapacity() );
                 assertEquals( BufferUtils.descriptorToByteSize( "256K" ) * 20 + 1, partitionBuffer.capacity() );
                 System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getAllocatedMemory()

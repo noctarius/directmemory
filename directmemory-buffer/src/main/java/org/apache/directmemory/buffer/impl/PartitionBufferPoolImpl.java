@@ -10,7 +10,6 @@ import org.apache.directmemory.buffer.spi.PartitionFactory;
 import org.apache.directmemory.buffer.spi.PartitionSlice;
 import org.apache.directmemory.buffer.spi.PartitionSliceSelector;
 
-
 public class PartitionBufferPoolImpl
     implements PartitionBufferPool
 {
@@ -51,6 +50,12 @@ public class PartitionBufferPoolImpl
         {
             slice.getPartition().free( slice );
         }
+    }
+
+    @Override
+    public boolean isPooled()
+    {
+        return partitions[0].isPooled();
     }
 
     @Override

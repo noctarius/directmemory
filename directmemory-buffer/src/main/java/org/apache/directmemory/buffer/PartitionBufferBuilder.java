@@ -106,6 +106,11 @@ public final class PartitionBufferBuilder
 
     public PartitionBufferPool allocatePool( long memoryByteSize, int partitions, int sliceByteSize )
     {
+        if ( partitions == 0 )
+        {
+            throw new IllegalArgumentException( "partitions must be greater / equal one" );
+        }
+
         if ( memoryByteSize % partitions != 0 )
         {
             throw new IllegalArgumentException( "partitions is not a divisor of memoryByteSize" );

@@ -22,7 +22,7 @@ public class UnsafeUnpooledPartition
     private UnsafeUnpooledPartition( int partitionIndex, int slices, int sliceByteSize,
                                      PartitionSliceSelector partitionSliceSelector )
     {
-        super( partitionIndex, slices, sliceByteSize, partitionSliceSelector, true );
+        super( partitionIndex, slices, sliceByteSize, partitionSliceSelector, false );
     }
 
     @Override

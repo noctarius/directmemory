@@ -99,6 +99,10 @@ class UnsafePartitionSlice
         }
         long memOffset = memoryPointer + position;
         unsafe.copyMemory( array, BufferUtils.BYTE_ARRAY_OFFSET + offset, null, memOffset, length );
+        if ( writerIndex < position + length )
+        {
+            writerIndex = position + length;
+        }
     }
 
     @Override
@@ -148,6 +152,10 @@ class UnsafePartitionSlice
         }
         long memOffset = memoryPointer + position;
         unsafe.copyMemory( null, memOffset, array, BufferUtils.BYTE_ARRAY_OFFSET + offset, length );
+        if ( readerIndex < position + length )
+        {
+            readerIndex = position + length;
+        }
     }
 
     @Override
