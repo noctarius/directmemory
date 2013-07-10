@@ -41,8 +41,12 @@ public interface WritablePartitionBuffer
 
     void writeCompressedInt( int value );
 
+    void writeString( String value );
+
     long writerIndex();
 
     void writerIndex( long writerIndex );
+
+    void flush();
 
 }

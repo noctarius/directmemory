@@ -8,7 +8,6 @@ import org.apache.directmemory.buffer.PartitionBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 @SuppressWarnings( "restriction" )
 public final class BufferUtils
 {
@@ -106,124 +105,134 @@ public final class BufferUtils
         }
     }
 
-    static void putShort( short value, PartitionBuffer partitionBuffer, boolean bigEndian )
+    static void putShort( short value, PartitionBuffer buffer, boolean bigEndian )
     {
         if ( bigEndian )
         {
-            partitionBuffer.writeByte( (byte) ( value >> 8 ) );
-            partitionBuffer.writeByte( (byte) ( value >> 0 ) );
+            buffer.writeByte( (byte) ( value >> 8 ) );
+            buffer.writeByte( (byte) ( value >> 0 ) );
         }
         else
         {
-            partitionBuffer.writeByte( (byte) ( value >> 0 ) );
-            partitionBuffer.writeByte( (byte) ( value >> 8 ) );
+            buffer.writeByte( (byte) ( value >> 0 ) );
+            buffer.writeByte( (byte) ( value >> 8 ) );
         }
     }
 
-    static short getShort( PartitionBuffer partitionBuffer, boolean bigEndian )
+    static short getShort( PartitionBuffer buffer, boolean bigEndian )
     {
         if ( bigEndian )
         {
-            byte b1 = partitionBuffer.readByte();
-            byte b0 = partitionBuffer.readByte();
+            byte b1 = buffer.readByte();
+            byte b0 = buffer.readByte();
             return buildShort( b1, b0 );
         }
         else
         {
-            byte b0 = partitionBuffer.readByte();
-            byte b1 = partitionBuffer.readByte();
+            byte b0 = buffer.readByte();
+            byte b1 = buffer.readByte();
             return buildShort( b1, b0 );
         }
     }
 
-    static void putInt( int value, PartitionBuffer partitionBuffer, boolean bigEndian )
+    static void putInt( int value, PartitionBuffer buffer, boolean bigEndian )
     {
+        int index = 0;
+        byte[] data = new byte[4];
         if ( bigEndian )
         {
-            partitionBuffer.writeByte( (byte) ( value >>> 24 ) );
-            partitionBuffer.writeByte( (byte) ( value >>> 16 ) );
-            partitionBuffer.writeByte( (byte) ( value >>> 8 ) );
-            partitionBuffer.writeByte( (byte) ( value >>> 0 ) );
+            data[index++] = (byte) ( value >>> 24 );
+            data[index++] = (byte) ( value >>> 16 );
+            data[index++] = (byte) ( value >>> 8 );
+            data[index++] = (byte) ( value >>> 0 );
         }
         else
         {
-            partitionBuffer.writeByte( (byte) ( value >>> 0 ) );
-            partitionBuffer.writeByte( (byte) ( value >>> 8 ) );
-            partitionBuffer.writeByte( (byte) ( value >>> 16 ) );
-            partitionBuffer.writeByte( (byte) ( value >>> 24 ) );
+            data[index++] = (byte) ( value >>> 0 );
+            data[index++] = (byte) ( value >>> 8 );
+            data[index++] = (byte) ( value >>> 16 );
+            data[index++] = (byte) ( value >>> 24 );
         }
+        buffer.writeBytes( data );
     }
 
-    static int getInt( PartitionBuffer partitionBuffer, boolean bigEndian )
+    static int getInt( PartitionBuffer buffer, boolean bigEndian )
     {
+        byte[] data = new byte[4];
+        buffer.readBytes( data );
         if ( bigEndian )
         {
-            byte b3 = partitionBuffer.readByte();
-            byte b2 = partitionBuffer.readByte();
-            byte b1 = partitionBuffer.readByte();
-            byte b0 = partitionBuffer.readByte();
+            byte b3 = data[0];
+            byte b2 = data[1];
+            byte b1 = data[2];
+            byte b0 = data[3];
             return buildInt( b3, b2, b1, b0 );
         }
         else
         {
-            byte b0 = partitionBuffer.readByte();
-            byte b1 = partitionBuffer.readByte();
-            byte b2 = partitionBuffer.readByte();
-            byte b3 = partitionBuffer.readByte();
+            byte b0 = data[0];
+            byte b1 = data[1];
+            byte b2 = data[2];
+            byte b3 = data[3];
             return buildInt( b3, b2, b1, b0 );
         }
     }
 
-    static void putLong( long value, PartitionBuffer partitionBuffer, boolean bigEndian )
+    static void putLong( long value, PartitionBuffer buffer, boolean bigEndian )
     {
+        int index = 0;
+        byte[] data = new byte[8];
         if ( bigEndian )
         {
-            partitionBuffer.writeByte( (byte) ( value >> 56 ) );
-            partitionBuffer.writeByte( (byte) ( value >> 48 ) );
-            partitionBuffer.writeByte( (byte) ( value >> 40 ) );
-            partitionBuffer.writeByte( (byte) ( value >> 32 ) );
-            partitionBuffer.writeByte( (byte) ( value >> 24 ) );
-            partitionBuffer.writeByte( (byte) ( value >> 16 ) );
-            partitionBuffer.writeByte( (byte) ( value >> 8 ) );
-            partitionBuffer.writeByte( (byte) ( value >> 0 ) );
+            data[index++] = (byte) ( value >> 56 );
+            data[index++] = (byte) ( value >> 48 );
+            data[index++] = (byte) ( value >> 40 );
+            data[index++] = (byte) ( value >> 32 );
+            data[index++] = (byte) ( value >> 24 );
+            data[index++] = (byte) ( value >> 16 );
+            data[index++] = (byte) ( value >> 8 );
+            data[index++] = (byte) ( value >> 0 );
         }
         else
         {
-            partitionBuffer.writeByte( (byte) ( value >> 0 ) );
-            partitionBuffer.writeByte( (byte) ( value >> 8 ) );
-            partitionBuffer.writeByte( (byte) ( value >> 16 ) );
-            partitionBuffer.writeByte( (byte) ( value >> 24 ) );
-            partitionBuffer.writeByte( (byte) ( value >> 32 ) );
-            partitionBuffer.writeByte( (byte) ( value >> 40 ) );
-            partitionBuffer.writeByte( (byte) ( value >> 48 ) );
-            partitionBuffer.writeByte( (byte) ( value >> 56 ) );
+            data[index++] = (byte) ( value >> 0 );
+            data[index++] = (byte) ( value >> 8 );
+            data[index++] = (byte) ( value >> 16 );
+            data[index++] = (byte) ( value >> 24 );
+            data[index++] = (byte) ( value >> 32 );
+            data[index++] = (byte) ( value >> 40 );
+            data[index++] = (byte) ( value >> 48 );
+            data[index++] = (byte) ( value >> 56 );
         }
+        buffer.writeBytes( data );
     }
 
-    static long getLong( PartitionBuffer partitionBuffer, boolean bigEndian )
+    static long getLong( PartitionBuffer buffer, boolean bigEndian )
     {
+        byte[] data = new byte[8];
+        buffer.readBytes( data );
         if ( bigEndian )
         {
-            byte b7 = partitionBuffer.readByte();
-            byte b6 = partitionBuffer.readByte();
-            byte b5 = partitionBuffer.readByte();
-            byte b4 = partitionBuffer.readByte();
-            byte b3 = partitionBuffer.readByte();
-            byte b2 = partitionBuffer.readByte();
-            byte b1 = partitionBuffer.readByte();
-            byte b0 = partitionBuffer.readByte();
+            byte b7 = data[0];
+            byte b6 = data[1];
+            byte b5 = data[2];
+            byte b4 = data[3];
+            byte b3 = data[4];
+            byte b2 = data[5];
+            byte b1 = data[6];
+            byte b0 = data[7];
             return buildLong( b7, b6, b5, b4, b3, b2, b1, b0 );
         }
         else
         {
-            byte b0 = partitionBuffer.readByte();
-            byte b1 = partitionBuffer.readByte();
-            byte b2 = partitionBuffer.readByte();
-            byte b3 = partitionBuffer.readByte();
-            byte b4 = partitionBuffer.readByte();
-            byte b5 = partitionBuffer.readByte();
-            byte b6 = partitionBuffer.readByte();
-            byte b7 = partitionBuffer.readByte();
+            byte b0 = data[0];
+            byte b1 = data[1];
+            byte b2 = data[2];
+            byte b3 = data[3];
+            byte b4 = data[4];
+            byte b5 = data[5];
+            byte b6 = data[6];
+            byte b7 = data[7];
             return buildLong( b7, b6, b5, b4, b3, b2, b1, b0 );
         }
     }

@@ -35,6 +35,8 @@ public interface ReadablePartitionBuffer
 
     int readInt();
 
+    String readString();
+
     int readCompressedInt();
 
     long readUnsignedInt();

@@ -11,11 +11,15 @@ public interface PartitionSlice
 
     void put( byte[] array, int offset, int length );
 
+    void put( int position, byte[] array, int offset, int length );
+
     byte read();
 
     byte read( int position );
 
     void read( byte[] array, int offset, int length );
+
+    void read( int position, byte[] array, int offset, int length );
 
     int getSliceByteSize();
 

@@ -14,6 +14,10 @@ class PartitionBufferImpl
 
     private final PartitionBufferPoolImpl partitionBufferPool;
 
+    private final byte[] buffer = new byte[1024];
+
+    private volatile int bufferPos = 0;
+
     private volatile PartitionSlice[] slices = new PartitionSlice[0];
 
     private ByteOrder byteOrder;
@@ -159,6 +163,12 @@ class PartitionBufferImpl
     public long readUnsignedInt()
     {
         return readInt() & 0xFFFFFFFFL;
+    }
+
+    @Override
+    public String readString()
+    {
+        return UnicodeUtil.UTF8toUTF16( this );
     }
 
     @Override
@@ -338,6 +348,12 @@ class PartitionBufferImpl
     }
 
     @Override
+    public void writeString( String value )
+    {
+        UnicodeUtil.UTF16toUTF8( value, this );
+    }
+
+    @Override
     public long writerIndex()
     {
         return writerIndex;
@@ -408,6 +424,24 @@ class PartitionBufferImpl
         }
     }
 
+    @Override
+    public void flush()
+    {
+        if ( bufferPos > 0 )
+        {
+            long position = writerIndex - bufferPos;
+            int sliceIndex = sliceIndex( position );
+            if ( sliceIndex >= slices.length )
+            {
+                resize( sliceIndex + 1 );
+            }
+
+            int relativePosition = (int) ( sliceIndex == 0 ? position : position % sliceByteSize() );
+            slices[sliceIndex].put( relativePosition, buffer, 0, bufferPos );
+            bufferPos = 0;
+        }
+    }
+
     private void put( byte value )
     {
         put( writerIndex++, value );
@@ -415,14 +449,26 @@ class PartitionBufferImpl
 
     private void put( long position, byte value )
     {
-        int sliceIndex = sliceIndex( position );
-        if ( sliceIndex >= slices.length )
+        if ( bufferPos == buffer.length )
         {
-            resize( sliceIndex + 1 );
+            flush();
         }
 
-        int relativePosition = (int) ( sliceIndex == 0 ? position : position % sliceByteSize() );
-        slices[sliceIndex].put( relativePosition, value );
+        if ( position == writerIndex )
+        {
+            buffer[bufferPos++] = value;
+        }
+        else
+        {
+            int sliceIndex = sliceIndex( position );
+            if ( sliceIndex >= slices.length )
+            {
+                resize( sliceIndex + 1 );
+            }
+
+            int relativePosition = (int) ( sliceIndex == 0 ? position : position % sliceByteSize() );
+            slices[sliceIndex].put( relativePosition, value );
+        }
     }
 
     private byte read()

@@ -5,7 +5,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.directmemory.buffer.spi.Partition;
 
-
 class ByteBufferPartitionSlice
     extends AbstractPartitionSlice
 {
@@ -54,10 +53,16 @@ class ByteBufferPartitionSlice
     @Override
     public void put( byte[] array, int offset, int length )
     {
-        for ( int i = 0; i < length; i++ )
-        {
-            put( writerIndex++, array[offset + i] );
-        }
+        byteBuffer.put( array, offset, length );
+    }
+
+    @Override
+    public void put( int position, byte[] array, int offset, int length )
+    {
+        int oldPosition = byteBuffer.position();
+        byteBuffer.position( position );
+        byteBuffer.put( array, offset, length );
+        byteBuffer.position( oldPosition );
     }
 
     @Override
@@ -75,10 +80,16 @@ class ByteBufferPartitionSlice
     @Override
     public void read( byte[] array, int offset, int length )
     {
-        for ( int i = 0; i < length; i++ )
-        {
-            array[offset + i] = read( readerIndex++ );
-        }
+        byteBuffer.get( array, offset, length );
+    }
+
+    @Override
+    public void read( int position, byte[] array, int offset, int length )
+    {
+        int oldPosition = byteBuffer.position();
+        byteBuffer.position( position );
+        byteBuffer.get( array, offset, length );
+        byteBuffer.position( oldPosition );
     }
 
     @Override

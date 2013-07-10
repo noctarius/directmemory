@@ -6,7 +6,6 @@ import org.apache.directmemory.buffer.spi.Partition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 @SuppressWarnings( "restriction" )
 class UnsafePartitionSlice
     extends AbstractPartitionSlice
@@ -79,9 +78,27 @@ class UnsafePartitionSlice
                 + writerIndex + ", offset=" + offset + ", arrayLength=" + array.length + ", writeLength=" + length
                 + ", writerAddress=" + ( memoryPointer + writerIndex ) );
         }
-        long memOffset = memoryPointer + readerIndex;
+        long memOffset = memoryPointer + writerIndex;
         unsafe.copyMemory( array, BufferUtils.BYTE_ARRAY_OFFSET + offset, null, memOffset, length );
         writerIndex += length;
+    }
+
+    @Override
+    public void put( int position, byte[] array, int offset, int length )
+    {
+        if ( writerAddress() + length - 1 > lastMemoryPointer )
+        {
+            throw new IndexOutOfBoundsException( "Writing the array exhausted the available size" );
+        }
+
+        if ( LOGGER.isTraceEnabled() )
+        {
+            LOGGER.trace( "partition=" + partition.getPartitionIndex() + ", sliceIndex=" + index + ", writerIndex="
+                + writerIndex + ", offset=" + offset + ", arrayLength=" + array.length + ", writeLength=" + length
+                + ", writerAddress=" + ( memoryPointer + writerIndex ) );
+        }
+        long memOffset = memoryPointer + position;
+        unsafe.copyMemory( array, BufferUtils.BYTE_ARRAY_OFFSET + offset, null, memOffset, length );
     }
 
     @Override
@@ -113,6 +130,24 @@ class UnsafePartitionSlice
         long memOffset = memoryPointer + readerIndex;
         unsafe.copyMemory( null, memOffset, array, BufferUtils.BYTE_ARRAY_OFFSET + offset, length );
         readerIndex += length;
+    }
+
+    @Override
+    public void read( int position, byte[] array, int offset, int length )
+    {
+        if ( readerAddress() + length - 1 > lastMemoryPointer )
+        {
+            throw new IndexOutOfBoundsException( "Reading the array exhausted the available size" );
+        }
+
+        if ( LOGGER.isTraceEnabled() )
+        {
+            LOGGER.trace( "partition=" + partition.getPartitionIndex() + ", sliceIndex=" + index + ", readerIndex="
+                + readerIndex + ", offset=" + offset + ", arrayLength=" + array.length + ", readLength=" + length
+                + ", readerAddress=" + ( memoryPointer + readerIndex ) );
+        }
+        long memOffset = memoryPointer + position;
+        unsafe.copyMemory( null, memOffset, array, BufferUtils.BYTE_ARRAY_OFFSET + offset, length );
     }
 
     @Override
