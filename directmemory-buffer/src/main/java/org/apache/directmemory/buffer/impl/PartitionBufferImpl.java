@@ -8,7 +8,6 @@ import org.apache.directmemory.buffer.PartitionBuffer;
 import org.apache.directmemory.buffer.ReadablePartitionBuffer;
 import org.apache.directmemory.buffer.spi.PartitionSlice;
 
-
 class PartitionBufferImpl
     implements PartitionBuffer
 {
@@ -103,15 +102,33 @@ class PartitionBufferImpl
     }
 
     @Override
+    public double readCompressedDouble()
+    {
+        return Double.longBitsToDouble( readCompressedLong() );
+    }
+
+    @Override
     public float readFloat()
     {
         return Float.intBitsToFloat( readInt() );
     }
 
     @Override
+    public float readCompressedFloat()
+    {
+        return Float.intBitsToFloat( readCompressedInt() );
+    }
+
+    @Override
     public long readLong()
     {
         return BufferUtils.getLong( this, byteOrder == ByteOrder.BIG_ENDIAN );
+    }
+
+    @Override
+    public long readCompressedLong()
+    {
+        return Int64Compressor.readInt64( this );
     }
 
     @Override
@@ -130,6 +147,12 @@ class PartitionBufferImpl
     public int readInt()
     {
         return BufferUtils.getInt( this, byteOrder == ByteOrder.BIG_ENDIAN );
+    }
+
+    @Override
+    public int readCompressedInt()
+    {
+        return Int32Compressor.readInt32( this );
     }
 
     @Override
@@ -238,7 +261,7 @@ class PartitionBufferImpl
     @Override
     public void writePartitionBuffer( ReadablePartitionBuffer partitionBuffer )
     {
-        writePartitionBuffer( partitionBuffer, 0, -1 );// TODO
+        writePartitionBuffer( partitionBuffer, 0, partitionBuffer.readableSize() );
     }
 
     @Override
@@ -267,15 +290,33 @@ class PartitionBufferImpl
     }
 
     @Override
+    public void writeCompressedDouble( double value )
+    {
+        writeCompressedLong( Double.doubleToLongBits( value ) );
+    }
+
+    @Override
     public void writeFloat( float value )
     {
         writeInt( Float.floatToIntBits( value ) );
     }
 
     @Override
+    public void writeCompressedFloat( float value )
+    {
+        writeCompressedInt( Float.floatToIntBits( value ) );
+    }
+
+    @Override
     public void writeLong( long value )
     {
         BufferUtils.putLong( value, this, byteOrder == ByteOrder.BIG_ENDIAN );
+    }
+
+    @Override
+    public void writeCompressedLong( long value )
+    {
+        Int64Compressor.writeInt64( value, this );
     }
 
     @Override
@@ -288,6 +329,12 @@ class PartitionBufferImpl
     public void writeInt( int value )
     {
         BufferUtils.putInt( value, this, byteOrder == ByteOrder.BIG_ENDIAN );
+    }
+
+    @Override
+    public void writeCompressedInt( int value )
+    {
+        Int32Compressor.writeInt32( value, this );
     }
 
     @Override

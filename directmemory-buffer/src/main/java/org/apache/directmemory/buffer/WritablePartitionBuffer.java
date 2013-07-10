@@ -25,13 +25,21 @@ public interface WritablePartitionBuffer
 
     void writeDouble( double value );
 
+    void writeCompressedDouble( double value );
+
     void writeFloat( float value );
 
+    void writeCompressedFloat( float value );
+
     void writeLong( long value );
+
+    void writeCompressedLong( long value );
 
     void writeShort( short value );
 
     void writeInt( int value );
+
+    void writeCompressedInt( int value );
 
     long writerIndex();
 

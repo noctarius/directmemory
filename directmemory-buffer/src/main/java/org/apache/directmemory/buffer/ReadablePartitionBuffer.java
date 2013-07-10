@@ -19,15 +19,23 @@ public interface ReadablePartitionBuffer
 
     double readDouble();
 
+    double readCompressedDouble();
+
     float readFloat();
 
+    float readCompressedFloat();
+
     long readLong();
+
+    long readCompressedLong();
 
     short readShort();
 
     int readUnsignedShort();
 
     int readInt();
+
+    int readCompressedInt();
 
     long readUnsignedInt();
 
