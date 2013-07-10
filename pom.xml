@@ -89,6 +89,7 @@ under the License.
     <karaf.version>2.2.8</karaf.version>
     <junit.version>4.11</junit.version>
     <junit-benchamrks.version>0.7.0</junit-benchamrks.version>
+    <jna.version>3.5.1</jna.version>
 
     <slf4j.version>1.7.5</slf4j.version>
     <log4j2.version>2.0-beta8</log4j2.version>
@@ -434,6 +435,18 @@ under the License.
         <artifactId>caliper</artifactId>
         <version>0.5-rc1</version>
         <scope>test</scope>
+       </dependency>
+      <dependency>
+        <groupId>net.java.dev.jna</groupId>
+        <artifactId>jna</artifactId>
+        <version>${jna.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>net.java.dev.jna</groupId>
+        <artifactId>platform</artifactId>
+        <version>${jna.version}</version>
+        <scope>provided</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>

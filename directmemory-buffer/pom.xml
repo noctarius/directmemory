@@ -29,7 +29,43 @@ under the License.
   <artifactId>directmemory-buffer</artifactId>
   <name>Apache DirectMemory :: Buffer</name>
   <packaging>bundle</packaging>
-  <description>DirectMemory Buffer is a preallocated, sliced and concurrent (partitioned) memory backend 
-      for using as onheap or offheap storage
-  </description>
+  <description>DirectMemory Buffer is a preallocated, sliced and concurrent (partitioned) memory backend for using as onheap or offheap storage</description>
+ 
+  <properties>
+    <osgi.import>
+      org.apache.directmemory*,
+      org.slf4j*;version="[1.6,2)",
+      sun.misc.*;resolution:=optional,
+      *
+    </osgi.import>
+    <osgi.export>org.apache.directmemory.buffer*;version="${project.version}</osgi.export>
+  </properties>
+  
+  <dependencies>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>net.java.dev.jna</groupId>
+      <artifactId>jna</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>net.java.dev.jna</groupId>
+      <artifactId>platform</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.carrotsearch</groupId>
+      <artifactId>junit-benchmarks</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 </project>

@@ -1,0 +1,36 @@
+package org.apache.directmemory.buffer.spi;
+
+public interface PartitionSlice
+{
+
+    void clear();
+
+    void put( byte value );
+
+    void put( int position, byte value );
+
+    void put( byte[] array, int offset, int length );
+
+    byte read();
+
+    byte read( int position );
+
+    void read( byte[] array, int offset, int length );
+
+    int getSliceByteSize();
+
+    int readableBytes();
+
+    int writeableBytes();
+
+    int writerIndex();
+
+    int readerIndex();
+
+    void writerIndex( int writerIndex );
+
+    void readerIndex( int readerIndex );
+
+    Partition getPartition();
+
+}
