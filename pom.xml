@@ -48,6 +48,7 @@ under the License.
     <module>serializers</module>
     <module>itests</module>
     <module>examples</module>
+    <module>directmemory-buffer</module>
   </modules>
 
   <scm>
