@@ -42,7 +42,7 @@ public class MemoryManagerServiceImplTest
     @Parameters
     public static Collection<Object[]> data()
     {
-        return Arrays.asList( new Object[][] { { MemoryManagerImpl.class },
+        return Arrays.asList( new Object[][] { { AllocatorMemoryManager.class },
             { UnsafeMemoryManagerServiceImpl.class } } );
     }
 

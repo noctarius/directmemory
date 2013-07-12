@@ -27,7 +27,7 @@ import java.util.Set;
 import org.apache.directmemory.DirectMemory;
 import org.apache.directmemory.cache.CacheService;
 import org.apache.directmemory.memory.MemoryManager;
-import org.apache.directmemory.memory.MemoryManagerImpl;
+import org.apache.directmemory.memory.AllocatorMemoryManager;
 import org.apache.directmemory.memory.Pointer;
 import org.apache.directmemory.serialization.Serializer;
 
@@ -44,7 +44,7 @@ public class DirectMemoryCache<K, V>
     public DirectMemoryCache( int numberOfBuffers, int size, int initialCapacity, int concurrencyLevel )
     {
         MemoryManager<V> memoryManager =
-                    new MemoryManagerImpl<V>( false );
+                    new AllocatorMemoryManager<V>( false );
 
         cacheService = new DirectMemory<K, V>().setMemoryManager( memoryManager )
                         .setNumberOfBuffers( numberOfBuffers )

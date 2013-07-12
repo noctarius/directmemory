@@ -23,7 +23,7 @@ import java.io.IOException;
 
 public class MemoryManagerHelper
 {
-    private static final MemoryManager<Object> memoryManager = new MemoryManagerImpl<Object>();
+    private static final MemoryManager<Object> memoryManager = new AllocatorMemoryManager<Object>();
 
     private MemoryManagerHelper()
     {

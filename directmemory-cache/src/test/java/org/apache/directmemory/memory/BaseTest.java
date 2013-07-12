@@ -52,7 +52,7 @@ public class BaseTest
     @Before
     public void initMMS()
     {
-        mem = new MemoryManagerImpl<Object>();
+        mem = new AllocatorMemoryManager<Object>();
         mem.init( 1, 1 * 1024 * 1024 );
     }
 

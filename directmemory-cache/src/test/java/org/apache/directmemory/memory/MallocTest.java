@@ -77,7 +77,7 @@ public class MallocTest
     @Before
     public void initMMS()
     {
-        mem = new MemoryManagerImpl<Object>();
+        mem = new AllocatorMemoryManager<Object>();
         mem.init( 1, 512 * 1024 * 1024 );
     }
 

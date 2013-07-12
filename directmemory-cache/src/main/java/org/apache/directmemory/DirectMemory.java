@@ -30,7 +30,7 @@ import org.apache.directmemory.cache.CacheService;
 import org.apache.directmemory.cache.CacheServiceImpl;
 import org.apache.directmemory.measures.Ram;
 import org.apache.directmemory.memory.MemoryManager;
-import org.apache.directmemory.memory.MemoryManagerImpl;
+import org.apache.directmemory.memory.AllocatorMemoryManager;
 import org.apache.directmemory.memory.Pointer;
 import org.apache.directmemory.serialization.Serializer;
 import org.slf4j.Logger;
@@ -149,7 +149,7 @@ public final class DirectMemory<K, V>
         }
         if ( memoryManager == null )
         {
-            memoryManager = new MemoryManagerImpl<V>();
+            memoryManager = new AllocatorMemoryManager<V>();
         }
         if ( serializer == null )
         {

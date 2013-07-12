@@ -34,7 +34,7 @@ import org.apache.directmemory.memory.buffer.MemoryBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MemoryManagerImpl<V>
+public class AllocatorMemoryManager<V>
     extends AbstractMemoryManager<V>
     implements MemoryManager<V>
 {
@@ -45,17 +45,17 @@ public class MemoryManagerImpl<V>
 
     protected final AllocationPolicy allocationPolicy;
 
-    public MemoryManagerImpl()
+    public AllocatorMemoryManager()
     {
         this( true );
     }
 
-    public MemoryManagerImpl( final boolean returnNullWhenFull )
+    public AllocatorMemoryManager( final boolean returnNullWhenFull )
     {
         this( new RoundRobinAllocationPolicy(), returnNullWhenFull );
     }
 
-    public MemoryManagerImpl( final AllocationPolicy allocationPolicy, final boolean returnNullWhenFull )
+    public AllocatorMemoryManager( final AllocationPolicy allocationPolicy, final boolean returnNullWhenFull )
     {
         this.allocationPolicy = allocationPolicy;
         this.returnNullWhenFull = returnNullWhenFull;

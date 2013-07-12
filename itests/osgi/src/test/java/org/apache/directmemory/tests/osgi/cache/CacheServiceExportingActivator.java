@@ -23,7 +23,7 @@ import org.apache.directmemory.DirectMemory;
 import org.apache.directmemory.cache.CacheService;
 import org.apache.directmemory.measures.Ram;
 import org.apache.directmemory.memory.MemoryManager;
-import org.apache.directmemory.memory.MemoryManagerImpl;
+import org.apache.directmemory.memory.AllocatorMemoryManager;
 import org.apache.directmemory.serialization.SerializerFactory;
 import org.apache.directmemory.serialization.StandardSerializer;
 import org.osgi.framework.BundleActivator;
@@ -42,7 +42,7 @@ public class CacheServiceExportingActivator
         throws Exception
     {
         MemoryManager<SimpleObject> memoryManager =
-            new MemoryManagerImpl<SimpleObject>();
+            new AllocatorMemoryManager<SimpleObject>();
         this.cacheService =
             new DirectMemory<String, SimpleObject>().setNumberOfBuffers( 1 ).setSize( Ram.Mb( 1 ) ).setMemoryManager(
                 memoryManager ).setSerializer(
