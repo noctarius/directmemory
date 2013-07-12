@@ -24,7 +24,7 @@ import java.util.HashSet;
 
 import org.apache.directmemory.memory.allocator.Allocator;
 import org.apache.directmemory.memory.allocator.AllocatorMemoryManager;
-import org.apache.directmemory.memory.allocator.FixedSizeByteBufferAllocatorImpl;
+import org.apache.directmemory.memory.allocator.FixedSizeByteBufferAllocator;
 import org.apache.directmemory.memory.allocator.SlabByteBufferAllocator;
 import org.junit.Test;
 
@@ -41,11 +41,11 @@ public class SlabMemoryManagerServiceTest
             @Override
             protected Allocator instanciateByteBufferAllocator( int allocatorNumber, int size )
             {
-                Collection<FixedSizeByteBufferAllocatorImpl> slabs = new HashSet<FixedSizeByteBufferAllocatorImpl>();
+                Collection<FixedSizeByteBufferAllocator> slabs = new HashSet<FixedSizeByteBufferAllocator>();
 
-                slabs.add( new FixedSizeByteBufferAllocatorImpl( 0, size, SMALL_PAYLOAD_LENGTH / 2, 1 ) );
-                slabs.add( new FixedSizeByteBufferAllocatorImpl( 1, size, SMALL_PAYLOAD_LENGTH, 1 ) );
-                slabs.add( new FixedSizeByteBufferAllocatorImpl( 2, size, SMALL_PAYLOAD_LENGTH * 2, 1 ) );
+                slabs.add( new FixedSizeByteBufferAllocator( 0, size, SMALL_PAYLOAD_LENGTH / 2, 1 ) );
+                slabs.add( new FixedSizeByteBufferAllocator( 1, size, SMALL_PAYLOAD_LENGTH, 1 ) );
+                slabs.add( new FixedSizeByteBufferAllocator( 2, size, SMALL_PAYLOAD_LENGTH * 2, 1 ) );
 
                 final SlabByteBufferAllocator allocator =
                     new SlabByteBufferAllocator( allocatorNumber, slabs, false );

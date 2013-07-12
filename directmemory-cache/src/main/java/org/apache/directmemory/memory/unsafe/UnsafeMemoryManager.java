@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.directmemory.buffer.PartitionBuffer;
 import org.apache.directmemory.memory.AbstractMemoryManager;
 import org.apache.directmemory.memory.MemoryManager;
 import org.apache.directmemory.memory.MemoryManagerHelper;
@@ -32,7 +33,6 @@ import org.apache.directmemory.memory.Pointer;
 import org.apache.directmemory.memory.PointerImpl;
 import org.apache.directmemory.memory.allocator.Allocator;
 import org.apache.directmemory.memory.allocator.LazyUnsafeAllocator;
-import org.apache.directmemory.memory.buffer.MemoryBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -95,7 +95,7 @@ public class UnsafeMemoryManager<V>
         }
 
         Pointer<V> p = instanciatePointer( payload.length, expiresIn, NEVER_EXPIRES );
-        p.getMemoryBuffer().writeBytes( payload );
+        p.getPartitionBuffer().writeBytes( payload );
 
         used.addAndGet( payload.length );
         // 2nd version
@@ -108,7 +108,7 @@ public class UnsafeMemoryManager<V>
     {
         final byte[] swp = new byte[(int) pointer.getSize()];
 
-        MemoryBuffer memoryBuffer = pointer.getMemoryBuffer();
+        PartitionBuffer memoryBuffer = pointer.getPartitionBuffer();
         memoryBuffer.readerIndex( 0 );
         memoryBuffer.readBytes( swp );
 
@@ -119,7 +119,7 @@ public class UnsafeMemoryManager<V>
     public Pointer<V> free( Pointer<V> pointer )
     {
         used.addAndGet( -pointer.getSize() );
-        allocator.free( pointer.getMemoryBuffer() );
+        allocator.free( pointer.getPartitionBuffer() );
         pointers.remove( pointer );
         pointer.setFree( true );
         return pointer;
@@ -128,8 +128,9 @@ public class UnsafeMemoryManager<V>
     @Override
     public void clear()
     {
-        for (Pointer<V> pointer : pointers) {
-            free(pointer);
+        for ( Pointer<V> pointer : pointers )
+        {
+            free( pointer );
         }
     }
 
@@ -144,26 +145,5 @@ public class UnsafeMemoryManager<V>
     {
         return used.get();
     }
-
-    // @Override
-    // public long collectExpired()
-    // {
-    // // TODO Auto-generated method stub
-    // return 0;
-    // }
-    //
-    // @Override
-    // public void collectLFU()
-    // {
-    // // TODO Auto-generated method stub
-    //
-    // }
-    //
-    // @Override
-    // public <T extends V> Pointer<V> allocate( Class<T> type, int size, long expiresIn, long expires )
-    // {
-    // // TODO Auto-generated method stub
-    // return null;
-    // }
 
 }

@@ -21,6 +21,8 @@ public interface WritablePartitionBuffer
 
     void writePartitionBuffer( ReadablePartitionBuffer partitionBuffer, long offset, long length );
 
+    void writeBoolean( boolean value );
+
     void writeChar( int value );
 
     void writeDouble( double value );

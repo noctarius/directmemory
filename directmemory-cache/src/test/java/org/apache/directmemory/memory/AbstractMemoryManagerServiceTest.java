@@ -26,7 +26,7 @@ import java.util.Random;
 
 import junit.framework.Assert;
 
-import org.apache.directmemory.memory.buffer.MemoryBuffer;
+import org.apache.directmemory.buffer.PartitionBuffer;
 import org.junit.After;
 import org.junit.Test;
 
@@ -314,10 +314,10 @@ public abstract class AbstractMemoryManagerServiceTest
         Pointer<Object> pointer3 = mms.allocate( Object.class, NUMBER_OF_OBJECTS / 4 * SMALL_PAYLOAD_LENGTH, 0, 0 );
         Assert.assertNotNull( pointer3 );
 
-        if ( pointer3.getMemoryBuffer() != null )
+        if ( pointer3.getPartitionBuffer() != null )
         { // it makes no sense for Unsafe
             byte[] payload3 = MemoryTestUtils.generateRandomPayload( NUMBER_OF_OBJECTS / 4 * SMALL_PAYLOAD_LENGTH );
-            pointer3.getMemoryBuffer().writeBytes( payload3 );
+            pointer3.getPartitionBuffer().writeBytes( payload3 );
             byte[] retrievePayload3 = mms.retrieve( pointer3 );
             Assert.assertEquals( new String( payload3 ), new String( retrievePayload3 ) );
         }
@@ -392,7 +392,7 @@ public abstract class AbstractMemoryManagerServiceTest
         final byte[] allocatedPayload1 = MemoryTestUtils.generateRandomPayload( size1 );
         final Pointer<Object> allocatedPointer1 = mms.allocate( Object.class, allocatedPayload1.length, -1, -1 );
         Assert.assertNotNull( allocatedPointer1 );
-        final MemoryBuffer buffer1 = allocatedPointer1.getMemoryBuffer();
+        final PartitionBuffer buffer1 = allocatedPointer1.getPartitionBuffer();
         Assert.assertNotNull( buffer1 );
         Assert.assertEquals( 0, buffer1.writerIndex() );
         Assert.assertEquals( size1, buffer1.capacity() );
@@ -404,7 +404,7 @@ public abstract class AbstractMemoryManagerServiceTest
         final byte[] allocatedPayload2 = MemoryTestUtils.generateRandomPayload( size2 );
         final Pointer<Object> allocatedPointer2 = mms.allocate( Object.class, allocatedPayload2.length, -1, -1 );
         Assert.assertNotNull( allocatedPointer2 );
-        final MemoryBuffer buffer2 = allocatedPointer2.getMemoryBuffer();
+        final PartitionBuffer buffer2 = allocatedPointer2.getPartitionBuffer();
         Assert.assertNotNull( buffer2 );
         Assert.assertEquals( size2, buffer2.capacity() );
         buffer2.writeBytes( allocatedPayload2 );

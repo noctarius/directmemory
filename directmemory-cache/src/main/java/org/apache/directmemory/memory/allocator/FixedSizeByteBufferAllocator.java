@@ -19,7 +19,8 @@ package org.apache.directmemory.memory.allocator;
  * under the License.
  */
 
-import org.apache.directmemory.memory.buffer.MemoryBuffer;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkState;
 
 import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
@@ -30,15 +31,14 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkState;
+import org.apache.directmemory.buffer.PartitionBuffer;
 
 /**
  * {@link Allocator} implementation that instantiate {@link ByteBuffer}s of fixed size, called slices.
- *
+ * 
  * @since 0.6
  */
-public class FixedSizeByteBufferAllocatorImpl
+public class FixedSizeByteBufferAllocator
     extends AbstractByteBufferAllocator
 {
 
@@ -54,7 +54,8 @@ public class FixedSizeByteBufferAllocatorImpl
     // Total size of the current slab
     private final int totalSize;
 
-    // Tells if it returns null or throw an BufferOverflowException when the requested size is bigger than the size of the slices
+    // Tells if it returns null or throw an BufferOverflowException when the requested size is bigger than the size of
+    // the slices
     private final boolean returnNullWhenOversizingSliceSize = true;
 
     // Tells if it returns null when no buffers are available
@@ -63,17 +64,16 @@ public class FixedSizeByteBufferAllocatorImpl
     // Collection that keeps track of borrowed buffers
     private final Map<Integer, ByteBuffer> usedSliceBuffers = new ConcurrentHashMap<Integer, ByteBuffer>();
 
-
     /**
      * Constructor.
-     *
-     * @param number           : internal identifier of the allocator
-     * @param totalSize        : the internal buffer
-     * @param sliceSize        : arbitrary number of the buffer.
+     * 
+     * @param number : internal identifier of the allocator
+     * @param totalSize : the internal buffer
+     * @param sliceSize : arbitrary number of the buffer.
      * @param numberOfSegments : number of parent {@link ByteBuffer} to allocate.
      */
-    public FixedSizeByteBufferAllocatorImpl( final int number, final int totalSize, final int sliceSize,
-                                             final int numberOfSegments )
+    public FixedSizeByteBufferAllocator( final int number, final int totalSize, final int sliceSize,
+                                         final int numberOfSegments )
     {
         super( number );
 
@@ -111,7 +111,6 @@ public class FixedSizeByteBufferAllocatorImpl
         }
     }
 
-
     protected ByteBuffer findFreeBuffer( int capacity )
     {
         // ensure the requested size is not bigger than the slices' size
@@ -131,13 +130,13 @@ public class FixedSizeByteBufferAllocatorImpl
     }
 
     @Override
-    public void free( final MemoryBuffer buffer )
+    public void free( final PartitionBuffer buffer )
     {
         buffer.free();
     }
 
     @Override
-    public MemoryBuffer allocate( int size )
+    public PartitionBuffer allocate( int size )
     {
 
         checkState( !isClosed() );
@@ -209,19 +208,24 @@ public class FixedSizeByteBufferAllocatorImpl
         }
     }
 
-    private class FixedSizeNioMemoryBuffer extends NioMemoryBuffer {
+    private class FixedSizeNioMemoryBuffer
+        extends AbstractNioPartitionBuffer
+    {
 
-        FixedSizeNioMemoryBuffer(ByteBuffer byteBuffer) {
-            super(byteBuffer);
+        FixedSizeNioMemoryBuffer( ByteBuffer byteBuffer )
+        {
+            super( byteBuffer );
         }
 
         @Override
-        public boolean growing() {
+        public boolean growing()
+        {
             return false;
         }
 
         @Override
-        public void free() {
+        public void free()
+        {
             checkState( !isClosed() );
 
             if ( usedSliceBuffers.remove( getHash( getByteBuffer() ) ) == null )
@@ -233,6 +237,18 @@ public class FixedSizeByteBufferAllocatorImpl
             checkArgument( getByteBuffer().capacity() == sliceSize );
 
             freeBuffers.offer( getByteBuffer() );
+        }
+
+        @Override
+        public int sliceByteSize()
+        {
+            return sliceSize;
+        }
+
+        @Override
+        public int slices()
+        {
+            return 1;
         }
     }
 

@@ -22,4 +22,6 @@ public interface PartitionBuffer
 
     void clear();
 
+    boolean growing();
+
 }

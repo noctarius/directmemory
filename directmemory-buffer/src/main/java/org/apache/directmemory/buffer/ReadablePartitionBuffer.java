@@ -11,9 +11,11 @@ public interface ReadablePartitionBuffer
 
     short readUnsignedByte();
 
-    void readBytes( byte[] bytes );
+    int readBytes( byte[] bytes );
 
-    void readBytes( byte[] bytes, int offset, int length );
+    int readBytes( byte[] bytes, int offset, int length );
+
+    boolean readBoolean();
 
     char readChar();
 

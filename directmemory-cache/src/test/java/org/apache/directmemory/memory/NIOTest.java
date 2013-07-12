@@ -19,20 +19,20 @@ package org.apache.directmemory.memory;
  * under the License.
  */
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import java.io.IOException;
+import java.util.Random;
+
+import org.apache.directmemory.buffer.PartitionBuffer;
 import org.apache.directmemory.measures.Ram;
-import org.apache.directmemory.memory.buffer.MemoryBuffer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.Random;
-
-import static org.junit.Assert.*;
 
 @Ignore
 public class NIOTest
@@ -75,7 +75,7 @@ public class NIOTest
         int size = rnd.nextInt( 10 ) * (int) MemoryManagerHelper.capacity() / 100;
         logger.info( "payload size=" + Ram.inKb( size ) );
         Pointer<Object> p = MemoryManagerHelper.allocate( size );
-        MemoryBuffer b = p.getMemoryBuffer();
+        PartitionBuffer b = p.getPartitionBuffer();
         logger.info( "allocated" );
         assertNotNull( p );
         assertNotNull( b );

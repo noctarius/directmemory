@@ -61,7 +61,7 @@ public class PartitionBufferPoolImpl
     @Override
     public PartitionBuffer getPartitionBuffer()
     {
-        return new PartitionBufferImpl( this, ByteOrder.BIG_ENDIAN );
+        return new PoolPartitionBuffer( this, ByteOrder.BIG_ENDIAN );
     }
 
     @Override

@@ -14,6 +14,8 @@ public final class BufferUtils
 
     private static final Logger LOGGER = LoggerFactory.getLogger( BufferUtils.class );
 
+    public static final int BYTE_ARRAY_OFFSET;
+
     private static final long KILOBYTE_BYTE_SIZE = 1024;
 
     private static final long MEGABYTE_BYTE_SIZE = KILOBYTE_BYTE_SIZE * 1024;
@@ -31,8 +33,6 @@ public final class BufferUtils
     private static final sun.misc.Unsafe UNSAFE;
 
     private static final boolean UNSAFE_AVAILABLE;
-
-    static final int BYTE_ARRAY_OFFSET;
 
     static
     {

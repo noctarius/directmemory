@@ -27,8 +27,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.directmemory.buffer.PartitionBuffer;
 import org.apache.directmemory.memory.allocator.Allocator;
-import org.apache.directmemory.memory.buffer.MemoryBuffer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -122,12 +122,12 @@ public class RoundRobinAllocationPolicyTest
     {
 
         @Override
-        public void free( MemoryBuffer buffer )
+        public void free( PartitionBuffer buffer )
         {
         }
 
         @Override
-        public MemoryBuffer allocate( int size )
+        public PartitionBuffer allocate( int size )
         {
             return null;
         }

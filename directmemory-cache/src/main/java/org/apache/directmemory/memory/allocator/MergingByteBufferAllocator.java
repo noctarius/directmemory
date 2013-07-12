@@ -19,8 +19,6 @@ package org.apache.directmemory.memory.allocator;
  * under the License.
  */
 
-import org.apache.directmemory.memory.buffer.MemoryBuffer;
-
 import java.io.IOException;
 import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
@@ -37,19 +35,24 @@ import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import org.apache.directmemory.buffer.PartitionBuffer;
+import org.apache.directmemory.memory.Pointer;
+
 /**
  * {@link Allocator} implementation with {@link ByteBuffer} merging capabilities.
  * <p/>
- * {@link ByteBuffer}s are wrapped into an {@link LinkedByteBuffer}, and when a {@link ByteBuffer} is freed,
- * lookup is done to the neighbor to check if they are also free, in which case they are merged.
+ * {@link ByteBuffer}s are wrapped into an {@link LinkedByteBuffer}, and when a {@link ByteBuffer} is freed, lookup is
+ * done to the neighbor to check if they are also free, in which case they are merged.
  * <p/>
  * {@link #setMinSizeThreshold(int)} gives the minimum buffer's size under which no splitting is done.
- * {@link #setSizeRatioThreshold(double)} gives the size ratio (requested allocation / free buffer's size} under which no splitting is done
+ * {@link #setSizeRatioThreshold(double)} gives the size ratio (requested allocation / free buffer's size} under which
+ * no splitting is done
  * <p/>
- * The free {@link ByteBuffer} are held into a {@link NavigableMap} with keys defining the size's range : 0 -> first key (included), first key -> second key (included), ...
- * Instead of keeping a list of {@link ByteBuffer}s sorted by capacity, {@link ByteBuffer}s in the same size's range are held in the same collection.
- * The size's range are computed by {@link #generateFreeSizesRange(long)} and can be overridden.
- *
+ * The free {@link ByteBuffer} are held into a {@link NavigableMap} with keys defining the size's range : 0 -> first key
+ * (included), first key -> second key (included), ... Instead of keeping a list of {@link ByteBuffer}s sorted by
+ * capacity, {@link ByteBuffer}s in the same size's range are held in the same collection. The size's range are computed
+ * by {@link #generateFreeSizesRange(long)} and can be overridden.
+ * 
  * @since 0.6
  */
 public class MergingByteBufferAllocator
@@ -84,8 +87,8 @@ public class MergingByteBufferAllocator
 
     /**
      * Constructor.
-     *
-     * @param number    : the internal buffer identifier
+     * 
+     * @param number : the internal buffer identifier
      * @param totalSize : total size of the parent buffer.
      */
     public MergingByteBufferAllocator( final int number, final int totalSize )
@@ -124,11 +127,10 @@ public class MergingByteBufferAllocator
         insertLinkedBuffer( initialLinkedBuffer );
     }
 
-
     /**
      * Generate free sizes' range. Sizes' range are used to try to allocate the best matching {@ByteBuffer}
      * regarding the requested size. Instead of using a sorted structure, arbitrary size's range are computed.
-     *
+     * 
      * @param totalSize
      * @return a list of all size's level used by the allocator.
      */
@@ -141,7 +143,7 @@ public class MergingByteBufferAllocator
             sizes.add( (int) i );
         }
 
-        // If totalSize < minSizeThreshold or totalSize is not a multiple of minSizeThreshold 
+        // If totalSize < minSizeThreshold or totalSize is not a multiple of minSizeThreshold
         // we force adding an element to the map
         if ( sizes.isEmpty() || !sizes.contains( totalSize ) )
         {
@@ -152,13 +154,13 @@ public class MergingByteBufferAllocator
     }
 
     @Override
-    public void free( final MemoryBuffer buffer )
+    public void free( final PartitionBuffer buffer )
     {
         buffer.free();
     }
 
     @Override
-    public MemoryBuffer allocate( final int size )
+    public PartitionBuffer allocate( final int size )
     {
 
         try
@@ -186,7 +188,8 @@ public class MergingByteBufferAllocator
                         if ( linkedBuffer.getBuffer().capacity() > minSizeThreshold
                             && ( 1.0 * size / linkedBuffer.getBuffer().capacity() ) < sizeRatioThreshold )
                         {
-                            // Split the buffer in a buffer that will be returned and another buffer reinserted in the corresponding queue.
+                            // Split the buffer in a buffer that will be returned and another buffer reinserted in the
+                            // corresponding queue.
                             parentBuffer.clear();
                             parentBuffer.position( linkedBuffer.getOffset() );
                             parentBuffer.limit( linkedBuffer.getOffset() + size );
@@ -229,7 +232,7 @@ public class MergingByteBufferAllocator
 
                         usedPointers.put( getHash( returnedLinkedBuffer.getBuffer() ), returnedLinkedBuffer );
 
-                        return new MergingNioMemoryBuffer(returnedLinkedBuffer);
+                        return new MergingNioPartitionBuffer( returnedLinkedBuffer, size );
                     }
 
                 }
@@ -272,8 +275,7 @@ public class MergingByteBufferAllocator
     private Collection<LinkedByteBuffer> getFreeLinkedByteBufferCollection( final LinkedByteBuffer linkedBuffer )
     {
         final Integer size = linkedBuffer.getBuffer().capacity() - 1;
-        final Map.Entry<Integer, Collection<LinkedByteBuffer>> bufferCollectionEntry =
-            freePointers.ceilingEntry( size );
+        final Map.Entry<Integer, Collection<LinkedByteBuffer>> bufferCollectionEntry = freePointers.ceilingEntry( size );
         return bufferCollectionEntry.getValue();
     }
 
@@ -375,19 +377,27 @@ public class MergingByteBufferAllocator
         }
     }
 
-    private class MergingNioMemoryBuffer extends NioMemoryBuffer {
+    private class MergingNioPartitionBuffer
+        extends AbstractNioPartitionBuffer
+    {
 
-        MergingNioMemoryBuffer(LinkedByteBuffer linkedBuffer) {
-            super(linkedBuffer.buffer);
+        private int size;
+
+        MergingNioPartitionBuffer( LinkedByteBuffer linkedBuffer, int size )
+        {
+            super( linkedBuffer.buffer );
+            this.size = size;
         }
 
         @Override
-        public boolean growing() {
+        public boolean growing()
+        {
             return false;
         }
 
         @Override
-        public void free() {
+        public void free()
+        {
             LinkedByteBuffer returningLinkedBuffer = usedPointers.remove( getHash( getByteBuffer() ) );
 
             if ( returningLinkedBuffer == null )
@@ -402,9 +412,9 @@ public class MergingByteBufferAllocator
 
                 if ( returningLinkedBuffer.getBefore() != null )
                 {
-                    // if returningLinkedBuffer.getBefore is in the free list, it is free, then it's free and can be merged
-                    if ( getFreeLinkedByteBufferCollection( returningLinkedBuffer.getBefore() ).contains(
-                            returningLinkedBuffer.getBefore() ) )
+                    // if returningLinkedBuffer.getBefore is in the free list, it is free, then it's free and can be
+                    // merged
+                    if ( getFreeLinkedByteBufferCollection( returningLinkedBuffer.getBefore() ).contains( returningLinkedBuffer.getBefore() ) )
                     {
                         returningLinkedBuffer = mergePointer( returningLinkedBuffer.getBefore(), returningLinkedBuffer );
                     }
@@ -412,9 +422,9 @@ public class MergingByteBufferAllocator
 
                 if ( returningLinkedBuffer.getAfter() != null )
                 {
-                    // if returningLinkedBuffer.getAfter is in the free list, it is free, it is free, then it's free and can be merged
-                    if ( getFreeLinkedByteBufferCollection( returningLinkedBuffer.getAfter() ).contains(
-                            returningLinkedBuffer.getAfter() ) )
+                    // if returningLinkedBuffer.getAfter is in the free list, it is free, it is free, then it's free and
+                    // can be merged
+                    if ( getFreeLinkedByteBufferCollection( returningLinkedBuffer.getAfter() ).contains( returningLinkedBuffer.getAfter() ) )
                     {
                         returningLinkedBuffer = mergePointer( returningLinkedBuffer, returningLinkedBuffer.getAfter() );
                     }
@@ -426,6 +436,18 @@ public class MergingByteBufferAllocator
             {
                 linkedStructureManipulationLock.unlock();
             }
+        }
+
+        @Override
+        public int sliceByteSize()
+        {
+            return size;
+        }
+
+        @Override
+        public int slices()
+        {
+            return 1;
         }
     }
 
@@ -444,6 +466,5 @@ public class MergingByteBufferAllocator
             // ignore error as we are on quiet mode here
         }
     }
-
 
 }

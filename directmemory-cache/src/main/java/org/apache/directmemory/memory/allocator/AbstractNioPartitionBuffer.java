@@ -19,18 +19,18 @@ package org.apache.directmemory.memory.allocator;
  * under the License.
  */
 
-import org.apache.directmemory.memory.buffer.AbstractMemoryBuffer;
-
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-abstract class NioMemoryBuffer
-    extends AbstractMemoryBuffer
+import org.apache.directmemory.buffer.impl.AbstractPartitionBuffer;
+
+abstract class AbstractNioPartitionBuffer
+    extends AbstractPartitionBuffer
 {
 
     private final ByteBuffer byteBuffer;
 
-    NioMemoryBuffer( ByteBuffer byteBuffer )
+    AbstractNioPartitionBuffer( ByteBuffer byteBuffer )
     {
         this.byteBuffer = byteBuffer;
     }
@@ -69,6 +69,25 @@ abstract class NioMemoryBuffer
     }
 
     @Override
+    public void flush()
+    {
+        if ( bufferPos > 0 )
+        {
+            int writableBytes = byteBuffer.remaining();
+            if ( bufferPos > writableBytes )
+            {
+                throw new IllegalStateException( "ByteBuffer is too small to be written!" );
+            }
+            else
+            {
+                int bytes = Math.min( bufferPos, writableBytes );
+                byteBuffer.put( buffer, 0, bytes );
+            }
+            bufferPos = 0;
+        }
+    }
+
+    @Override
     public boolean readable()
     {
         return byteBuffer.remaining() > 0;
@@ -97,19 +116,19 @@ abstract class NioMemoryBuffer
     }
 
     @Override
-    protected byte readByte( long offset )
+    protected byte read( long offset )
     {
         return byteBuffer.get( (int) offset );
     }
 
     @Override
-    public boolean writable()
+    public boolean writeable()
     {
         return byteBuffer.position() < byteBuffer.capacity();
     }
 
     @Override
-    protected void writeByte( long offset, byte value )
+    protected void put( long offset, byte value )
     {
         byteBuffer.put( (int) offset, value );
     }
@@ -117,11 +136,13 @@ abstract class NioMemoryBuffer
     @Override
     public void writeBytes( byte[] bytes, int offset, int length )
     {
+        length = Math.min( length, bytes.length - offset );
         byteBuffer.put( bytes, offset, length );
         writerIndex += length;
     }
 
-    protected ByteBuffer getByteBuffer() {
+    protected ByteBuffer getByteBuffer()
+    {
         return byteBuffer;
     }
 

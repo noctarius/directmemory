@@ -19,7 +19,7 @@ package org.apache.directmemory.memory;
  * under the License.
  */
 
-import org.apache.directmemory.memory.buffer.MemoryBuffer;
+import org.apache.directmemory.buffer.PartitionBuffer;
 
 public interface Pointer<T>
 {
@@ -48,7 +48,7 @@ public interface Pointer<T>
 
     void setClazz( Class<? extends T> clazz );
 
-    MemoryBuffer getMemoryBuffer();
+    PartitionBuffer getPartitionBuffer();
 
     void createdNow();
 

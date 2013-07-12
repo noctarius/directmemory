@@ -19,8 +19,6 @@ package org.apache.directmemory.memory.allocator;
  * under the License.
  */
 
-import org.apache.directmemory.memory.buffer.MemoryBuffer;
-
 import java.io.IOException;
 import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
@@ -29,11 +27,12 @@ import java.util.Map;
 import java.util.NavigableMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
+import org.apache.directmemory.buffer.PartitionBuffer;
 
 /**
- * {@link Allocator} implementation that uses {@link FixedSizeByteBufferAllocatorImpl}
- * of different size to allocate best matching's size {@link ByteBuffer}
- *
+ * {@link Allocator} implementation that uses {@link FixedSizeByteBufferAllocator} of different size to allocate best
+ * matching's size {@link ByteBuffer}
+ * 
  * @since 0.6
  */
 public class SlabByteBufferAllocator
@@ -44,42 +43,41 @@ public class SlabByteBufferAllocator
     private final boolean returnNullWhenNoBufferAvailable = true;
 
     // Internal slabs sorted by sliceSize
-    private final NavigableMap<Long, FixedSizeByteBufferAllocatorImpl> slabs =
-        new ConcurrentSkipListMap<Long, FixedSizeByteBufferAllocatorImpl>();
+    private final NavigableMap<Long, FixedSizeByteBufferAllocator> slabs =
+        new ConcurrentSkipListMap<Long, FixedSizeByteBufferAllocator>();
 
     // Tells if it is allowed to look in a bigger slab to perform the request.
     private final boolean allowAllocationToBiggerSlab;
 
     /**
      * Constructor.
-     *
-     * @param number                      : internal allocator identifier
-     * @param slabs                       : {@link FixedSizeByteBufferAllocatorImpl} to use for allocation
+     * 
+     * @param number : internal allocator identifier
+     * @param slabs : {@link FixedSizeByteBufferAllocator} to use for allocation
      * @param allowAllocationToBiggerSlab : tells if it is allowed to look in a bigger slab to perform the request.
      */
-    public SlabByteBufferAllocator( final int number, final Collection<FixedSizeByteBufferAllocatorImpl> slabs,
+    public SlabByteBufferAllocator( final int number, final Collection<FixedSizeByteBufferAllocator> slabs,
                                     final boolean allowAllocationToBiggerSlab )
     {
         super( number );
 
         this.allowAllocationToBiggerSlab = allowAllocationToBiggerSlab;
 
-        for ( FixedSizeByteBufferAllocatorImpl slab : slabs )
+        for ( FixedSizeByteBufferAllocator slab : slabs )
         {
             this.slabs.put( (long) slab.getSliceSize(), slab );
         }
 
     }
 
-
     /**
      * @param size
      * @return the slab that best match the given size
      */
-    private FixedSizeByteBufferAllocatorImpl getSlabThatMatchTheSize( final long size )
+    private FixedSizeByteBufferAllocator getSlabThatMatchTheSize( final long size )
     {
         // Find the slab that can carry the wanted size. -1 is used because higherEntry returns a strictly higher entry.
-        final Map.Entry<Long, FixedSizeByteBufferAllocatorImpl> entry = slabs.higherEntry( size - 1 );
+        final Map.Entry<Long, FixedSizeByteBufferAllocator> entry = slabs.higherEntry( size - 1 );
 
         if ( entry != null )
         {
@@ -91,11 +89,11 @@ public class SlabByteBufferAllocator
     }
 
     @Override
-    public void free( final MemoryBuffer buffer )
+    public void free( final PartitionBuffer buffer )
     {
 
         buffer.free();
-        final FixedSizeByteBufferAllocatorImpl slab = getSlabThatMatchTheSize( buffer.capacity() );
+        final FixedSizeByteBufferAllocator slab = getSlabThatMatchTheSize( buffer.capacity() );
 
         if ( slab == null )
         {
@@ -108,10 +106,10 @@ public class SlabByteBufferAllocator
     }
 
     @Override
-    public MemoryBuffer allocate( final int size )
+    public PartitionBuffer allocate( final int size )
     {
 
-        final FixedSizeByteBufferAllocatorImpl slab = getSlabThatMatchTheSize( size );
+        final FixedSizeByteBufferAllocator slab = getSlabThatMatchTheSize( size );
 
         if ( slab == null )
         {
@@ -127,7 +125,7 @@ public class SlabByteBufferAllocator
         }
 
         // Try to allocate the given size
-        final MemoryBuffer byteBuffer = slab.allocate( size );
+        final PartitionBuffer byteBuffer = slab.allocate( size );
 
         // If allocation succeed, return the buffer
         if ( byteBuffer != null )
@@ -152,7 +150,7 @@ public class SlabByteBufferAllocator
             // We can try to allocate to a bigger slab.
             // size + 1 here because getSlabThatMatchTheSize do a size -1 and thus will return the same slab
             final int biggerSize = slab.getSliceSize() + 1;
-            final FixedSizeByteBufferAllocatorImpl biggerSlab = getSlabThatMatchTheSize( biggerSize );
+            final FixedSizeByteBufferAllocator biggerSlab = getSlabThatMatchTheSize( biggerSize );
             if ( biggerSlab == null )
             {
                 // We were already trying to allocate in the biggest slab
@@ -166,7 +164,7 @@ public class SlabByteBufferAllocator
                 }
             }
 
-            final MemoryBuffer secondByteBuffer = biggerSlab.allocate( size );
+            final PartitionBuffer secondByteBuffer = biggerSlab.allocate( size );
 
             if ( secondByteBuffer == null )
             {
@@ -189,7 +187,7 @@ public class SlabByteBufferAllocator
     @Override
     public void clear()
     {
-        for ( final Map.Entry<Long, FixedSizeByteBufferAllocatorImpl> entry : slabs.entrySet() )
+        for ( final Map.Entry<Long, FixedSizeByteBufferAllocator> entry : slabs.entrySet() )
         {
             entry.getValue().clear();
         }
@@ -199,7 +197,7 @@ public class SlabByteBufferAllocator
     public int getCapacity()
     {
         int totalSize = 0;
-        for ( final Map.Entry<Long, FixedSizeByteBufferAllocatorImpl> entry : slabs.entrySet() )
+        for ( final Map.Entry<Long, FixedSizeByteBufferAllocator> entry : slabs.entrySet() )
         {
             totalSize += entry.getValue().getCapacity();
         }
@@ -210,7 +208,7 @@ public class SlabByteBufferAllocator
     public void close()
         throws IOException
     {
-        for ( final Map.Entry<Long, FixedSizeByteBufferAllocatorImpl> entry : slabs.entrySet() )
+        for ( final Map.Entry<Long, FixedSizeByteBufferAllocator> entry : slabs.entrySet() )
         {
             entry.getValue().close();
         }

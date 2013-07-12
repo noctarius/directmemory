@@ -62,7 +62,7 @@ public abstract class AbstractMemoryManager<V>
         {
             pointer.reset();
             pointer.setFree( false );
-            pointer.getMemoryBuffer().writeBytes( payload );
+            pointer.getPartitionBuffer().writeBytes( payload );
             pointer.hit();
             return pointer;
         }
@@ -166,8 +166,8 @@ public abstract class AbstractMemoryManager<V>
     {
 
         Pointer<V> p = store( new byte[size], expiresIn );
-        if ( p != null && p.getMemoryBuffer() != null )
-            p.getMemoryBuffer().clear();
+        if ( p != null && p.getPartitionBuffer() != null )
+            p.getPartitionBuffer().clear();
 
         if ( p != null )
             p.setClazz( type );

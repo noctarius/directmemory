@@ -19,18 +19,65 @@ package org.apache.directmemory.buffer.impl;
  * under the License.
  */
 
-import static org.apache.directmemory.buffer.impl.Int32Compressor.*;
-import static org.apache.directmemory.buffer.impl.Int64Compressor.*;
+import static org.apache.directmemory.buffer.impl.Int32Compressor.INT32_FULL;
+import static org.apache.directmemory.buffer.impl.Int32Compressor.INT32_MAX_DOUBLE;
+import static org.apache.directmemory.buffer.impl.Int32Compressor.INT32_MAX_SINGLE;
+import static org.apache.directmemory.buffer.impl.Int32Compressor.INT32_MAX_TRIPPLE;
+import static org.apache.directmemory.buffer.impl.Int32Compressor.INT32_MIN_DOUBLE;
+import static org.apache.directmemory.buffer.impl.Int32Compressor.INT32_MIN_SINGLE;
+import static org.apache.directmemory.buffer.impl.Int32Compressor.INT32_MIN_TRIPPLE;
+import static org.apache.directmemory.buffer.impl.Int64Compressor.INT64_FULL;
+import static org.apache.directmemory.buffer.impl.Int64Compressor.INT64_MAX_DOUBLE;
+import static org.apache.directmemory.buffer.impl.Int64Compressor.INT64_MAX_FIFTH;
+import static org.apache.directmemory.buffer.impl.Int64Compressor.INT64_MAX_QUAD;
+import static org.apache.directmemory.buffer.impl.Int64Compressor.INT64_MAX_SEVENTH;
+import static org.apache.directmemory.buffer.impl.Int64Compressor.INT64_MAX_SINGLE;
+import static org.apache.directmemory.buffer.impl.Int64Compressor.INT64_MAX_SIXTH;
+import static org.apache.directmemory.buffer.impl.Int64Compressor.INT64_MAX_TRIPPLE;
+import static org.apache.directmemory.buffer.impl.Int64Compressor.INT64_MIN_DOUBLE;
+import static org.apache.directmemory.buffer.impl.Int64Compressor.INT64_MIN_FIFTH;
+import static org.apache.directmemory.buffer.impl.Int64Compressor.INT64_MIN_QUAD;
+import static org.apache.directmemory.buffer.impl.Int64Compressor.INT64_MIN_SEVENTH;
+import static org.apache.directmemory.buffer.impl.Int64Compressor.INT64_MIN_SINGLE;
+import static org.apache.directmemory.buffer.impl.Int64Compressor.INT64_MIN_SIXTH;
+import static org.apache.directmemory.buffer.impl.Int64Compressor.INT64_MIN_TRIPPLE;
 import static org.junit.Assert.assertEquals;
 
+import java.util.Collection;
 import java.util.Random;
 
 import org.apache.directmemory.buffer.PartitionBuffer;
-import org.apache.directmemory.memory.allocator.FixedSizeUnsafeAllocator;
+import org.apache.directmemory.buffer.PartitionBufferBuilder;
+import org.apache.directmemory.buffer.PartitionBufferPool;
+import org.apache.directmemory.buffer.TestCaseConstants;
+import org.apache.directmemory.buffer.spi.PartitionFactory;
+import org.apache.directmemory.buffer.spi.PartitionSliceSelector;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 
+@RunWith( Parameterized.class )
 public class IntLongCompressionTestCase
 {
+
+    @Parameters( name = "Execution {index} - {0}, {1}" )
+    public static Collection<Object[]> parameters()
+    {
+        return TestCaseConstants.EXECUTION_PARAMETER_MUTATIONS;
+    }
+
+    private final PartitionFactory partitionFactory;
+
+    private final PartitionSliceSelector partitionSliceSelector;
+
+    public IntLongCompressionTestCase( String name1, String name2, PartitionFactory partitionFactory,
+                                       Class<PartitionSliceSelector> partitionSliceSelectorClass )
+        throws InstantiationException, IllegalAccessException
+    {
+        this.partitionFactory = partitionFactory;
+        this.partitionSliceSelector = partitionSliceSelectorClass.newInstance();
+    }
 
     private static final int TEST_VALUES_COUNT = 1000000;
 
@@ -38,7 +85,8 @@ public class IntLongCompressionTestCase
     public void testInt32Compression()
         throws Exception
     {
-        FixedSizeUnsafeAllocator allocator = new FixedSizeUnsafeAllocator( 1, 5 );
+        PartitionBufferBuilder builder = new PartitionBufferBuilder( partitionFactory, partitionSliceSelector );
+        PartitionBufferPool pool = builder.allocatePool( "50K", 1, "50K" );
         try
         {
             for ( int i = 0; i < 4; i++ )
@@ -53,24 +101,25 @@ public class IntLongCompressionTestCase
                     values[o] = (int) ( random.nextDouble() * ( max - min + 1 ) ) + min;
                 }
 
-                PartitionBuffer buffer = allocator.allocate( 5 );
+                PartitionBuffer buffer = pool.getPartitionBuffer();
 
                 for ( int v = 0; v < TEST_VALUES_COUNT; v++ )
                 {
                     int value = values[v];
                     buffer.clear();
                     buffer.writeCompressedInt( value );
+                    buffer.flush();
                     checkIntLength( value, buffer.writerIndex() );
 
                     int result = buffer.readCompressedInt();
                     assertEquals( value, result );
                 }
-                allocator.free( buffer );
+                buffer.free();
             }
         }
         finally
         {
-            allocator.close();
+            pool.close();
         }
     }
 
@@ -79,7 +128,8 @@ public class IntLongCompressionTestCase
         throws Exception
     {
 
-        FixedSizeUnsafeAllocator allocator = new FixedSizeUnsafeAllocator( 1, 9 );
+        PartitionBufferBuilder builder = new PartitionBufferBuilder( partitionFactory, partitionSliceSelector );
+        PartitionBufferPool pool = builder.allocatePool( "50K", 1, "50K" );
         try
         {
             for ( int i = 0; i < 8; i++ )
@@ -94,24 +144,25 @@ public class IntLongCompressionTestCase
                     values[o] = (long) ( random.nextDouble() * ( max - min + 1 ) ) + min;
                 }
 
-                PartitionBuffer buffer = allocator.allocate( 5 );
+                PartitionBuffer buffer = pool.getPartitionBuffer();
 
                 for ( int v = 0; v < TEST_VALUES_COUNT; v++ )
                 {
                     long value = values[v];
                     buffer.clear();
                     buffer.writeCompressedLong( value );
+                    buffer.flush();
                     checkLongLength( value, buffer.writerIndex() );
 
                     long result = buffer.readCompressedLong();
                     assertEquals( value, result );
                 }
-                allocator.free( buffer );
+                buffer.free();
             }
         }
         finally
         {
-            allocator.close();
+            pool.close();
         }
     }
 

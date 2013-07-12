@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.directmemory.buffer.PartitionBuffer;
 import org.apache.directmemory.measures.Ram;
 import org.apache.directmemory.memory.AbstractMemoryManager;
 import org.apache.directmemory.memory.MemoryManager;
@@ -34,7 +35,6 @@ import org.apache.directmemory.memory.MemoryManagerHelper;
 import org.apache.directmemory.memory.Pointer;
 import org.apache.directmemory.memory.PointerImpl;
 import org.apache.directmemory.memory.RoundRobinAllocationPolicy;
-import org.apache.directmemory.memory.buffer.MemoryBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -138,7 +138,7 @@ public class AllocatorMemoryManager<V>
                     throw new BufferOverflowException();
                 }
             }
-            final MemoryBuffer buffer = allocator.allocate( payload.length );
+            final PartitionBuffer buffer = allocator.allocate( payload.length );
 
             if ( buffer == null )
             {
@@ -168,10 +168,10 @@ public class AllocatorMemoryManager<V>
 
         pointer.hit();
 
-        final MemoryBuffer buf = pointer.getMemoryBuffer();
+        final PartitionBuffer buf = pointer.getPartitionBuffer();
         buf.readerIndex( 0 );
 
-        final byte[] swp = new byte[(int) buf.readableBytes()];
+        final byte[] swp = new byte[(int) buf.readableSize()];
         buf.readBytes( swp );
         return swp;
     }
@@ -186,7 +186,7 @@ public class AllocatorMemoryManager<V>
             return pointer;
         }
 
-        getAllocator( pointer.getBufferNumber() ).free( pointer.getMemoryBuffer() );
+        getAllocator( pointer.getBufferNumber() ).free( pointer.getPartitionBuffer() );
 
         used.addAndGet( -pointer.getCapacity() );
 
@@ -236,7 +236,7 @@ public class AllocatorMemoryManager<V>
                 }
             }
 
-            final MemoryBuffer buffer = allocator.allocate( size );
+            final PartitionBuffer buffer = allocator.allocate( size );
 
             if ( buffer == null )
             {
@@ -267,11 +267,11 @@ public class AllocatorMemoryManager<V>
             allocator.clear();
         }
         allocationPolicy.reset();
-        used.set(0L);
+        used.set( 0L );
     }
 
-    protected Pointer<V> instanciatePointer( final MemoryBuffer buffer, final int allocatorIndex, final long expiresIn,
-                                             final long expires )
+    protected Pointer<V> instanciatePointer( final PartitionBuffer buffer, final int allocatorIndex,
+                                             final long expiresIn, final long expires )
     {
 
         Pointer<V> p = new PointerImpl<V>( buffer, allocatorIndex );

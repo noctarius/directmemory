@@ -25,13 +25,13 @@ import static java.lang.System.currentTimeMillis;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.apache.directmemory.memory.buffer.MemoryBuffer;
+import org.apache.directmemory.buffer.PartitionBuffer;
 
 public class PointerImpl<T>
     implements Pointer<T>
 {
 
-    public final MemoryBuffer memoryBuffer;
+    public final PartitionBuffer buffer;
 
     public final int bufferNumber;
 
@@ -49,9 +49,9 @@ public class PointerImpl<T>
 
     public Class<? extends T> clazz;
 
-    public PointerImpl( MemoryBuffer memoryBuffer, int bufferNumber )
+    public PointerImpl( PartitionBuffer buffer, int bufferNumber )
     {
-        this.memoryBuffer = memoryBuffer;
+        this.buffer = buffer;
         this.bufferNumber = bufferNumber;
     }
 
@@ -70,7 +70,7 @@ public class PointerImpl<T>
     @Override
     public long getCapacity()
     {
-        return memoryBuffer == null ? -1 : memoryBuffer.capacity();
+        return buffer == null ? -1 : buffer.capacity();
     }
 
     @Override
@@ -88,7 +88,7 @@ public class PointerImpl<T>
         hits = 0;
         expiresIn = 0;
         clazz = null;
-        memoryBuffer.clear();
+        buffer.clear();
     }
 
     @Override
@@ -116,7 +116,7 @@ public class PointerImpl<T>
     @Override
     public long getSize()
     {
-        return memoryBuffer.capacity();
+        return buffer.capacity();
     }
 
     @Override
@@ -133,9 +133,9 @@ public class PointerImpl<T>
     }
 
     @Override
-    public MemoryBuffer getMemoryBuffer()
+    public PartitionBuffer getPartitionBuffer()
     {
-        return memoryBuffer;
+        return buffer;
     }
 
     @Override
