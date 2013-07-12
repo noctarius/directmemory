@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.directmemory.buffer.spi.Partition;
+import org.apache.directmemory.buffer.utils.BufferUtils;
 
 class ByteBufferPartitionSlice
     extends AbstractPartitionSlice

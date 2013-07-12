@@ -36,6 +36,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.directmemory.buffer.PartitionBuffer;
+import org.apache.directmemory.buffer.utils.BufferUtils;
 import org.apache.directmemory.memory.Pointer;
 
 /**
@@ -459,7 +460,7 @@ public class MergingByteBufferAllocator
 
         try
         {
-            DirectByteBufferUtils.destroyDirectByteBuffer( parentBuffer );
+            BufferUtils.cleanByteBuffer( parentBuffer );
         }
         catch ( Exception e )
         {

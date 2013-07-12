@@ -1,11 +1,11 @@
 package org.apache.directmemory.buffer;
 
-import org.apache.directmemory.buffer.impl.BufferUtils;
 import org.apache.directmemory.buffer.impl.ByteBufferPooledPartition;
 import org.apache.directmemory.buffer.impl.PartitionBufferPoolImpl;
 import org.apache.directmemory.buffer.selector.ThreadLocalPartitionSliceSelector;
 import org.apache.directmemory.buffer.spi.PartitionFactory;
 import org.apache.directmemory.buffer.spi.PartitionSliceSelector;
+import org.apache.directmemory.buffer.utils.BufferUtils;
 
 public final class PartitionBufferBuilder
 {

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.directmemory.buffer.impl;
+package org.apache.directmemory.buffer.utils;
 
 import java.lang.reflect.Constructor;
 
@@ -98,10 +98,10 @@ import org.apache.directmemory.buffer.WritablePartitionBuffer;
  * Class to encode java's UTF16 char[] into UTF8 byte[] without always allocating a new byte[] as
  * String.getBytes("UTF-8") does.
  */
-public final class UnicodeUtil
+public final class UnicodeUtils
 {
 
-    private UnicodeUtil()
+    private UnicodeUtils()
     {
     } // no instance
 

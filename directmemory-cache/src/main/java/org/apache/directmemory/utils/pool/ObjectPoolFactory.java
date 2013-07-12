@@ -19,7 +19,7 @@ package org.apache.directmemory.utils.pool;
  * under the License.
  */
 
-import org.apache.directmemory.buffer.impl.BufferUtils;
+import org.apache.directmemory.buffer.utils.BufferUtils;
 
 public class ObjectPoolFactory
 {

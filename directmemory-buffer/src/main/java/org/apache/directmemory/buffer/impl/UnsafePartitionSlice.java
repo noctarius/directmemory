@@ -3,6 +3,7 @@ package org.apache.directmemory.buffer.impl;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.directmemory.buffer.spi.Partition;
+import org.apache.directmemory.buffer.utils.BufferUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

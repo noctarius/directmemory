@@ -2,6 +2,8 @@ package org.apache.directmemory.buffer.impl;
 
 import java.util.concurrent.atomic.AtomicLongArray;
 
+import org.apache.directmemory.buffer.utils.BufferUtils;
+
 
 public class FixedLengthBitSet
 {

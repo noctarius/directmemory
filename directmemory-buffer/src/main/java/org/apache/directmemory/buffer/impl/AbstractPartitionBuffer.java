@@ -5,6 +5,10 @@ import java.nio.ByteOrder;
 
 import org.apache.directmemory.buffer.PartitionBuffer;
 import org.apache.directmemory.buffer.ReadablePartitionBuffer;
+import org.apache.directmemory.buffer.utils.BufferUtils;
+import org.apache.directmemory.buffer.utils.Int32Compressor;
+import org.apache.directmemory.buffer.utils.Int64Compressor;
+import org.apache.directmemory.buffer.utils.UnicodeUtils;
 
 public abstract class AbstractPartitionBuffer
     implements PartitionBuffer
@@ -133,7 +137,7 @@ public abstract class AbstractPartitionBuffer
     @Override
     public String readString()
     {
-        return UnicodeUtil.UTF8toUTF16( this );
+        return UnicodeUtils.UTF8toUTF16( this );
     }
 
     @Override
@@ -295,7 +299,7 @@ public abstract class AbstractPartitionBuffer
     @Override
     public void writeString( String value )
     {
-        UnicodeUtil.UTF16toUTF8( value, this );
+        UnicodeUtils.UTF16toUTF8( value, this );
     }
 
     @Override

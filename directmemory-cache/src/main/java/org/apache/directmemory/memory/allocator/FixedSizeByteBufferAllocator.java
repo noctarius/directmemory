@@ -32,6 +32,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.apache.directmemory.buffer.PartitionBuffer;
+import org.apache.directmemory.buffer.utils.BufferUtils;
 
 /**
  * {@link Allocator} implementation that instantiate {@link ByteBuffer}s of fixed size, called slices.
@@ -199,7 +200,7 @@ public class FixedSizeByteBufferAllocator
         {
             try
             {
-                DirectByteBufferUtils.destroyDirectByteBuffer( buffer );
+                BufferUtils.cleanByteBuffer( buffer );
             }
             catch ( Exception e )
             {

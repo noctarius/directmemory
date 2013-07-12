@@ -3,7 +3,7 @@ package org.apache.directmemory.utils.pool;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 
-import org.apache.directmemory.buffer.impl.BufferUtils;
+import org.apache.directmemory.buffer.utils.BufferUtils;
 
 public class FastObjectPool<T>
 {

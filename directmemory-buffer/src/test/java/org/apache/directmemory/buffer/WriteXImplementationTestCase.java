@@ -5,11 +5,11 @@ import static org.junit.Assert.assertEquals;
 import org.apache.directmemory.buffer.PartitionBuffer;
 import org.apache.directmemory.buffer.PartitionBufferBuilder;
 import org.apache.directmemory.buffer.PartitionBufferPool;
-import org.apache.directmemory.buffer.impl.BufferUtils;
 import org.apache.directmemory.buffer.impl.ByteBufferPooledPartition;
 import org.apache.directmemory.buffer.selector.RoundRobinPartitionSliceSelector;
 import org.apache.directmemory.buffer.spi.PartitionFactory;
 import org.apache.directmemory.buffer.spi.PartitionSliceSelector;
+import org.apache.directmemory.buffer.utils.BufferUtils;
 import org.junit.Test;
 
 

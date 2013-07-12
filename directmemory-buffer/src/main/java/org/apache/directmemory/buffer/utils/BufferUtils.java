@@ -1,4 +1,4 @@
-package org.apache.directmemory.buffer.impl;
+package org.apache.directmemory.buffer.utils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -87,7 +87,7 @@ public final class BufferUtils
         return UNSAFE;
     }
 
-    static void cleanByteBuffer( ByteBuffer byteBuffer )
+    public static void cleanByteBuffer( ByteBuffer byteBuffer )
     {
         if ( !byteBuffer.isDirect() || !CLEANER_AVAILABLE )
         {
@@ -105,7 +105,7 @@ public final class BufferUtils
         }
     }
 
-    static void putShort( short value, PartitionBuffer buffer, boolean bigEndian )
+    public static void putShort( short value, PartitionBuffer buffer, boolean bigEndian )
     {
         if ( bigEndian )
         {
@@ -119,7 +119,7 @@ public final class BufferUtils
         }
     }
 
-    static short getShort( PartitionBuffer buffer, boolean bigEndian )
+    public static short getShort( PartitionBuffer buffer, boolean bigEndian )
     {
         if ( bigEndian )
         {
@@ -135,7 +135,7 @@ public final class BufferUtils
         }
     }
 
-    static void putInt( int value, PartitionBuffer buffer, boolean bigEndian )
+    public static void putInt( int value, PartitionBuffer buffer, boolean bigEndian )
     {
         int index = 0;
         byte[] data = new byte[4];
@@ -156,7 +156,7 @@ public final class BufferUtils
         buffer.writeBytes( data );
     }
 
-    static int getInt( PartitionBuffer buffer, boolean bigEndian )
+    public static int getInt( PartitionBuffer buffer, boolean bigEndian )
     {
         byte[] data = new byte[4];
         buffer.readBytes( data );
@@ -178,7 +178,7 @@ public final class BufferUtils
         }
     }
 
-    static void putLong( long value, PartitionBuffer buffer, boolean bigEndian )
+    public static void putLong( long value, PartitionBuffer buffer, boolean bigEndian )
     {
         int index = 0;
         byte[] data = new byte[8];
@@ -207,7 +207,7 @@ public final class BufferUtils
         buffer.writeBytes( data );
     }
 
-    static long getLong( PartitionBuffer buffer, boolean bigEndian )
+    public static long getLong( PartitionBuffer buffer, boolean bigEndian )
     {
         byte[] data = new byte[8];
         buffer.readBytes( data );
@@ -237,7 +237,7 @@ public final class BufferUtils
         }
     }
 
-    static void rangeCheck( int position, int lowerBound, int upperBound, String name )
+    public static void rangeCheck( int position, int lowerBound, int upperBound, String name )
     {
         if ( position < lowerBound )
         {

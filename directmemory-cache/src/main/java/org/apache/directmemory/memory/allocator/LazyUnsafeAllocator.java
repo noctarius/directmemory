@@ -28,7 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.directmemory.buffer.PartitionBuffer;
-import org.apache.directmemory.buffer.impl.BufferUtils;
+import org.apache.directmemory.buffer.utils.BufferUtils;
 
 public class LazyUnsafeAllocator
     implements Allocator

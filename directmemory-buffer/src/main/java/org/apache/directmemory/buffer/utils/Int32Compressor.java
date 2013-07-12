@@ -1,4 +1,4 @@
-package org.apache.directmemory.buffer.impl;
+package org.apache.directmemory.buffer.utils;
 
 import org.apache.directmemory.buffer.ReadablePartitionBuffer;
 import org.apache.directmemory.buffer.WritablePartitionBuffer;
@@ -29,25 +29,25 @@ public final class Int32Compressor
     {
     }
 
-    static final byte INT32_FULL = 1;
+    public static final byte INT32_FULL = 1;
 
-    static final byte INT32_COMPRESSED_SINGLE = 2;
+    public static final byte INT32_COMPRESSED_SINGLE = 2;
 
-    static final byte INT32_COMPRESSED_DOUBLE = 3;
+    public static final byte INT32_COMPRESSED_DOUBLE = 3;
 
-    static final byte INT32_COMPRESSED_TRIPPLE = 4;
+    public static final byte INT32_COMPRESSED_TRIPPLE = 4;
 
-    static final int INT32_MAX_SINGLE = 0x7F;
+    public static final int INT32_MAX_SINGLE = 0x7F;
 
-    static final int INT32_MIN_SINGLE = ~INT32_MAX_SINGLE + 1;
+    public static final int INT32_MIN_SINGLE = ~INT32_MAX_SINGLE + 1;
 
-    static final int INT32_MAX_DOUBLE = 0x7FFF;
+    public static final int INT32_MAX_DOUBLE = 0x7FFF;
 
-    static final int INT32_MIN_DOUBLE = ~INT32_MAX_DOUBLE + 1;
+    public static final int INT32_MIN_DOUBLE = ~INT32_MAX_DOUBLE + 1;
 
-    static final int INT32_MAX_TRIPPLE = 0x7FFFFF;
+    public static final int INT32_MAX_TRIPPLE = 0x7FFFFF;
 
-    static final int INT32_MIN_TRIPPLE = ~INT32_MAX_TRIPPLE + 1;
+    public static final int INT32_MIN_TRIPPLE = ~INT32_MAX_TRIPPLE + 1;
 
     public static void writeInt32( int value, WritablePartitionBuffer buffer )
     {

@@ -22,7 +22,7 @@ package org.apache.directmemory.memory.allocator;
 import java.nio.ByteOrder;
 
 import org.apache.directmemory.buffer.impl.AbstractPartitionBuffer;
-import org.apache.directmemory.buffer.impl.BufferUtils;
+import org.apache.directmemory.buffer.utils.BufferUtils;
 import org.apache.directmemory.memory.IllegalMemoryPointerException;
 
 public class UnsafePartitionBuffer

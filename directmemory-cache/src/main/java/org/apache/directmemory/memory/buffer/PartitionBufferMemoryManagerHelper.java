@@ -20,8 +20,8 @@ package org.apache.directmemory.memory.buffer;
  */
 
 import org.apache.directmemory.buffer.PartitionStrategy;
-import org.apache.directmemory.buffer.impl.BufferUtils;
 import org.apache.directmemory.buffer.spi.PartitionFactory;
+import org.apache.directmemory.buffer.utils.BufferUtils;
 
 final class PartitionBufferMemoryManagerHelper
 {

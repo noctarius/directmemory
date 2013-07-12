@@ -1,4 +1,4 @@
-package org.apache.directmemory.buffer.impl;
+package org.apache.directmemory.buffer.utils;
 
 import org.apache.directmemory.buffer.ReadablePartitionBuffer;
 import org.apache.directmemory.buffer.WritablePartitionBuffer;
@@ -29,49 +29,49 @@ public final class Int64Compressor
     {
     }
 
-    static final byte INT64_FULL = 1;
+    public static final byte INT64_FULL = 1;
 
-    static final byte INT64_COMPRESSED_SINGLE = 2;
+    public static final byte INT64_COMPRESSED_SINGLE = 2;
 
-    static final byte INT64_COMPRESSED_DOUBLE = 3;
+    public static final byte INT64_COMPRESSED_DOUBLE = 3;
 
-    static final byte INT64_COMPRESSED_TRIPPLE = 4;
+    public static final byte INT64_COMPRESSED_TRIPPLE = 4;
 
-    static final byte INT64_COMPRESSED_QUAD = 5;
+    public static final byte INT64_COMPRESSED_QUAD = 5;
 
-    static final byte INT64_COMPRESSED_FIFTH = 6;
+    public static final byte INT64_COMPRESSED_FIFTH = 6;
 
-    static final byte INT64_COMPRESSED_SIXTH = 7;
+    public static final byte INT64_COMPRESSED_SIXTH = 7;
 
-    static final byte INT64_COMPRESSED_SEVENTH = 8;
+    public static final byte INT64_COMPRESSED_SEVENTH = 8;
 
-    static final long INT64_MAX_SINGLE = 0x7F;
+    public static final long INT64_MAX_SINGLE = 0x7F;
 
-    static final long INT64_MIN_SINGLE = ~INT64_MAX_SINGLE + 1;
+    public static final long INT64_MIN_SINGLE = ~INT64_MAX_SINGLE + 1;
 
-    static final long INT64_MAX_DOUBLE = 0x7FFF;
+    public static final long INT64_MAX_DOUBLE = 0x7FFF;
 
-    static final long INT64_MIN_DOUBLE = ~INT64_MAX_DOUBLE + 1;
+    public static final long INT64_MIN_DOUBLE = ~INT64_MAX_DOUBLE + 1;
 
-    static final long INT64_MAX_TRIPPLE = 0x7FFFFF;
+    public static final long INT64_MAX_TRIPPLE = 0x7FFFFF;
 
-    static final long INT64_MIN_TRIPPLE = ~INT64_MAX_TRIPPLE + 1;
+    public static final long INT64_MIN_TRIPPLE = ~INT64_MAX_TRIPPLE + 1;
 
-    static final long INT64_MAX_QUAD = 0x7FFFFFFF;
+    public static final long INT64_MAX_QUAD = 0x7FFFFFFF;
 
-    static final long INT64_MIN_QUAD = ~INT64_MAX_QUAD + 1;
+    public static final long INT64_MIN_QUAD = ~INT64_MAX_QUAD + 1;
 
-    static final long INT64_MAX_FIFTH = 0x7FFFFFFFFFL;
+    public static final long INT64_MAX_FIFTH = 0x7FFFFFFFFFL;
 
-    static final long INT64_MIN_FIFTH = ~INT64_MAX_FIFTH + 1;
+    public static final long INT64_MIN_FIFTH = ~INT64_MAX_FIFTH + 1;
 
-    static final long INT64_MAX_SIXTH = 0x7FFFFFFFFFFFL;
+    public static final long INT64_MAX_SIXTH = 0x7FFFFFFFFFFFL;
 
-    static final long INT64_MIN_SIXTH = ~INT64_MAX_SIXTH + 1;
+    public static final long INT64_MIN_SIXTH = ~INT64_MAX_SIXTH + 1;
 
-    static final long INT64_MAX_SEVENTH = 0x7FFFFFFFFFFFFFL;
+    public static final long INT64_MAX_SEVENTH = 0x7FFFFFFFFFFFFFL;
 
-    static final long INT64_MIN_SEVENTH = ~INT64_MAX_SEVENTH + 1;
+    public static final long INT64_MIN_SEVENTH = ~INT64_MAX_SEVENTH + 1;
 
     public static void writeInt64( long value, WritablePartitionBuffer buffer )
     {

@@ -26,7 +26,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.apache.directmemory.buffer.PartitionBuffer;
-import org.apache.directmemory.buffer.impl.BufferUtils;
+import org.apache.directmemory.buffer.utils.BufferUtils;
 
 public class FixedSizeUnsafeAllocator
     implements Allocator
