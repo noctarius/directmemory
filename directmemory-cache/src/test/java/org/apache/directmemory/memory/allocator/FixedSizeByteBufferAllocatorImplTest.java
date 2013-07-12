@@ -19,9 +19,10 @@ package org.apache.directmemory.memory.allocator;
  * under the License.
  */
 
-import java.io.IOException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
-import junit.framework.Assert;
+import java.io.IOException;
 
 import org.apache.directmemory.buffer.PartitionBuffer;
 import org.junit.Test;
@@ -36,26 +37,26 @@ public class FixedSizeByteBufferAllocatorImplTest
         Allocator allocator = new FixedSizeByteBufferAllocator( 0, 5000, 256, 1 );
 
         PartitionBuffer bf1 = allocator.allocate( 250 );
-        Assert.assertEquals( 256, bf1.maxCapacity() );
-        Assert.assertEquals( 250, bf1.capacity() );
+        assertEquals( 256, bf1.maxCapacity() );
+        assertEquals( 250, bf1.capacity() );
 
         PartitionBuffer bf2 = allocator.allocate( 251 );
-        Assert.assertEquals( 256, bf2.maxCapacity() );
-        Assert.assertEquals( 251, bf2.capacity() );
+        assertEquals( 256, bf2.maxCapacity() );
+        assertEquals( 251, bf2.capacity() );
 
         PartitionBuffer bf3 = allocator.allocate( 200 );
-        Assert.assertEquals( 256, bf3.maxCapacity() );
-        Assert.assertEquals( 200, bf3.capacity() );
+        assertEquals( 256, bf3.maxCapacity() );
+        assertEquals( 200, bf3.capacity() );
 
         PartitionBuffer bf4 = allocator.allocate( 2000 );
-        Assert.assertNull( bf4 );
+        assertNull( bf4 );
 
         PartitionBuffer bf5 = allocator.allocate( 298 );
-        Assert.assertNull( bf5 );
+        assertNull( bf5 );
 
         PartitionBuffer bf6 = allocator.allocate( 128 );
-        Assert.assertEquals( 256, bf6.maxCapacity() );
-        Assert.assertEquals( 128, bf6.capacity() );
+        assertEquals( 256, bf6.maxCapacity() );
+        assertEquals( 128, bf6.capacity() );
 
         allocator.close();
     }
@@ -68,33 +69,33 @@ public class FixedSizeByteBufferAllocatorImplTest
         Allocator allocator = new FixedSizeByteBufferAllocator( 0, 1000, 256, 1 );
 
         PartitionBuffer bf1 = allocator.allocate( 250 );
-        Assert.assertEquals( 256, bf1.maxCapacity() );
-        Assert.assertEquals( 250, bf1.capacity() );
+        assertEquals( 256, bf1.maxCapacity() );
+        assertEquals( 250, bf1.capacity() );
 
         PartitionBuffer bf2 = allocator.allocate( 251 );
-        Assert.assertEquals( 256, bf2.maxCapacity() );
-        Assert.assertEquals( 251, bf2.capacity() );
+        assertEquals( 256, bf2.maxCapacity() );
+        assertEquals( 251, bf2.capacity() );
 
         PartitionBuffer bf3 = allocator.allocate( 252 );
-        Assert.assertEquals( 256, bf3.maxCapacity() );
-        Assert.assertEquals( 252, bf3.capacity() );
+        assertEquals( 256, bf3.maxCapacity() );
+        assertEquals( 252, bf3.capacity() );
 
         PartitionBuffer bf4 = allocator.allocate( 500 );
-        Assert.assertNull( bf4 );
+        assertNull( bf4 );
 
         allocator.free( bf1 );
         allocator.free( bf2 );
 
         PartitionBuffer bf5 = allocator.allocate( 500 );
-        Assert.assertNull( bf5 );
+        assertNull( bf5 );
 
         PartitionBuffer bf6 = allocator.allocate( 249 );
-        Assert.assertEquals( 256, bf6.maxCapacity() );
-        Assert.assertEquals( 249, bf6.capacity() );
+        assertEquals( 256, bf6.maxCapacity() );
+        assertEquals( 249, bf6.capacity() );
 
         PartitionBuffer bf7 = allocator.allocate( 248 );
-        Assert.assertEquals( 256, bf7.maxCapacity() );
-        Assert.assertEquals( 248, bf7.capacity() );
+        assertEquals( 256, bf7.maxCapacity() );
+        assertEquals( 248, bf7.capacity() );
 
         allocator.close();
     }
@@ -109,25 +110,25 @@ public class FixedSizeByteBufferAllocatorImplTest
         for ( int i = 0; i < 1000; i++ )
         {
             PartitionBuffer bf1 = allocator.allocate( 250 );
-            Assert.assertEquals( 256, bf1.maxCapacity() );
-            Assert.assertEquals( 250, bf1.capacity() );
+            assertEquals( 256, bf1.maxCapacity() );
+            assertEquals( 250, bf1.capacity() );
 
             allocator.free( bf1 );
         }
 
         PartitionBuffer bf2 = allocator.allocate( 1000 );
-        Assert.assertNull( bf2 );
+        assertNull( bf2 );
 
         for ( int i = 0; i < 3; i++ )
         {
             PartitionBuffer bf3 = allocator.allocate( 250 );
-            Assert.assertEquals( 256, bf3.maxCapacity() );
-            Assert.assertEquals( 250, bf3.capacity() );
+            assertEquals( 256, bf3.maxCapacity() );
+            assertEquals( 250, bf3.capacity() );
 
         }
 
         PartitionBuffer bf4 = allocator.allocate( 238 );
-        Assert.assertNull( bf4 );
+        assertNull( bf4 );
 
         allocator.close();
     }

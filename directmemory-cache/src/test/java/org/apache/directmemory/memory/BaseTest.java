@@ -29,7 +29,6 @@ import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 
 import org.apache.directmemory.measures.Ram;
-import org.apache.directmemory.memory.allocator.AllocatorMemoryManager;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -53,8 +52,8 @@ public class BaseTest
     @Before
     public void initMMS()
     {
-        mem = new AllocatorMemoryManager<Object>();
-        mem.init( 1, 1 * 1024 * 1024 );
+        MemoryManagerFactory<Object> factory = MemoryManagerStrategy.Allocator.newInstance();
+        mem = factory.build( 1, 1, 1 * 1024 * 1024 );
     }
 
     @After

@@ -19,12 +19,16 @@ package org.apache.directmemory.memory;
  * under the License.
  */
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-import junit.framework.Assert;
 
 import org.apache.directmemory.buffer.PartitionBuffer;
 import org.junit.After;
@@ -67,11 +71,11 @@ public abstract class AbstractMemoryManagerServiceTest
         mms = instanciateMemoryManagerService( BUFFER_SIZE );
 
         Pointer<Object> pointer1 = mms.store( SMALL_PAYLOAD );
-        Assert.assertNotNull( pointer1 );
-        Assert.assertFalse( pointer1.isFree() );
+        assertNotNull( pointer1 );
+        assertFalse( pointer1.isFree() );
 
         Pointer<Object> pointer2 = mms.store( SMALL_PAYLOAD );
-        Assert.assertNull( pointer2 );
+        assertNull( pointer2 );
 
     }
 
@@ -92,11 +96,11 @@ public abstract class AbstractMemoryManagerServiceTest
         for ( int i = 0; i < NUMBER_OF_OBJECTS; i++ )
         {
             Pointer<Object> pointer = mms.store( SMALL_PAYLOAD );
-            Assert.assertNotNull( pointer );
+            assertNotNull( pointer );
         }
 
         Pointer<Object> pointerNull = mms.store( SMALL_PAYLOAD );
-        Assert.assertNull( pointerNull );
+        assertNull( pointerNull );
     }
 
     /**
@@ -117,21 +121,21 @@ public abstract class AbstractMemoryManagerServiceTest
         for ( int i = 0; i < NUMBER_OF_OBJECTS; i++ )
         {
             Pointer<Object> pointer = mms.store( SMALL_PAYLOAD );
-            Assert.assertNotNull( pointer );
+            assertNotNull( pointer );
             lastPointer = pointer;
         }
 
         // Buffer is fully used.
-        Assert.assertEquals( BUFFER_SIZE, mms.used() );
+        assertEquals( BUFFER_SIZE, mms.used() );
 
-        Assert.assertNotNull( lastPointer );
+        assertNotNull( lastPointer );
         mms.free( lastPointer );
 
         Pointer<Object> pointerNotNull = mms.store( SMALL_PAYLOAD );
-        Assert.assertNotNull( pointerNotNull );
+        assertNotNull( pointerNotNull );
 
         // Buffer again fully used.
-        Assert.assertEquals( BUFFER_SIZE, mms.used() );
+        assertEquals( BUFFER_SIZE, mms.used() );
 
     }
 
@@ -149,27 +153,27 @@ public abstract class AbstractMemoryManagerServiceTest
         mms = instanciateMemoryManagerService( BUFFER_SIZE );
 
         Pointer<Object> pointerFull = mms.store( MemoryTestUtils.generateRandomPayload( BUFFER_SIZE ) );
-        Assert.assertNotNull( pointerFull );
+        assertNotNull( pointerFull );
         mms.free( pointerFull );
 
         final int size1 = R.nextInt( BUFFER_SIZE / 2 ) + 1;
         Pointer<Object> pointer1 = mms.store( MemoryTestUtils.generateRandomPayload( size1 ) );
-        Assert.assertNotNull( "Cannot store " + size1 + " bytes", pointer1 );
+        assertNotNull( "Cannot store " + size1 + " bytes", pointer1 );
 
         final int size2 = R.nextInt( ( BUFFER_SIZE - size1 ) / 2 ) + 1;
         Pointer<Object> pointer2 = mms.store( MemoryTestUtils.generateRandomPayload( size2 ) );
-        Assert.assertNotNull( "Cannot store " + size2 + " bytes", pointer2 );
+        assertNotNull( "Cannot store " + size2 + " bytes", pointer2 );
 
         final int size3 = R.nextInt( ( BUFFER_SIZE - size1 - size2 ) / 2 ) + 1;
         Pointer<Object> pointer3 = mms.store( MemoryTestUtils.generateRandomPayload( size3 ) );
-        Assert.assertNotNull( "Cannot store " + size3 + " bytes", pointer3 );
+        assertNotNull( "Cannot store " + size3 + " bytes", pointer3 );
 
         final int size4 = BUFFER_SIZE - size1 - size2 - size3;
         Pointer<Object> pointer4 = mms.store( MemoryTestUtils.generateRandomPayload( size4 ) );
-        Assert.assertNotNull( "Cannot store " + size4 + " bytes", pointer4 );
+        assertNotNull( "Cannot store " + size4 + " bytes", pointer4 );
 
         mms.free( pointer1 );
-        Assert.assertTrue( pointer1.isFree() );
+        assertTrue( pointer1.isFree() );
 
         mms.free( pointer3 );
 
@@ -177,17 +181,17 @@ public abstract class AbstractMemoryManagerServiceTest
 
         mms.free( pointer2 );
 
-        Assert.assertEquals( 0, mms.used() );
+        assertEquals( 0, mms.used() );
 
         // As all pointers have been freeed, we should be able to reallocate the whole buffer
         Pointer<Object> pointer6 = mms.store( MemoryTestUtils.generateRandomPayload( BUFFER_SIZE ) );
-        Assert.assertNotNull( "Cannot store " + BUFFER_SIZE + " bytes", pointer6 );
+        assertNotNull( "Cannot store " + BUFFER_SIZE + " bytes", pointer6 );
 
         mms.clear();
 
         // As all pointers have been cleared, we should be able to reallocate the whole buffer
         Pointer<Object> pointer7 = mms.store( MemoryTestUtils.generateRandomPayload( BUFFER_SIZE ) );
-        Assert.assertNotNull( "Cannot store " + BUFFER_SIZE + " bytes", pointer7 );
+        assertNotNull( "Cannot store " + BUFFER_SIZE + " bytes", pointer7 );
 
         mms.clear();
 
@@ -195,14 +199,14 @@ public abstract class AbstractMemoryManagerServiceTest
         for ( int i = 0; i < NUMBER_OF_OBJECTS; i++ )
         {
             Pointer<Object> pointer = mms.store( SMALL_PAYLOAD );
-            Assert.assertNotNull( pointer );
+            assertNotNull( pointer );
         }
 
         mms.clear();
 
         // As all pointers have been cleared, we should be able to reallocate the whole buffer
         Pointer<Object> pointer8 = mms.store( MemoryTestUtils.generateRandomPayload( BUFFER_SIZE ) );
-        Assert.assertNotNull( "Cannot store " + BUFFER_SIZE + " bytes", pointer8 );
+        assertNotNull( "Cannot store " + BUFFER_SIZE + " bytes", pointer8 );
 
         mms.free( pointer8 );
 
@@ -210,13 +214,13 @@ public abstract class AbstractMemoryManagerServiceTest
         for ( int i = 0; i < NUMBER_OF_OBJECTS * 10; i++ )
         {
             Pointer<Object> pointer = mms.store( SMALL_PAYLOAD );
-            Assert.assertNotNull( pointer );
+            assertNotNull( pointer );
             mms.free( pointer );
         }
 
         // After a clear occurs, pointers allocated before the clear should be set as "free"
-        Assert.assertTrue( pointer6.isFree() );
-        Assert.assertTrue( pointer7.isFree() );
+        assertTrue( pointer6.isFree() );
+        assertTrue( pointer7.isFree() );
 
     }
 
@@ -233,9 +237,9 @@ public abstract class AbstractMemoryManagerServiceTest
         {
             byte[] payload = MemoryTestUtils.generateRandomPayload( SMALL_PAYLOAD_LENGTH );
             Pointer<Object> pointer = mms.store( payload );
-            Assert.assertNotNull( pointer );
+            assertNotNull( pointer );
             byte[] fetchedPayload = mms.retrieve( pointer );
-            Assert.assertEquals( new String( payload ), new String( fetchedPayload ) );
+            assertEquals( new String( payload ), new String( fetchedPayload ) );
             if ( R.nextBoolean() )
             {
                 mms.free( pointer );
@@ -248,9 +252,9 @@ public abstract class AbstractMemoryManagerServiceTest
         {
             byte[] payload = MemoryTestUtils.generateRandomPayload( SMALL_PAYLOAD_LENGTH );
             Pointer<Object> pointer = mms.store( payload );
-            Assert.assertNotNull( pointer );
+            assertNotNull( pointer );
             byte[] fetchedPayload = mms.retrieve( pointer );
-            Assert.assertEquals( new String( payload ), new String( fetchedPayload ) );
+            assertEquals( new String( payload ), new String( fetchedPayload ) );
             if ( R.nextBoolean() )
             {
                 mms.free( pointer );
@@ -274,10 +278,10 @@ public abstract class AbstractMemoryManagerServiceTest
         {
             byte[] payload = MemoryTestUtils.generateRandomPayload( SMALL_PAYLOAD_LENGTH );
             Pointer<Object> pointer = mms.store( payload );
-            Assert.assertNotNull( pointer );
+            assertNotNull( pointer );
             pointers.add( pointer );
             byte[] fetchedPayload = mms.retrieve( pointer );
-            Assert.assertEquals( new String( payload ), new String( fetchedPayload ) );
+            assertEquals( new String( payload ), new String( fetchedPayload ) );
         }
 
         // Free 1/4 of the pointers, from 1/4 of the address space to 1/2
@@ -289,7 +293,7 @@ public abstract class AbstractMemoryManagerServiceTest
 
         // Should be able to allocate NUMBER_OF_OBJECTS / 4 * SMALL_PAYLOAD_LENGTH bytes
         Pointer<Object> pointer1 = mms.allocate( Object.class, NUMBER_OF_OBJECTS / 4 * SMALL_PAYLOAD_LENGTH, 0, 0 );
-        Assert.assertNotNull( pointer1 );
+        assertNotNull( pointer1 );
 
         int pointerToSkip = NUMBER_OF_OBJECTS / 2 + NUMBER_OF_OBJECTS / 10;
         for ( int i = NUMBER_OF_OBJECTS / 2; i < NUMBER_OF_OBJECTS * 3 / 4; i++ )
@@ -305,21 +309,21 @@ public abstract class AbstractMemoryManagerServiceTest
 
         // Should NOT be able to allocate NUMBER_OF_OBJECTS / 4 * SMALL_PAYLOAD_LENGTH bytes
         Pointer<Object> pointer2 = mms.allocate( Object.class, NUMBER_OF_OBJECTS / 4 * SMALL_PAYLOAD_LENGTH, 0, 0 );
-        Assert.assertNull( pointer2 );
+        assertNull( pointer2 );
 
         // Freeing the previously skipped pointer should then merge the whole memory space
         mms.free( pointers.get( pointerToSkip ) );
 
         // Should be able to allocate NUMBER_OF_OBJECTS / 4 * SMALL_PAYLOAD_LENGTH bytes
         Pointer<Object> pointer3 = mms.allocate( Object.class, NUMBER_OF_OBJECTS / 4 * SMALL_PAYLOAD_LENGTH, 0, 0 );
-        Assert.assertNotNull( pointer3 );
+        assertNotNull( pointer3 );
 
         if ( pointer3.getPartitionBuffer() != null )
         { // it makes no sense for Unsafe
             byte[] payload3 = MemoryTestUtils.generateRandomPayload( NUMBER_OF_OBJECTS / 4 * SMALL_PAYLOAD_LENGTH );
             pointer3.getPartitionBuffer().writeBytes( payload3 );
             byte[] retrievePayload3 = mms.retrieve( pointer3 );
-            Assert.assertEquals( new String( payload3 ), new String( retrievePayload3 ) );
+            assertEquals( new String( payload3 ), new String( retrievePayload3 ) );
         }
     }
 
@@ -335,31 +339,31 @@ public abstract class AbstractMemoryManagerServiceTest
         final byte[] payload = MemoryTestUtils.generateRandomPayload( SMALL_PAYLOAD_LENGTH );
 
         final Pointer<Object> pointer = mms.store( payload );
-        Assert.assertNotNull( pointer );
-        Assert.assertEquals( new String( payload ), new String( mms.retrieve( pointer ) ) );
+        assertNotNull( pointer );
+        assertEquals( new String( payload ), new String( mms.retrieve( pointer ) ) );
 
         final byte[] otherPayload = MemoryTestUtils.generateRandomPayload( SMALL_PAYLOAD_LENGTH );
         final Pointer<Object> otherPointer = mms.update( pointer, otherPayload );
-        Assert.assertNotNull( otherPointer );
-        // Assert.assertEquals( pointer.getStart(), otherPointer.getStart() );
-        Assert.assertEquals( pointer.getSize(), otherPointer.getSize() );
-        Assert.assertEquals( new String( otherPayload ), new String( mms.retrieve( otherPointer ) ) );
+        assertNotNull( otherPointer );
+        // assertEquals( pointer.getStart(), otherPointer.getStart() );
+        assertEquals( pointer.getSize(), otherPointer.getSize() );
+        assertEquals( new String( otherPayload ), new String( mms.retrieve( otherPointer ) ) );
 
         final byte[] evenAnotherPayload = MemoryTestUtils.generateRandomPayload( SMALL_PAYLOAD_LENGTH / 2 );
         final Pointer<Object> evenAnotherPointer = mms.update( otherPointer, evenAnotherPayload );
-        Assert.assertNotNull( evenAnotherPointer );
-        // Assert.assertEquals( pointer.getStart(), evenAnotherPointer.getStart() );
-        Assert.assertEquals( pointer.getSize(), evenAnotherPointer.getSize() );
-        // Assert.assertEquals( 2, new String( mms.retrieve( evenAnotherPointer ) ).length() );
-        Assert.assertTrue( new String( mms.retrieve( evenAnotherPointer ) ).startsWith( new String( evenAnotherPayload ) ) );
+        assertNotNull( evenAnotherPointer );
+        // assertEquals( pointer.getStart(), evenAnotherPointer.getStart() );
+        assertEquals( pointer.getSize(), evenAnotherPointer.getSize() );
+        // assertEquals( 2, new String( mms.retrieve( evenAnotherPointer ) ).length() );
+        assertTrue( new String( mms.retrieve( evenAnotherPointer ) ).startsWith( new String( evenAnotherPayload ) ) );
 
         final byte[] andAnotherPayload = MemoryTestUtils.generateRandomPayload( SMALL_PAYLOAD_LENGTH * 2 );
         final Pointer<Object> andAnotherPointer = mms.update( otherPointer, andAnotherPayload );
-        Assert.assertNotNull( andAnotherPointer );
-        // Assert.assertEquals( pointer.getStart(), evenAnotherPointer.getStart() );
-        Assert.assertEquals( pointer.getSize() * 2, andAnotherPointer.getSize() );
-        // Assert.assertEquals( 2, new String( mms.retrieve( evenAnotherPointer ) ).length() );
-        Assert.assertTrue( new String( mms.retrieve( andAnotherPointer ) ).startsWith( new String( andAnotherPayload ) ) );
+        assertNotNull( andAnotherPointer );
+        // assertEquals( pointer.getStart(), evenAnotherPointer.getStart() );
+        assertEquals( pointer.getSize() * 2, andAnotherPointer.getSize() );
+        // assertEquals( 2, new String( mms.retrieve( evenAnotherPointer ) ).length() );
+        assertTrue( new String( mms.retrieve( andAnotherPointer ) ).startsWith( new String( andAnotherPayload ) ) );
     }
 
     @Test
@@ -373,46 +377,46 @@ public abstract class AbstractMemoryManagerServiceTest
 
         final byte[] payload1 = MemoryTestUtils.generateRandomPayload( 8 * SMALL_PAYLOAD_LENGTH );
         final Pointer<Object> pointer1 = mms.store( payload1 );
-        Assert.assertNotNull( pointer1 );
-        Assert.assertEquals( new String( payload1 ), new String( mms.retrieve( pointer1 ) ) );
+        assertNotNull( pointer1 );
+        assertEquals( new String( payload1 ), new String( mms.retrieve( pointer1 ) ) );
 
         final byte[] payload2 = MemoryTestUtils.generateRandomPayload( 2 * SMALL_PAYLOAD_LENGTH );
         final Pointer<Object> pointer2 = mms.store( payload2 );
-        Assert.assertNotNull( pointer2 );
-        Assert.assertEquals( new String( payload2 ), new String( mms.retrieve( pointer2 ) ) );
+        assertNotNull( pointer2 );
+        assertEquals( new String( payload2 ), new String( mms.retrieve( pointer2 ) ) );
 
         mms.free( pointer1 );
 
         final byte[] payload3 = MemoryTestUtils.generateRandomPayload( 2 * SMALL_PAYLOAD_LENGTH );
         final Pointer<Object> pointer3 = mms.store( payload3 );
-        Assert.assertNotNull( pointer3 );
-        Assert.assertEquals( new String( payload3 ), new String( mms.retrieve( pointer3 ) ) );
+        assertNotNull( pointer3 );
+        assertEquals( new String( payload3 ), new String( mms.retrieve( pointer3 ) ) );
 
         final int size1 = 4 * SMALL_PAYLOAD_LENGTH;
         final byte[] allocatedPayload1 = MemoryTestUtils.generateRandomPayload( size1 );
         final Pointer<Object> allocatedPointer1 = mms.allocate( Object.class, allocatedPayload1.length, -1, -1 );
-        Assert.assertNotNull( allocatedPointer1 );
+        assertNotNull( allocatedPointer1 );
         final PartitionBuffer buffer1 = allocatedPointer1.getPartitionBuffer();
-        Assert.assertNotNull( buffer1 );
-        Assert.assertEquals( 0, buffer1.writerIndex() );
-        Assert.assertEquals( size1, buffer1.capacity() );
-        Assert.assertEquals( size1, buffer1.capacity() );
+        assertNotNull( buffer1 );
+        assertEquals( 0, buffer1.writerIndex() );
+        assertEquals( size1, buffer1.capacity() );
+        assertEquals( size1, buffer1.capacity() );
         buffer1.writeBytes( allocatedPayload1 );
-        Assert.assertEquals( new String( allocatedPayload1 ), new String( mms.retrieve( allocatedPointer1 ) ) );
+        assertEquals( new String( allocatedPayload1 ), new String( mms.retrieve( allocatedPointer1 ) ) );
 
         final int size2 = 2 * SMALL_PAYLOAD_LENGTH;
         final byte[] allocatedPayload2 = MemoryTestUtils.generateRandomPayload( size2 );
         final Pointer<Object> allocatedPointer2 = mms.allocate( Object.class, allocatedPayload2.length, -1, -1 );
-        Assert.assertNotNull( allocatedPointer2 );
+        assertNotNull( allocatedPointer2 );
         final PartitionBuffer buffer2 = allocatedPointer2.getPartitionBuffer();
-        Assert.assertNotNull( buffer2 );
-        Assert.assertEquals( size2, buffer2.capacity() );
+        assertNotNull( buffer2 );
+        assertEquals( size2, buffer2.capacity() );
         buffer2.writeBytes( allocatedPayload2 );
-        Assert.assertEquals( new String( allocatedPayload2 ), new String( mms.retrieve( allocatedPointer2 ) ) );
+        assertEquals( new String( allocatedPayload2 ), new String( mms.retrieve( allocatedPointer2 ) ) );
 
         // Ensure the new allocation has not overwritten other data
-        Assert.assertEquals( new String( payload2 ), new String( mms.retrieve( pointer2 ) ) );
-        Assert.assertEquals( new String( payload3 ), new String( mms.retrieve( pointer3 ) ) );
+        assertEquals( new String( payload2 ), new String( mms.retrieve( pointer2 ) ) );
+        assertEquals( new String( payload3 ), new String( mms.retrieve( pointer3 ) ) );
 
     }
 

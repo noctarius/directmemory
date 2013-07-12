@@ -29,7 +29,6 @@ import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 
 import org.apache.directmemory.measures.Ram;
-import org.apache.directmemory.memory.unsafe.UnsafeMemoryManager;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -50,8 +49,8 @@ public class BaseUnsafeTest
     @Before
     public void initMMS()
     {
-        mem = new UnsafeMemoryManager<Object>();
-        mem.init( 1, 1 * 1024 * 1024 );
+        MemoryManagerFactory<Object> factory = MemoryManagerStrategy.Unsafe.newInstance();
+        mem = factory.build( 1, 1, 1 * 1024 * 1024 );
     }
 
     @After

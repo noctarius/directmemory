@@ -19,16 +19,14 @@ package org.apache.directmemory.memory;
  * under the License.
  */
 
-import com.carrotsearch.junitbenchmarks.AbstractBenchmark;
-import com.carrotsearch.junitbenchmarks.BenchmarkOptions;
-import com.carrotsearch.junitbenchmarks.annotation.AxisRange;
-import com.carrotsearch.junitbenchmarks.annotation.BenchmarkHistoryChart;
-import com.carrotsearch.junitbenchmarks.annotation.BenchmarkMethodChart;
-import com.carrotsearch.junitbenchmarks.annotation.LabelType;
-import com.google.common.collect.MapMaker;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import java.io.IOException;
+import java.util.Random;
+import java.util.concurrent.ConcurrentMap;
+
 import org.apache.directmemory.measures.Ram;
-import org.apache.directmemory.memory.Pointer;
-import org.apache.directmemory.memory.allocator.AllocatorMemoryManager;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -36,12 +34,13 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.util.Random;
-import java.util.concurrent.ConcurrentMap;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import com.carrotsearch.junitbenchmarks.AbstractBenchmark;
+import com.carrotsearch.junitbenchmarks.BenchmarkOptions;
+import com.carrotsearch.junitbenchmarks.annotation.AxisRange;
+import com.carrotsearch.junitbenchmarks.annotation.BenchmarkHistoryChart;
+import com.carrotsearch.junitbenchmarks.annotation.BenchmarkMethodChart;
+import com.carrotsearch.junitbenchmarks.annotation.LabelType;
+import com.google.common.collect.MapMaker;
 
 @AxisRange( min = 0, max = 1 )
 @BenchmarkMethodChart( )
@@ -78,8 +77,8 @@ public class MallocTest
     @Before
     public void initMMS()
     {
-        mem = new AllocatorMemoryManager<Object>();
-        mem.init( 1, 512 * 1024 * 1024 );
+        MemoryManagerFactory<Object> factory = MemoryManagerStrategy.Allocator.newInstance();
+        mem = factory.build( 1, 1, 512 * 1024 * 1024 );
     }
 
     @Test

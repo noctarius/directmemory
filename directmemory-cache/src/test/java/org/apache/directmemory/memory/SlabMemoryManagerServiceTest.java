@@ -35,7 +35,7 @@ public class SlabMemoryManagerServiceTest
     @Override
     protected MemoryManager<Object> instanciateMemoryManagerService( int bufferSize )
     {
-        final MemoryManager<Object> mms = new AllocatorMemoryManager<Object>()
+        final AllocatorMemoryManager<Object> mms = new AllocatorMemoryManager<Object>()
         {
 
             @Override
@@ -47,8 +47,7 @@ public class SlabMemoryManagerServiceTest
                 slabs.add( new FixedSizeByteBufferAllocator( 1, size, SMALL_PAYLOAD_LENGTH, 1 ) );
                 slabs.add( new FixedSizeByteBufferAllocator( 2, size, SMALL_PAYLOAD_LENGTH * 2, 1 ) );
 
-                final SlabByteBufferAllocator allocator =
-                    new SlabByteBufferAllocator( allocatorNumber, slabs, false );
+                final SlabByteBufferAllocator allocator = new SlabByteBufferAllocator( allocatorNumber, slabs, false );
 
                 return allocator;
             }

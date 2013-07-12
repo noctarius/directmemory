@@ -19,22 +19,24 @@ package org.apache.directmemory.memory;
  * under the License.
  */
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Random;
 
-import junit.framework.Assert;
-
-import org.apache.directmemory.memory.allocator.AllocatorMemoryManager;
-import org.apache.directmemory.memory.unsafe.UnsafeMemoryManager;
+import org.apache.directmemory.memory.allocator.AllocatorMemoryManagerFactory;
+import org.apache.directmemory.memory.unsafe.UnsafeMemoryManagerFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 @RunWith( Parameterized.class )
-public class MemoryManagerServiceImplTest
+public class MemoryManagerImplTest
 {
 
     protected static final Random R = new Random();
@@ -44,22 +46,23 @@ public class MemoryManagerServiceImplTest
     @Parameters
     public static Collection<Object[]> data()
     {
-        return Arrays.asList( new Object[][] { { AllocatorMemoryManager.class },
-            { UnsafeMemoryManager.class } } );
+        return Arrays.asList( new Object[][] { { AllocatorMemoryManagerFactory.class },
+            { UnsafeMemoryManagerFactory.class } } );
     }
 
-    private final Class<? extends MemoryManager<Object>> memoryManagerServiceClass;
+    private final Class<? extends MemoryManagerFactory<Object>> memoryManagerFactoryClass;
 
-    public MemoryManagerServiceImplTest( Class<? extends MemoryManager<Object>> memoryManagerServiceClass )
+    public MemoryManagerImplTest( Class<? extends MemoryManagerFactory<Object>> memoryManagerFactoryClass )
     {
-        this.memoryManagerServiceClass = memoryManagerServiceClass;
+        this.memoryManagerFactoryClass = memoryManagerFactoryClass;
     }
 
-    protected MemoryManager<Object> getMemoryManagerService()
+    protected MemoryManager<Object> getMemoryManagerService( int numberOfBuffers, int bufferSize )
     {
         try
         {
-            return memoryManagerServiceClass.newInstance();
+            MemoryManagerFactory<Object> factory = memoryManagerFactoryClass.newInstance();
+            return factory.build( 1, numberOfBuffers, bufferSize );
         }
         catch ( Exception e )
         {
@@ -78,15 +81,13 @@ public class MemoryManagerServiceImplTest
 
         final int BUFFER_SIZE = 5;
 
-        final MemoryManager<Object> memoryManagerService = getMemoryManagerService();
-
-        memoryManagerService.init( 1, BUFFER_SIZE );
+        final MemoryManager<Object> memoryManagerService = getMemoryManagerService( 1, BUFFER_SIZE );
 
         Pointer<Object> pointer1 = memoryManagerService.store( SMALL_PAYLOAD );
-        Assert.assertNotNull( pointer1 );
+        assertNotNull( pointer1 );
 
         Pointer<Object> pointer2 = memoryManagerService.store( SMALL_PAYLOAD );
-        Assert.assertNull( pointer2 );
+        assertNull( pointer2 );
 
         memoryManagerService.close();
     }
@@ -101,18 +102,17 @@ public class MemoryManagerServiceImplTest
 
         final int NUMBER_OF_OBJECTS = 4;
 
-        final MemoryManager<Object> memoryManagerService = getMemoryManagerService();
-
-        memoryManagerService.init( NUMBER_OF_OBJECTS, SMALL_PAYLOAD.length );
+        final MemoryManager<Object> memoryManagerService =
+            getMemoryManagerService( NUMBER_OF_OBJECTS, SMALL_PAYLOAD.length );
 
         for ( int i = 0; i < NUMBER_OF_OBJECTS; i++ )
         {
             Pointer<Object> pointer = memoryManagerService.store( SMALL_PAYLOAD );
-            Assert.assertNotNull( pointer );
+            assertNotNull( pointer );
         }
 
         Pointer<Object> pointerNull = memoryManagerService.store( SMALL_PAYLOAD );
-        Assert.assertNull( pointerNull );
+        assertNull( pointerNull );
 
         memoryManagerService.close();
     }
@@ -127,17 +127,17 @@ public class MemoryManagerServiceImplTest
 
         final int NUMBER_OF_OBJECTS = 10;
 
-        final MemoryManager<Object> memoryManagerService = getMemoryManagerService();
-        memoryManagerService.init( 1, NUMBER_OF_OBJECTS * SMALL_PAYLOAD.length );
+        final MemoryManager<Object> memoryManagerService =
+            getMemoryManagerService( 1, NUMBER_OF_OBJECTS * SMALL_PAYLOAD.length );
 
         for ( int i = 0; i < NUMBER_OF_OBJECTS; i++ )
         {
             Pointer<Object> pointer = memoryManagerService.store( SMALL_PAYLOAD );
-            Assert.assertNotNull( pointer );
+            assertNotNull( pointer );
         }
 
         Pointer<Object> pointerNull = memoryManagerService.store( SMALL_PAYLOAD );
-        Assert.assertNull( pointerNull );
+        assertNull( pointerNull );
 
         memoryManagerService.close();
     }
@@ -153,29 +153,27 @@ public class MemoryManagerServiceImplTest
         final int NUMBER_OF_OBJECTS = 4;
         final int BUFFER_SIZE = NUMBER_OF_OBJECTS * SMALL_PAYLOAD.length;
 
-        final MemoryManager<Object> memoryManagerService = getMemoryManagerService();
-
-        memoryManagerService.init( 1, BUFFER_SIZE );
+        final MemoryManager<Object> memoryManagerService = getMemoryManagerService( 1, BUFFER_SIZE );
 
         Pointer<Object> lastPointer = null;
         for ( int i = 0; i < NUMBER_OF_OBJECTS; i++ )
         {
             Pointer<Object> pointer = memoryManagerService.store( SMALL_PAYLOAD );
-            Assert.assertNotNull( pointer );
+            assertNotNull( pointer );
             lastPointer = pointer;
         }
 
         // Buffer is fully used.
-        Assert.assertEquals( BUFFER_SIZE, memoryManagerService.used() );
+        assertEquals( BUFFER_SIZE, memoryManagerService.used() );
 
-        Assert.assertNotNull( lastPointer );
+        assertNotNull( lastPointer );
         memoryManagerService.free( lastPointer );
 
         Pointer<Object> pointerNotNull = memoryManagerService.store( SMALL_PAYLOAD );
-        Assert.assertNotNull( pointerNotNull );
+        assertNotNull( pointerNotNull );
 
         // Buffer again fully used.
-        Assert.assertEquals( BUFFER_SIZE, memoryManagerService.used() );
+        assertEquals( BUFFER_SIZE, memoryManagerService.used() );
 
         memoryManagerService.close();
     }
@@ -188,17 +186,15 @@ public class MemoryManagerServiceImplTest
         final int NUMBER_OF_OBJECTS = 10;
         final int BUFFER_SIZE = NUMBER_OF_OBJECTS * SMALL_PAYLOAD.length;
 
-        final MemoryManager<Object> memoryManagerService = getMemoryManagerService();
-
-        memoryManagerService.init( 1, BUFFER_SIZE );
+        final MemoryManager<Object> memoryManagerService = getMemoryManagerService( 1, BUFFER_SIZE );
 
         for ( int i = 0; i < NUMBER_OF_OBJECTS; i++ )
         {
             byte[] payload = MemoryTestUtils.generateRandomPayload( SMALL_PAYLOAD.length );
             Pointer<Object> pointer = memoryManagerService.store( payload );
-            Assert.assertNotNull( pointer );
+            assertNotNull( pointer );
             byte[] fetchedPayload = memoryManagerService.retrieve( pointer );
-            Assert.assertEquals( new String( payload ), new String( fetchedPayload ) );
+            assertEquals( new String( payload ), new String( fetchedPayload ) );
             if ( R.nextBoolean() )
             {
                 memoryManagerService.free( pointer );
@@ -211,9 +207,9 @@ public class MemoryManagerServiceImplTest
         {
             byte[] payload = MemoryTestUtils.generateRandomPayload( SMALL_PAYLOAD.length );
             Pointer<Object> pointer = memoryManagerService.store( payload );
-            Assert.assertNotNull( pointer );
+            assertNotNull( pointer );
             byte[] fetchedPayload = memoryManagerService.retrieve( pointer );
-            Assert.assertEquals( new String( payload ), new String( fetchedPayload ) );
+            assertEquals( new String( payload ), new String( fetchedPayload ) );
             if ( R.nextBoolean() )
             {
                 memoryManagerService.free( pointer );

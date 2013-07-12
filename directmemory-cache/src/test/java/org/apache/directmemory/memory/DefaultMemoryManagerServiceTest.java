@@ -3,8 +3,8 @@ package org.apache.directmemory.memory;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.apache.directmemory.memory.allocator.AllocatorMemoryManager;
-import org.apache.directmemory.memory.unsafe.UnsafeMemoryManager;
+import org.apache.directmemory.memory.allocator.AllocatorMemoryManagerFactory;
+import org.apache.directmemory.memory.unsafe.UnsafeMemoryManagerFactory;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
@@ -36,15 +36,15 @@ public class DefaultMemoryManagerServiceTest
     @Parameters
     public static Collection<Object[]> data()
     {
-        return Arrays.asList( new Object[][] { { AllocatorMemoryManager.class },
-            { UnsafeMemoryManager.class } } );
+        return Arrays.asList( new Object[][] { { AllocatorMemoryManagerFactory.class },
+            { UnsafeMemoryManagerFactory.class } } );
     }
 
-    private final Class<? extends MemoryManager<Object>> memoryManagerServiceClass;
+    private final Class<? extends MemoryManagerFactory<Object>> memoryManagerFactoryClass;
 
-    public DefaultMemoryManagerServiceTest( Class<? extends MemoryManager<Object>> memoryManagerServiceClass )
+    public DefaultMemoryManagerServiceTest( Class<? extends MemoryManagerFactory<Object>> memoryManagerFactoryClass )
     {
-        this.memoryManagerServiceClass = memoryManagerServiceClass;
+        this.memoryManagerFactoryClass = memoryManagerFactoryClass;
     }
 
     @Override
@@ -52,8 +52,8 @@ public class DefaultMemoryManagerServiceTest
     {
         try
         {
-            final MemoryManager<Object> mms = memoryManagerServiceClass.newInstance();
-            mms.init( 1, bufferSize );
+            final MemoryManagerFactory<Object> factory = memoryManagerFactoryClass.newInstance();
+            mms = factory.build( 1, 1, bufferSize );
             return mms;
         }
         catch ( Exception e )
