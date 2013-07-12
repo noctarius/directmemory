@@ -34,6 +34,25 @@ class PartitionBufferImpl
     }
 
     @Override
+    public void clear()
+    {
+        writerIndex = 0;
+        readerIndex = 0;
+        if ( slices.length > 1 )
+        {
+            // Release unused slices
+            for ( int i = 1; i < slices.length; i++ )
+            {
+                partitionBufferPool.freeSlice( slices[i] );
+            }
+            PartitionSlice firstSlice = slices[0];
+            slices = new PartitionSlice[1];
+            slices[0] = firstSlice;
+        }
+        slices[0].clear();
+    }
+
+    @Override
     public boolean readable()
     {
         return writerIndex - readerIndex > 0;

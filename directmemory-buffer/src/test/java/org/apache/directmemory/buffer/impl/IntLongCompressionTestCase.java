@@ -1,4 +1,4 @@
-package org.apache.directmemory.memory.buffer;
+package org.apache.directmemory.buffer.impl;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,32 +19,13 @@ package org.apache.directmemory.memory.buffer;
  * under the License.
  */
 
-import static org.apache.directmemory.memory.buffer.Int32Compressor.INT32_FULL;
-import static org.apache.directmemory.memory.buffer.Int32Compressor.INT32_MAX_DOUBLE;
-import static org.apache.directmemory.memory.buffer.Int32Compressor.INT32_MAX_SINGLE;
-import static org.apache.directmemory.memory.buffer.Int32Compressor.INT32_MAX_TRIPPLE;
-import static org.apache.directmemory.memory.buffer.Int32Compressor.INT32_MIN_DOUBLE;
-import static org.apache.directmemory.memory.buffer.Int32Compressor.INT32_MIN_SINGLE;
-import static org.apache.directmemory.memory.buffer.Int32Compressor.INT32_MIN_TRIPPLE;
-import static org.apache.directmemory.memory.buffer.Int64Compressor.INT64_FULL;
-import static org.apache.directmemory.memory.buffer.Int64Compressor.INT64_MAX_DOUBLE;
-import static org.apache.directmemory.memory.buffer.Int64Compressor.INT64_MAX_FIFTH;
-import static org.apache.directmemory.memory.buffer.Int64Compressor.INT64_MAX_QUAD;
-import static org.apache.directmemory.memory.buffer.Int64Compressor.INT64_MAX_SEVENTH;
-import static org.apache.directmemory.memory.buffer.Int64Compressor.INT64_MAX_SINGLE;
-import static org.apache.directmemory.memory.buffer.Int64Compressor.INT64_MAX_SIXTH;
-import static org.apache.directmemory.memory.buffer.Int64Compressor.INT64_MAX_TRIPPLE;
-import static org.apache.directmemory.memory.buffer.Int64Compressor.INT64_MIN_DOUBLE;
-import static org.apache.directmemory.memory.buffer.Int64Compressor.INT64_MIN_FIFTH;
-import static org.apache.directmemory.memory.buffer.Int64Compressor.INT64_MIN_QUAD;
-import static org.apache.directmemory.memory.buffer.Int64Compressor.INT64_MIN_SEVENTH;
-import static org.apache.directmemory.memory.buffer.Int64Compressor.INT64_MIN_SINGLE;
-import static org.apache.directmemory.memory.buffer.Int64Compressor.INT64_MIN_SIXTH;
-import static org.apache.directmemory.memory.buffer.Int64Compressor.INT64_MIN_TRIPPLE;
+import static org.apache.directmemory.buffer.impl.Int32Compressor.*;
+import static org.apache.directmemory.buffer.impl.Int64Compressor.*;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Random;
 
+import org.apache.directmemory.buffer.PartitionBuffer;
 import org.apache.directmemory.memory.allocator.FixedSizeUnsafeAllocator;
 import org.junit.Test;
 
@@ -72,7 +53,7 @@ public class IntLongCompressionTestCase
                     values[o] = (int) ( random.nextDouble() * ( max - min + 1 ) ) + min;
                 }
 
-                MemoryBuffer buffer = allocator.allocate( 5 );
+                PartitionBuffer buffer = allocator.allocate( 5 );
 
                 for ( int v = 0; v < TEST_VALUES_COUNT; v++ )
                 {
@@ -113,7 +94,7 @@ public class IntLongCompressionTestCase
                     values[o] = (long) ( random.nextDouble() * ( max - min + 1 ) ) + min;
                 }
 
-                MemoryBuffer buffer = allocator.allocate( 5 );
+                PartitionBuffer buffer = allocator.allocate( 5 );
 
                 for ( int v = 0; v < TEST_VALUES_COUNT; v++ )
                 {

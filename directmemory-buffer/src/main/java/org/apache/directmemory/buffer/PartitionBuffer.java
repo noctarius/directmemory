@@ -20,4 +20,6 @@ public interface PartitionBuffer
 
     void byteOrder( ByteOrder byteOrder );
 
+    void clear();
+
 }

@@ -77,12 +77,12 @@ public final class BufferUtils
     {
     }
 
-    static boolean isUnsafeAvailable()
+    public static boolean isUnsafeAvailable()
     {
         return UNSAFE_AVAILABLE;
     }
 
-    static sun.misc.Unsafe getUnsafe()
+    public static sun.misc.Unsafe getUnsafe()
     {
         return UNSAFE;
     }
