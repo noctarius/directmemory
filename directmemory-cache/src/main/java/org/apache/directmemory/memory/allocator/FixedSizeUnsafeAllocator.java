@@ -100,7 +100,7 @@ public class FixedSizeUnsafeAllocator
     }
 
     @Override
-    public int getCapacity()
+    public long getCapacity()
     {
         long capacity = 0;
         for ( UnsafePartitionBuffer partitionBuffer : partitionBuffers )

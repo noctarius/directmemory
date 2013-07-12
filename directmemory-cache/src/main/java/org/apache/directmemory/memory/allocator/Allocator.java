@@ -60,7 +60,7 @@ public interface Allocator
     /**
      * @return the internal total size that can be allocated
      */
-    int getCapacity();
+    long getCapacity();
 
     /**
      * @return the internal identifier of the {@link Allocator}

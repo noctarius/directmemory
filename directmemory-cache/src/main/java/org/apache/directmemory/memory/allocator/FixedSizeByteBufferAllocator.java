@@ -181,7 +181,7 @@ public class FixedSizeByteBufferAllocator
     }
 
     @Override
-    public int getCapacity()
+    public long getCapacity()
     {
         return totalSize;
     }

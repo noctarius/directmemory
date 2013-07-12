@@ -194,7 +194,7 @@ public class SlabByteBufferAllocator
     }
 
     @Override
-    public int getCapacity()
+    public long getCapacity()
     {
         int totalSize = 0;
         for ( final Map.Entry<Long, FixedSizeByteBufferAllocator> entry : slabs.entrySet() )

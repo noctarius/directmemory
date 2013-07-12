@@ -322,7 +322,7 @@ public class MergingByteBufferAllocator
     }
 
     @Override
-    public int getCapacity()
+    public long getCapacity()
     {
         return parentBuffer.capacity();
     }
