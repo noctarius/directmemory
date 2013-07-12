@@ -25,9 +25,9 @@ public class UnsafeMemoryManagerTest
 {
 
     @Override
-    protected MemoryManagerService<Object> instanciateMemoryManagerService( int bufferSize )
+    protected MemoryManager<Object> instanciateMemoryManagerService( int bufferSize )
     {
-        final MemoryManagerService<Object> mms = new UnsafeMemoryManagerServiceImpl<Object>();
+        final MemoryManager<Object> mms = new UnsafeMemoryManagerServiceImpl<Object>();
         mms.init( 1, bufferSize );
         return mms;
     }

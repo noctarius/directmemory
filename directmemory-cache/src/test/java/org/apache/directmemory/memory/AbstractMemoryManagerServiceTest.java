@@ -39,9 +39,9 @@ public abstract class AbstractMemoryManagerServiceTest
 
     protected static final byte[] SMALL_PAYLOAD = MemoryTestUtils.generateRandomPayload( SMALL_PAYLOAD_LENGTH );
 
-    protected MemoryManagerService<Object> mms;
+    protected MemoryManager<Object> mms;
 
-    protected abstract MemoryManagerService<Object> instanciateMemoryManagerService( int bufferSize );
+    protected abstract MemoryManager<Object> instanciateMemoryManagerService( int bufferSize );
 
     @After
     public void cleanup()
@@ -53,7 +53,7 @@ public abstract class AbstractMemoryManagerServiceTest
 
     /**
      * Test pointers allocation, when buffer size is not aligned with the size of stored objects. Null {@link Pointer}
-     * should be returned to allow {@link MemoryManagerService} to go to next step with allocation policy.
+     * should be returned to allow {@link MemoryManager} to go to next step with allocation policy.
      */
     @Test
     public void testNotEnoughFreeSpace()

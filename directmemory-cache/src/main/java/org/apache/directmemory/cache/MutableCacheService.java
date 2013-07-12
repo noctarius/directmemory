@@ -21,7 +21,7 @@ package org.apache.directmemory.cache;
 
 import java.util.concurrent.ConcurrentMap;
 
-import org.apache.directmemory.memory.MemoryManagerService;
+import org.apache.directmemory.memory.MemoryManager;
 import org.apache.directmemory.memory.Pointer;
 import org.apache.directmemory.serialization.Serializer;
 
@@ -31,7 +31,7 @@ public interface MutableCacheService<K, V>
 
     void setMap( ConcurrentMap<K, Pointer<V>> map );
 
-    void setMemoryManager( MemoryManagerService<V> memoryManager );
+    void setMemoryManager( MemoryManager<V> memoryManager );
 
     void setSerializer( Serializer serializer );
 

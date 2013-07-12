@@ -61,7 +61,7 @@ public class MallocWithUnsafeTest
         }
     }
 
-    MemoryManagerService<Object> mem;
+    MemoryManager<Object> mem;
 
     @Before
     public void initMMS()

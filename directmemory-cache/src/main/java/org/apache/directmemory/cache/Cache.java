@@ -22,7 +22,7 @@ package org.apache.directmemory.cache;
 import java.io.IOException;
 
 import org.apache.directmemory.DirectMemory;
-import org.apache.directmemory.memory.MemoryManagerService;
+import org.apache.directmemory.memory.MemoryManager;
 import org.apache.directmemory.memory.Pointer;
 import org.apache.directmemory.serialization.Serializer;
 
@@ -148,7 +148,7 @@ public class Cache
         return cacheService.getSerializer();
     }
 
-    public static MemoryManagerService<Object> getMemoryManager()
+    public static MemoryManager<Object> getMemoryManager()
     {
         return cacheService.getMemoryManager();
     }

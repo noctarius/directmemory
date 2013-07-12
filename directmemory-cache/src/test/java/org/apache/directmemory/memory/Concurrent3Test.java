@@ -225,7 +225,7 @@ public class Concurrent3Test
 
     private static Logger logger = LoggerFactory.getLogger( Concurrent3Test.class );
 
-    private static void dump( MemoryManagerService<Object> mms )
+    private static void dump( MemoryManager<Object> mms )
     {
         logger.info( "off-heap - allocated: " + Ram.inMb( mms.capacity() ) );
         logger.info( "off-heap - used:      " + Ram.inMb( mms.used() ) );

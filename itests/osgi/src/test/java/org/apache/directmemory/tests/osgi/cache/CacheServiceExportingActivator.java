@@ -22,8 +22,8 @@ package org.apache.directmemory.tests.osgi.cache;
 import org.apache.directmemory.DirectMemory;
 import org.apache.directmemory.cache.CacheService;
 import org.apache.directmemory.measures.Ram;
-import org.apache.directmemory.memory.MemoryManagerService;
-import org.apache.directmemory.memory.MemoryManagerServiceImpl;
+import org.apache.directmemory.memory.MemoryManager;
+import org.apache.directmemory.memory.MemoryManagerImpl;
 import org.apache.directmemory.serialization.SerializerFactory;
 import org.apache.directmemory.serialization.StandardSerializer;
 import org.osgi.framework.BundleActivator;
@@ -41,8 +41,8 @@ public class CacheServiceExportingActivator
     public void start( BundleContext context )
         throws Exception
     {
-        MemoryManagerService<SimpleObject> memoryManager =
-            new MemoryManagerServiceImpl<SimpleObject>();
+        MemoryManager<SimpleObject> memoryManager =
+            new MemoryManagerImpl<SimpleObject>();
         this.cacheService =
             new DirectMemory<String, SimpleObject>().setNumberOfBuffers( 1 ).setSize( Ram.Mb( 1 ) ).setMemoryManager(
                 memoryManager ).setSerializer(

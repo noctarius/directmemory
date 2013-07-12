@@ -23,7 +23,7 @@ import java.io.IOException;
 
 public class MemoryManagerHelper
 {
-    private static final MemoryManagerService<Object> memoryManager = new MemoryManagerServiceImpl<Object>();
+    private static final MemoryManager<Object> memoryManager = new MemoryManagerImpl<Object>();
 
     private MemoryManagerHelper()
     {
@@ -86,7 +86,7 @@ public class MemoryManagerHelper
         memoryManager.collectLFU();
     }
 
-    public static MemoryManagerService<Object> getMemoryManager()
+    public static MemoryManager<Object> getMemoryManager()
     {
         return memoryManager;
     }

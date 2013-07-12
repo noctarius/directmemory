@@ -63,7 +63,7 @@ public class ConcurrentTest
 
     private static AtomicInteger read = new AtomicInteger();
 
-    private static MemoryManagerService<Object> mem;
+    private static MemoryManager<Object> mem;
 
     public static ConcurrentMap<String, Pointer<Object>> map =
         new MapMaker().concurrencyLevel( 4 ).initialCapacity( 100000 ).makeMap();
@@ -71,7 +71,7 @@ public class ConcurrentTest
     @Before
     public void initMMS()
     {
-        mem = new MemoryManagerServiceImpl<Object>();
+        mem = new MemoryManagerImpl<Object>();
         mem.init( 1, 512 * 1024 * 1024 );
     }
     

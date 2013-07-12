@@ -32,9 +32,9 @@ public class SlabMemoryManagerServiceTest
 {
 
     @Override
-    protected MemoryManagerService<Object> instanciateMemoryManagerService( int bufferSize )
+    protected MemoryManager<Object> instanciateMemoryManagerService( int bufferSize )
     {
-        final MemoryManagerService<Object> mms = new MemoryManagerServiceImpl<Object>()
+        final MemoryManager<Object> mms = new MemoryManagerImpl<Object>()
         {
 
             @Override

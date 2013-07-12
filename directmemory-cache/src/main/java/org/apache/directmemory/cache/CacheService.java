@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.directmemory.memory.MemoryManagerService;
+import org.apache.directmemory.memory.MemoryManager;
 import org.apache.directmemory.memory.Pointer;
 import org.apache.directmemory.serialization.Serializer;
 import org.slf4j.Logger;
@@ -151,7 +151,7 @@ public interface CacheService<K, V>
     void collectAll();
 
     /**
-     * Clears the whole cache by removing all stored keys. It is up to the underlying {@link MemoryManagerService}
+     * Clears the whole cache by removing all stored keys. It is up to the underlying {@link MemoryManager}
      * implementation to free allocated memory or not.
      */
     void clear();
@@ -164,7 +164,7 @@ public interface CacheService<K, V>
     long entries();
 
     /**
-     * Dumps information about the actual internal {@link MemoryManagerService} to the configured {@link Logger} with
+     * Dumps information about the actual internal {@link MemoryManager} to the configured {@link Logger} with
      * info loglevel.
      */
     void dump();
@@ -186,11 +186,11 @@ public interface CacheService<K, V>
     Serializer getSerializer();
 
     /**
-     * Retrieves the internally used {@link MemoryManagerService} implementation.
+     * Retrieves the internally used {@link MemoryManager} implementation.
      * 
      * @return The used memory manager
      */
-    MemoryManagerService<V> getMemoryManager();
+    MemoryManager<V> getMemoryManager();
 
     /**
      * Explicitly allocated a bunch of bytes in the cache using a given key and type and returns the created

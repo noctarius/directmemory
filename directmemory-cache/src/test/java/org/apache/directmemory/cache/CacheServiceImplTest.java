@@ -22,8 +22,8 @@ package org.apache.directmemory.cache;
 import org.apache.directmemory.DirectMemory;
 import org.apache.directmemory.measures.Ram;
 import org.apache.directmemory.memory.AllocationPolicy;
-import org.apache.directmemory.memory.MemoryManagerService;
-import org.apache.directmemory.memory.MemoryManagerServiceImpl;
+import org.apache.directmemory.memory.MemoryManager;
+import org.apache.directmemory.memory.MemoryManagerImpl;
 import org.apache.directmemory.memory.Pointer;
 import org.apache.directmemory.memory.RoundRobinAllocationPolicy;
 import org.junit.Test;
@@ -41,7 +41,7 @@ public class CacheServiceImplTest
         throws IOException
     {
         AllocationPolicy allocationPolicy = new RoundRobinAllocationPolicy();
-        MemoryManagerService<byte[]> memoryManager = new MemoryManagerServiceImpl<byte[]>( allocationPolicy, true );
+        MemoryManager<byte[]> memoryManager = new MemoryManagerImpl<byte[]>( allocationPolicy, true );
         CacheService<Integer, byte[]> cache =
             new DirectMemory<Integer, byte[]>().setMemoryManager( memoryManager ).setNumberOfBuffers( 1 ).setSize( Ram.Mb( 1 ) ).newCacheService();
 
@@ -88,7 +88,7 @@ public class CacheServiceImplTest
         throws InterruptedException, IOException
     {
         AllocationPolicy allocationPolicy = new RoundRobinAllocationPolicy();
-        MemoryManagerService<MyBean> memoryManager = new MemoryManagerServiceImpl<MyBean>( allocationPolicy, true );
+        MemoryManager<MyBean> memoryManager = new MemoryManagerImpl<MyBean>( allocationPolicy, true );
         CacheService<Integer, MyBean> cache =
             new DirectMemory<Integer, MyBean>().setMemoryManager( memoryManager ).setNumberOfBuffers( 1 ).setSize( Ram.Mb( 1 ) ).newCacheService();
         /*

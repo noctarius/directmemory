@@ -20,7 +20,7 @@ package org.apache.directmemory.cache;
  */
 
 import org.apache.directmemory.measures.Ram;
-import org.apache.directmemory.memory.MemoryManagerService;
+import org.apache.directmemory.memory.MemoryManager;
 import org.apache.directmemory.memory.Pointer;
 import org.apache.directmemory.serialization.Serializer;
 import org.slf4j.Logger;
@@ -47,14 +47,14 @@ public class CacheServiceImpl<K, V>
 
     private Serializer serializer;
 
-    private MemoryManagerService<V> memoryManager;
+    private MemoryManager<V> memoryManager;
 
     private final Timer timer = new Timer(true);
 
     /**
      * Constructor
      */
-    public CacheServiceImpl( ConcurrentMap<K, Pointer<V>> map, MemoryManagerService<V> memoryManager,
+    public CacheServiceImpl( ConcurrentMap<K, Pointer<V>> map, MemoryManager<V> memoryManager,
                              Serializer serializer )
     {
         checkArgument( map != null, "Impossible to initialize the CacheService with a null map" );
@@ -303,7 +303,7 @@ public class CacheServiceImpl<K, V>
         return map.size();
     }
 
-    public void dump( MemoryManagerService<V> mms )
+    public void dump( MemoryManager<V> mms )
     {
         logger.info( format( "off-heap - allocated: \t%1s", Ram.inMb( mms.capacity() ) ) );
         logger.info( format( "off-heap - used:      \t%1s", Ram.inMb( mms.used() ) ) );
@@ -351,13 +351,13 @@ public class CacheServiceImpl<K, V>
     }
 
     @Override
-    public MemoryManagerService<V> getMemoryManager()
+    public MemoryManager<V> getMemoryManager()
     {
         return memoryManager;
     }
 
     @Override
-    public void setMemoryManager( MemoryManagerService<V> memoryManager )
+    public void setMemoryManager( MemoryManager<V> memoryManager )
     {
         this.memoryManager = memoryManager;
     }

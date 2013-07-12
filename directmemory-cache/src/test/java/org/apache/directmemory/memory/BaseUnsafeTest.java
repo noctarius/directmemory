@@ -44,7 +44,7 @@ public class BaseUnsafeTest
     extends AbstractBenchmark
 {
 
-    MemoryManagerService<Object> mem;
+    MemoryManager<Object> mem;
 
     @Before
     public void initMMS()

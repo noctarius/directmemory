@@ -29,8 +29,8 @@ import java.util.concurrent.ConcurrentMap;
 import org.apache.directmemory.cache.CacheService;
 import org.apache.directmemory.cache.CacheServiceImpl;
 import org.apache.directmemory.measures.Ram;
-import org.apache.directmemory.memory.MemoryManagerService;
-import org.apache.directmemory.memory.MemoryManagerServiceImpl;
+import org.apache.directmemory.memory.MemoryManager;
+import org.apache.directmemory.memory.MemoryManagerImpl;
 import org.apache.directmemory.memory.Pointer;
 import org.apache.directmemory.serialization.Serializer;
 import org.slf4j.Logger;
@@ -63,7 +63,7 @@ public final class DirectMemory<K, V>
 
     private Serializer serializer;
 
-    private MemoryManagerService<V> memoryManager;
+    private MemoryManager<V> memoryManager;
 
     public DirectMemory()
     {
@@ -134,7 +134,7 @@ public final class DirectMemory<K, V>
         return this;
     }
 
-    public DirectMemory<K, V> setMemoryManager( MemoryManagerService<V> memoryManager )
+    public DirectMemory<K, V> setMemoryManager( MemoryManager<V> memoryManager )
     {
         checkArgument( memoryManager != null, "Impossible to create a CacheService with a null memoryManager" );
         this.memoryManager = memoryManager;
@@ -149,7 +149,7 @@ public final class DirectMemory<K, V>
         }
         if ( memoryManager == null )
         {
-            memoryManager = new MemoryManagerServiceImpl<V>();
+            memoryManager = new MemoryManagerImpl<V>();
         }
         if ( serializer == null )
         {

@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 
 public class UnsafeMemoryManagerServiceImpl<V>
     extends AbstractMemoryManager<V>
-    implements MemoryManagerService<V>
+    implements MemoryManager<V>
 {
 
     protected static final long NEVER_EXPIRES = 0L;

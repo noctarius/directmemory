@@ -203,7 +203,7 @@ public class Concurrent2Test
 
     private static Logger logger = LoggerFactory.getLogger( Concurrent2Test.class );
 
-    private static void dump( MemoryManagerService<Object> mms )
+    private static void dump( MemoryManager<Object> mms )
     {
         logger.info( "off-heap - allocated: " + Ram.inMb( mms.capacity() ) );
         logger.info( "off-heap - used:      " + Ram.inMb( mms.used() ) );

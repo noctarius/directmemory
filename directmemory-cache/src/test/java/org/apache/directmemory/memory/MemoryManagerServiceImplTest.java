@@ -42,18 +42,18 @@ public class MemoryManagerServiceImplTest
     @Parameters
     public static Collection<Object[]> data()
     {
-        return Arrays.asList( new Object[][] { { MemoryManagerServiceImpl.class },
+        return Arrays.asList( new Object[][] { { MemoryManagerImpl.class },
             { UnsafeMemoryManagerServiceImpl.class } } );
     }
 
-    private final Class<? extends MemoryManagerService<Object>> memoryManagerServiceClass;
+    private final Class<? extends MemoryManager<Object>> memoryManagerServiceClass;
 
-    public MemoryManagerServiceImplTest( Class<? extends MemoryManagerService<Object>> memoryManagerServiceClass )
+    public MemoryManagerServiceImplTest( Class<? extends MemoryManager<Object>> memoryManagerServiceClass )
     {
         this.memoryManagerServiceClass = memoryManagerServiceClass;
     }
 
-    protected MemoryManagerService<Object> getMemoryManagerService()
+    protected MemoryManager<Object> getMemoryManagerService()
     {
         try
         {
@@ -76,7 +76,7 @@ public class MemoryManagerServiceImplTest
 
         final int BUFFER_SIZE = 5;
 
-        final MemoryManagerService<Object> memoryManagerService = getMemoryManagerService();
+        final MemoryManager<Object> memoryManagerService = getMemoryManagerService();
 
         memoryManagerService.init( 1, BUFFER_SIZE );
 
@@ -94,12 +94,12 @@ public class MemoryManagerServiceImplTest
         throws IOException
     {
 
-        // Initializing 4 buffers of 4 bytes, MemoryManagerService should search
+        // Initializing 4 buffers of 4 bytes, MemoryManager should search
         // for available space in another buffer.
 
         final int NUMBER_OF_OBJECTS = 4;
 
-        final MemoryManagerService<Object> memoryManagerService = getMemoryManagerService();
+        final MemoryManager<Object> memoryManagerService = getMemoryManagerService();
 
         memoryManagerService.init( NUMBER_OF_OBJECTS, SMALL_PAYLOAD.length );
 
@@ -125,7 +125,7 @@ public class MemoryManagerServiceImplTest
 
         final int NUMBER_OF_OBJECTS = 10;
 
-        final MemoryManagerService<Object> memoryManagerService = getMemoryManagerService();
+        final MemoryManager<Object> memoryManagerService = getMemoryManagerService();
         memoryManagerService.init( 1, NUMBER_OF_OBJECTS * SMALL_PAYLOAD.length );
 
         for ( int i = 0; i < NUMBER_OF_OBJECTS; i++ )
@@ -151,7 +151,7 @@ public class MemoryManagerServiceImplTest
         final int NUMBER_OF_OBJECTS = 4;
         final int BUFFER_SIZE = NUMBER_OF_OBJECTS * SMALL_PAYLOAD.length;
 
-        final MemoryManagerService<Object> memoryManagerService = getMemoryManagerService();
+        final MemoryManager<Object> memoryManagerService = getMemoryManagerService();
 
         memoryManagerService.init( 1, BUFFER_SIZE );
 
@@ -186,7 +186,7 @@ public class MemoryManagerServiceImplTest
         final int NUMBER_OF_OBJECTS = 10;
         final int BUFFER_SIZE = NUMBER_OF_OBJECTS * SMALL_PAYLOAD.length;
 
-        final MemoryManagerService<Object> memoryManagerService = getMemoryManagerService();
+        final MemoryManager<Object> memoryManagerService = getMemoryManagerService();
 
         memoryManagerService.init( 1, BUFFER_SIZE );
 

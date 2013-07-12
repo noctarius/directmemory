@@ -22,7 +22,7 @@ import java.util.Set;
  * under the License.
  */
 
-public interface MemoryManagerService<V>
+public interface MemoryManager<V>
     extends Closeable
 {
 
