@@ -25,7 +25,7 @@ import java.io.IOException;
 
 import org.apache.directmemory.DirectMemory;
 import org.apache.directmemory.memory.Pointer;
-import org.apache.directmemory.memory.UnsafeMemoryManagerServiceImpl;
+import org.apache.directmemory.memory.unsafe.UnsafeMemoryManager;
 import org.junit.Test;
 
 public class BasicTest
@@ -57,7 +57,7 @@ public class BasicTest
         throws IOException
     {
         CacheService<String, Long> cache =
-            new DirectMemory<String, Long>().setNumberOfBuffers( 10 ).setSize( 1000 ).setInitialCapacity( 10000 ).setConcurrencyLevel( 4 ).setMemoryManager( new UnsafeMemoryManagerServiceImpl<Long>() ).newCacheService();
+            new DirectMemory<String, Long>().setNumberOfBuffers( 10 ).setSize( 1000 ).setInitialCapacity( 10000 ).setConcurrencyLevel( 4 ).setMemoryManager( new UnsafeMemoryManager<Long>() ).newCacheService();
 
         assertNull( cache.retrieve( "a" ) );
         assertNotNull( cache.put( "a", 3L ) );

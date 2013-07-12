@@ -1,5 +1,6 @@
 package org.apache.directmemory.memory;
 
+import org.apache.directmemory.memory.unsafe.UnsafeMemoryManager;
 import org.junit.Test;
 
 /*
@@ -27,7 +28,7 @@ public class UnsafeMemoryManagerTest
     @Override
     protected MemoryManager<Object> instanciateMemoryManagerService( int bufferSize )
     {
-        final MemoryManager<Object> mms = new UnsafeMemoryManagerServiceImpl<Object>();
+        final MemoryManager<Object> mms = new UnsafeMemoryManager<Object>();
         mms.init( 1, bufferSize );
         return mms;
     }

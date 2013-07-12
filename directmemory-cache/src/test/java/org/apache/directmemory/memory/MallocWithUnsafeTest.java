@@ -27,6 +27,7 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentMap;
 
 import org.apache.directmemory.measures.Ram;
+import org.apache.directmemory.memory.unsafe.UnsafeMemoryManager;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -66,7 +67,7 @@ public class MallocWithUnsafeTest
     @Before
     public void initMMS()
     {
-        mem = new UnsafeMemoryManagerServiceImpl<Object>();
+        mem = new UnsafeMemoryManager<Object>();
         mem.init( 1, 512 * 1024 * 1024 );
     }
 

@@ -27,6 +27,7 @@ import java.util.Random;
 import junit.framework.Assert;
 
 import org.apache.directmemory.memory.allocator.AllocatorMemoryManager;
+import org.apache.directmemory.memory.unsafe.UnsafeMemoryManager;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -44,7 +45,7 @@ public class MemoryManagerServiceImplTest
     public static Collection<Object[]> data()
     {
         return Arrays.asList( new Object[][] { { AllocatorMemoryManager.class },
-            { UnsafeMemoryManagerServiceImpl.class } } );
+            { UnsafeMemoryManager.class } } );
     }
 
     private final Class<? extends MemoryManager<Object>> memoryManagerServiceClass;

@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import org.apache.directmemory.memory.allocator.AllocatorMemoryManager;
+import org.apache.directmemory.memory.unsafe.UnsafeMemoryManager;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
@@ -36,7 +37,7 @@ public class DefaultMemoryManagerServiceTest
     public static Collection<Object[]> data()
     {
         return Arrays.asList( new Object[][] { { AllocatorMemoryManager.class },
-            { UnsafeMemoryManagerServiceImpl.class } } );
+            { UnsafeMemoryManager.class } } );
     }
 
     private final Class<? extends MemoryManager<Object>> memoryManagerServiceClass;

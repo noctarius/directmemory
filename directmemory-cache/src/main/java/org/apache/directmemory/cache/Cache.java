@@ -53,7 +53,7 @@ public class Cache
     {
         cacheService =
             builder.setNumberOfBuffers( numberOfBuffers ).setInitialCapacity( initialCapacity ).setConcurrencyLevel( concurrencyLevel ).setSize( size ).newCacheService();
-        // concurrencyLevel ).setMemoryManager( new UnsafeMemoryManagerServiceImpl<Object>() ).setSize( size
+        // concurrencyLevel ).setMemoryManager( new UnsafeMemoryManager<Object>() ).setSize( size
         // ).newCacheService();
     }
 
