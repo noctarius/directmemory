@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
 import java.nio.ByteBuffer;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-
 public abstract class AbstractByteBufferAllocator
     implements Allocator
 {

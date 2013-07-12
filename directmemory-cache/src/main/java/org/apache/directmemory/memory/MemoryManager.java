@@ -1,8 +1,5 @@
 package org.apache.directmemory.memory;
 
-import java.io.Closeable;
-import java.util.Set;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -21,6 +18,9 @@ import java.util.Set;
  * specific language governing permissions and limitations
  * under the License.
  */
+
+import java.io.Closeable;
+import java.util.Set;
 
 public interface MemoryManager<V>
     extends Closeable
