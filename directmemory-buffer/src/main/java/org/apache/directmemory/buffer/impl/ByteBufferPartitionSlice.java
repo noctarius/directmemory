@@ -89,7 +89,10 @@ class ByteBufferPartitionSlice
     public void read( byte[] array, int offset, int length )
     {
         int bytes = Math.min( array.length - offset, length );
+        int oldPosition = byteBuffer.position();
+        byteBuffer.position( readerIndex );
         byteBuffer.get( array, offset, length );
+        byteBuffer.position( oldPosition );
         readerIndex += bytes;
     }
 

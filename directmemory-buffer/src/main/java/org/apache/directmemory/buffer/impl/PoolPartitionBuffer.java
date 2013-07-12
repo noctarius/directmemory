@@ -53,7 +53,8 @@ class PoolPartitionBuffer
         PartitionSlice slice = slices[baseSliceIndex];
         if ( slice.readableBytes() >= length )
         {
-            slice.read( bytes, offset, length );
+            int relativePosition = (int) ( baseSliceIndex == 0 ? readerIndex : readerIndex % sliceByteSize() );
+            slice.read( relativePosition, bytes, offset, length );
         }
         else
         {
