@@ -1,4 +1,4 @@
-package org.apache.directmemory.memory;
+package org.apache.directmemory.memory.allocator;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -28,8 +28,12 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.directmemory.measures.Ram;
-import org.apache.directmemory.memory.allocator.Allocator;
-import org.apache.directmemory.memory.allocator.MergingByteBufferAllocator;
+import org.apache.directmemory.memory.AbstractMemoryManager;
+import org.apache.directmemory.memory.MemoryManager;
+import org.apache.directmemory.memory.MemoryManagerHelper;
+import org.apache.directmemory.memory.Pointer;
+import org.apache.directmemory.memory.PointerImpl;
+import org.apache.directmemory.memory.RoundRobinAllocationPolicy;
 import org.apache.directmemory.memory.buffer.MemoryBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

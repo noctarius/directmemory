@@ -22,6 +22,7 @@ package org.apache.directmemory.memory;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.directmemory.memory.allocator.AllocationPolicy;
 import org.apache.directmemory.memory.allocator.Allocator;
 
 /**

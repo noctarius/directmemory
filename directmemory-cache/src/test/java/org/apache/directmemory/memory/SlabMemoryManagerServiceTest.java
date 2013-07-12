@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import org.apache.directmemory.memory.allocator.Allocator;
+import org.apache.directmemory.memory.allocator.AllocatorMemoryManager;
 import org.apache.directmemory.memory.allocator.FixedSizeByteBufferAllocatorImpl;
 import org.apache.directmemory.memory.allocator.SlabByteBufferAllocator;
 import org.junit.Test;

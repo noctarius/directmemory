@@ -1,4 +1,4 @@
-package org.apache.directmemory.memory;
+package org.apache.directmemory.memory.allocator;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -21,7 +21,6 @@ package org.apache.directmemory.memory;
 
 import java.util.List;
 
-import org.apache.directmemory.memory.allocator.Allocator;
 
 /**
  * Interface describing the buffer allocation policy.

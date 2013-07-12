@@ -28,6 +28,7 @@ import com.carrotsearch.junitbenchmarks.annotation.LabelType;
 import com.google.common.collect.MapMaker;
 import org.apache.directmemory.measures.Ram;
 import org.apache.directmemory.memory.Pointer;
+import org.apache.directmemory.memory.allocator.AllocatorMemoryManager;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;

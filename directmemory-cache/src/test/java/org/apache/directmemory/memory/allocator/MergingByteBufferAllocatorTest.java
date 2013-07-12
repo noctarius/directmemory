@@ -28,7 +28,6 @@ import junit.framework.Assert;
 
 import org.apache.directmemory.DirectMemory;
 import org.apache.directmemory.cache.CacheService;
-import org.apache.directmemory.memory.AllocatorMemoryManager;
 import org.apache.directmemory.memory.buffer.MemoryBuffer;
 import org.junit.Test;
 

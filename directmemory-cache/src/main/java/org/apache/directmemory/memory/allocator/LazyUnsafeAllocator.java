@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.apache.directmemory.buffer.impl.BufferUtils;
 import org.apache.directmemory.memory.IllegalMemoryPointerException;
 import org.apache.directmemory.memory.buffer.AbstractMemoryBuffer;
 import org.apache.directmemory.memory.buffer.MemoryBuffer;
@@ -36,7 +37,7 @@ public class LazyUnsafeAllocator
     implements Allocator
 {
 
-    private final sun.misc.Unsafe unsafe = UnsafeUtils.getUnsafe();
+    private final sun.misc.Unsafe unsafe = BufferUtils.getUnsafe();
 
     private final Set<UnsafeMemoryBuffer> memoryBuffers =
         Collections.newSetFromMap( new ConcurrentHashMap<UnsafeMemoryBuffer, Boolean>() );

@@ -29,6 +29,7 @@ import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 
 import org.apache.directmemory.measures.Ram;
+import org.apache.directmemory.memory.allocator.AllocatorMemoryManager;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

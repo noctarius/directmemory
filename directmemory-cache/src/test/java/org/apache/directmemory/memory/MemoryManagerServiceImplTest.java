@@ -26,6 +26,7 @@ import java.util.Random;
 
 import junit.framework.Assert;
 
+import org.apache.directmemory.memory.allocator.AllocatorMemoryManager;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;

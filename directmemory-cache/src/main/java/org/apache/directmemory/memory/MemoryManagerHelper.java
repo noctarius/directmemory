@@ -2,6 +2,8 @@ package org.apache.directmemory.memory;
 
 import java.io.IOException;
 
+import org.apache.directmemory.memory.allocator.AllocatorMemoryManager;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

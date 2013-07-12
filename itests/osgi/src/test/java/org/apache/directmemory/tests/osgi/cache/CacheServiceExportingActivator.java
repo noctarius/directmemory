@@ -23,7 +23,7 @@ import org.apache.directmemory.DirectMemory;
 import org.apache.directmemory.cache.CacheService;
 import org.apache.directmemory.measures.Ram;
 import org.apache.directmemory.memory.MemoryManager;
-import org.apache.directmemory.memory.AllocatorMemoryManager;
+import org.apache.directmemory.memory.allocator.AllocatorMemoryManager;
 import org.apache.directmemory.serialization.SerializerFactory;
 import org.apache.directmemory.serialization.StandardSerializer;
 import org.osgi.framework.BundleActivator;

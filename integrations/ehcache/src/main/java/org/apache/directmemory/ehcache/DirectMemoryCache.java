@@ -27,8 +27,8 @@ import java.util.Set;
 import org.apache.directmemory.DirectMemory;
 import org.apache.directmemory.cache.CacheService;
 import org.apache.directmemory.memory.MemoryManager;
-import org.apache.directmemory.memory.AllocatorMemoryManager;
 import org.apache.directmemory.memory.Pointer;
+import org.apache.directmemory.memory.allocator.AllocatorMemoryManager;
 import org.apache.directmemory.serialization.Serializer;
 
 /**

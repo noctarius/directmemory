@@ -21,11 +21,11 @@ package org.apache.directmemory.cache;
 
 import org.apache.directmemory.DirectMemory;
 import org.apache.directmemory.measures.Ram;
-import org.apache.directmemory.memory.AllocationPolicy;
 import org.apache.directmemory.memory.MemoryManager;
-import org.apache.directmemory.memory.AllocatorMemoryManager;
 import org.apache.directmemory.memory.Pointer;
 import org.apache.directmemory.memory.RoundRobinAllocationPolicy;
+import org.apache.directmemory.memory.allocator.AllocationPolicy;
+import org.apache.directmemory.memory.allocator.AllocatorMemoryManager;
 import org.junit.Test;
 
 import java.io.IOException;

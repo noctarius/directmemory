@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import org.apache.directmemory.buffer.impl.BufferUtils;
 import org.apache.directmemory.memory.IllegalMemoryPointerException;
 import org.apache.directmemory.memory.buffer.AbstractMemoryBuffer;
 import org.apache.directmemory.memory.buffer.MemoryBuffer;
@@ -34,7 +35,7 @@ public class FixedSizeUnsafeAllocator
     implements Allocator
 {
 
-    private final sun.misc.Unsafe unsafe = UnsafeUtils.getUnsafe();
+    private final sun.misc.Unsafe unsafe = BufferUtils.getUnsafe();
 
     private final Queue<UnsafeMemoryBuffer> memoryBuffers = new ConcurrentLinkedQueue<UnsafeMemoryBuffer>();
 
