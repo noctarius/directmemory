@@ -83,7 +83,7 @@ public class Starter
     {
         Allocator allocator = new MergingByteBufferAllocator( 1, megabytes * 1024 * 1024 );
         assertNotNull( allocator );
-        int size = allocator.getCapacity() / ( howMany );
+        long size = allocator.getCapacity() / ( howMany );
         size -= size / 100 * 1;
         logger.info( "payload size=" + size );
         logger.info( "entries=" + howMany );
@@ -94,7 +94,7 @@ public class Starter
 
         for ( int i = 0; i < howMany; i++ )
         {
-            allocator.allocate( size );
+            allocator.allocate( (int) size );
         }
 
         logger.info( "...done in " + ( System.currentTimeMillis() - start ) + " msecs." );

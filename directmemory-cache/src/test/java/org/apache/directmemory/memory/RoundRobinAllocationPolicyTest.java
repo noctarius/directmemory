@@ -138,7 +138,7 @@ public class RoundRobinAllocationPolicyTest
         }
 
         @Override
-        public int getCapacity()
+        public long getCapacity()
         {
             return 0;
         }
