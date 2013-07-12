@@ -59,7 +59,7 @@ public class LazyUnsafeAllocator
         if ( unsafe == null )
         {
             throw new IllegalStateException( "This JVM has no sun.misc.Unsafe support, "
-                + "please choose another MemoryManager implementation" );
+                + "please choose another MemoryManagerHelper implementation" );
         }
     }
 

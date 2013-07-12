@@ -28,7 +28,7 @@ import com.carrotsearch.junitbenchmarks.annotation.LabelType;
 import org.apache.directmemory.cache.Cache;
 import org.apache.directmemory.measures.Monitor;
 import org.apache.directmemory.measures.Ram;
-import org.apache.directmemory.memory.MemoryManager;
+import org.apache.directmemory.memory.MemoryManagerHelper;
 import org.apache.directmemory.memory.Pointer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -105,7 +105,7 @@ public class CacheConcurrentTest
         if ( p != null )
         {
             got.incrementAndGet();
-            byte[] payload = MemoryManager.retrieve( p );
+            byte[] payload = MemoryManagerHelper.retrieve( p );
             if ( ( new String( payload ) ).startsWith( key ) )
             {
                 good.incrementAndGet();
@@ -171,7 +171,7 @@ public class CacheConcurrentTest
                 {
                     disposals.incrementAndGet();
                     final long start = System.currentTimeMillis();
-                    long howMany = MemoryManager.collectExpired();
+                    long howMany = MemoryManagerHelper.collectExpired();
                     final long end = System.currentTimeMillis();
                     logger.info( "" + howMany + " disposed in " + ( end - start ) + " milliseconds" );
                 }

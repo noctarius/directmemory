@@ -44,30 +44,30 @@ public class MemoryManagerTest
     public static void init()
     {
         logger.info( "init" );
-        MemoryManager.init( 1, Ram.Mb( 100 ) );
+        MemoryManagerHelper.init( 1, Ram.Mb( 100 ) );
     }
 
     @AfterClass
     public static void cleanup()
         throws IOException
     {
-        MemoryManager.close();
+        MemoryManagerHelper.close();
     }
 
     @Test
     public void smokeTest()
     {
         Random rnd = new Random();
-        int size = rnd.nextInt( 10 ) * (int) MemoryManager.capacity() / 100;
+        int size = rnd.nextInt( 10 ) * (int) MemoryManagerHelper.capacity() / 100;
         logger.info( "payload size=" + Ram.inKb( size ) );
-        Pointer<Object> p = MemoryManager.store( new byte[size] );
+        Pointer<Object> p = MemoryManagerHelper.store( new byte[size] );
         logger.info( "stored" );
         assertNotNull( p );
         // assertEquals(size,p.end);
         assertEquals( size, p.getCapacity() );
-        assertEquals( size, MemoryManager.getMemoryManager().used() );
-        MemoryManager.free( p );
-        assertEquals( 0, MemoryManager.getMemoryManager().used() );
+        assertEquals( size, MemoryManagerHelper.getMemoryManager().used() );
+        MemoryManagerHelper.free( p );
+        assertEquals( 0, MemoryManagerHelper.getMemoryManager().used() );
         logger.info( "end" );
     }
 
@@ -76,14 +76,14 @@ public class MemoryManagerTest
     @Test
     public void fillupTest()
     {
-        MemoryManager.clear();
+        MemoryManagerHelper.clear();
         logger.info( "payload size=" + Ram.inKb( payload.length ) );
-        long howMany = ( MemoryManager.capacity() / payload.length );
+        long howMany = ( MemoryManagerHelper.capacity() / payload.length );
         howMany = ( howMany * 90 ) / 100;
 
         for ( int i = 0; i < howMany; i++ )
         {
-            Pointer<Object> p = MemoryManager.store( payload );
+            Pointer<Object> p = MemoryManagerHelper.store( payload );
             assertNotNull( p );
         }
 
@@ -93,11 +93,11 @@ public class MemoryManagerTest
     @Test
     public void readTest()
     {
-        for ( Pointer<Object> ptr : MemoryManager.getMemoryManager().getPointers() )
+        for ( Pointer<Object> ptr : MemoryManagerHelper.getMemoryManager().getPointers() )
         {
             if ( !ptr.isFree() )
             {
-                byte[] res = MemoryManager.retrieve( ptr );
+                byte[] res = MemoryManagerHelper.retrieve( ptr );
                 assertNotNull( res );
                 assertEquals( new String( payload ), new String( res ) );
             }

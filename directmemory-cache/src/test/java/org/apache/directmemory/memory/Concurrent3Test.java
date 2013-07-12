@@ -26,7 +26,7 @@ import com.carrotsearch.junitbenchmarks.annotation.BenchmarkMethodChart;
 import com.carrotsearch.junitbenchmarks.annotation.LabelType;
 import com.google.common.collect.MapMaker;
 import org.apache.directmemory.measures.Ram;
-import org.apache.directmemory.memory.MemoryManager;
+import org.apache.directmemory.memory.MemoryManagerHelper;
 import org.apache.directmemory.memory.Pointer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -105,7 +105,7 @@ public class Concurrent3Test
         if ( p != null )
         {
             got.incrementAndGet();
-            byte[] payload = MemoryManager.retrieve( p );
+            byte[] payload = MemoryManagerHelper.retrieve( p );
             if ( ( new String( payload ) ).startsWith( key ) )
             {
                 good.incrementAndGet();
@@ -128,7 +128,7 @@ public class Concurrent3Test
         {
             bldr.append( key );
         }
-        map.put( key, MemoryManager.store( bldr.toString().getBytes() ) );
+        map.put( key, MemoryManagerHelper.store( bldr.toString().getBytes() ) );
     }
 
     private void putWithExpiry( String key )
@@ -138,7 +138,7 @@ public class Concurrent3Test
         {
             bldr.append( key );
         }
-        map.put( key, MemoryManager.store( bldr.toString().getBytes(), rndGen.nextInt( 2000 ) ) );
+        map.put( key, MemoryManagerHelper.store( bldr.toString().getBytes(), rndGen.nextInt( 2000 ) ) );
     }
 
 
@@ -171,7 +171,7 @@ public class Concurrent3Test
                 {
                     disposals.incrementAndGet();
                     final long start = System.currentTimeMillis();
-                    long howMany = MemoryManager.collectExpired();
+                    long howMany = MemoryManagerHelper.collectExpired();
                     final long end = System.currentTimeMillis();
                     logger.info( "" + howMany + " disposed in " + ( end - start ) + " milliseconds" );
                 }
@@ -238,14 +238,14 @@ public class Concurrent3Test
     @BeforeClass
     public static void init()
     {
-        MemoryManager.init( 1, Ram.Mb( 512 ) );
+        MemoryManagerHelper.init( 1, Ram.Mb( 512 ) );
     }
 
     @AfterClass
     public static void dump()
     {
 
-        dump( MemoryManager.getMemoryManager() );
+        dump( MemoryManagerHelper.getMemoryManager() );
 
         logger.info( "************************************************" );
         logger.info( "entries: " + entries );

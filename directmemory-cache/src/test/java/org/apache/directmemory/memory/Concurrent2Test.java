@@ -27,7 +27,7 @@ import com.carrotsearch.junitbenchmarks.annotation.BenchmarkMethodChart;
 import com.carrotsearch.junitbenchmarks.annotation.LabelType;
 import com.google.common.collect.MapMaker;
 import org.apache.directmemory.measures.Ram;
-import org.apache.directmemory.memory.MemoryManager;
+import org.apache.directmemory.memory.MemoryManagerHelper;
 import org.apache.directmemory.memory.Pointer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -84,7 +84,7 @@ public class Concurrent2Test
         if ( p != null )
         {
             got.incrementAndGet();
-            byte[] payload = MemoryManager.retrieve( p );
+            byte[] payload = MemoryManagerHelper.retrieve( p );
             if ( key.equals( new String( payload ) ) )
             {
                 good.incrementAndGet();
@@ -111,7 +111,7 @@ public class Concurrent2Test
         if ( p != null )
         {
             got.incrementAndGet();
-            byte[] payload = MemoryManager.retrieve( p );
+            byte[] payload = MemoryManagerHelper.retrieve( p );
             if ( key.equals( new String( payload ) ) )
             {
                 good.incrementAndGet();
@@ -129,7 +129,7 @@ public class Concurrent2Test
 
     private void put( String key )
     {
-        map.put( key, MemoryManager.store( key.getBytes() ) );
+        map.put( key, MemoryManagerHelper.store( key.getBytes() ) );
     }
 
     @BenchmarkOptions( benchmarkRounds = 1000000, warmupRounds = 0, concurrency = 10 )
@@ -183,7 +183,7 @@ public class Concurrent2Test
         if ( p != null )
         {
             got.incrementAndGet();
-            byte[] payload = MemoryManager.retrieve( p );
+            byte[] payload = MemoryManagerHelper.retrieve( p );
             if ( key.equals( new String( payload ) ) )
             {
                 good.incrementAndGet();
@@ -216,14 +216,14 @@ public class Concurrent2Test
     @BeforeClass
     public static void init()
     {
-        MemoryManager.init( 1, Ram.Mb( 512 ) );
+        MemoryManagerHelper.init( 1, Ram.Mb( 512 ) );
     }
 
     @AfterClass
     public static void dump()
     {
 
-        dump( MemoryManager.getMemoryManager() );
+        dump( MemoryManagerHelper.getMemoryManager() );
 
         logger.info( "************************************************" );
         logger.info( "entries: " + entries );

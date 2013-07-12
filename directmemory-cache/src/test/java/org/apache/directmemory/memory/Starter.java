@@ -105,8 +105,8 @@ public class Starter
 
     public void rawInsertMultipleBuffers( int buffers, int megabytes, int howMany )
     {
-        MemoryManager.init( buffers, Ram.Mb( megabytes ) );
-        int size = (int) ( MemoryManager.capacity() / ( howMany ) );
+        MemoryManagerHelper.init( buffers, Ram.Mb( megabytes ) );
+        int size = (int) ( MemoryManagerHelper.capacity() / ( howMany ) );
         size -= size / 100 * 1;
         logger.info( "payload size=" + size );
         logger.info( "entries=" + howMany );
@@ -118,13 +118,13 @@ public class Starter
         byte[] payload = new byte[size];
         for ( int i = 0; i < howMany; i++ )
         {
-            MemoryManager.store( payload );
+            MemoryManagerHelper.store( payload );
         }
 
         logger.info( "...done in " + ( System.currentTimeMillis() - start ) + " msecs." );
         logger.info( "---------------------------------" );
 
-        dump( MemoryManager.getMemoryManager() );
+        dump( MemoryManagerHelper.getMemoryManager() );
     }
 
 

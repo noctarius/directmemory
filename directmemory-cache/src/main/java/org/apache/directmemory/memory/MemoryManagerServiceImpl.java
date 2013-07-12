@@ -39,7 +39,7 @@ public class MemoryManagerServiceImpl<V>
     implements MemoryManagerService<V>
 {
 
-    protected static final Logger logger = LoggerFactory.getLogger( MemoryManager.class );
+    protected static final Logger logger = LoggerFactory.getLogger( MemoryManagerHelper.class );
 
     List<Allocator> allocators;
 
@@ -75,7 +75,7 @@ public class MemoryManagerServiceImpl<V>
 
         allocationPolicy.init( allocators );
 
-        logger.info( format( "MemoryManager initialized - %d buffers, %s each", numberOfBuffers, Ram.inMb( size ) ) );
+        logger.info( format( "MemoryManagerHelper initialized - %d buffers, %s each", numberOfBuffers, Ram.inMb( size ) ) );
     }
 
     @Override

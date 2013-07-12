@@ -46,15 +46,15 @@ public class NIOTest
         byte[] payload = "012345678901234567890123456789012345678901234567890123456789".getBytes();
 
         logger.info( "init" );
-        MemoryManager.init( 1, Ram.Mb( 100 ) );
+        MemoryManagerHelper.init( 1, Ram.Mb( 100 ) );
 
         logger.info( "payload size=" + Ram.inKb( payload.length ) );
-        long howMany = ( MemoryManager.capacity() / payload.length );
+        long howMany = ( MemoryManagerHelper.capacity() / payload.length );
         howMany = ( howMany * 50 ) / 100;
 
         for ( int i = 0; i < howMany; i++ )
         {
-            Pointer<Object> p = MemoryManager.store( payload );
+            Pointer<Object> p = MemoryManagerHelper.store( payload );
             assertNotNull( p );
         }
 
@@ -65,16 +65,16 @@ public class NIOTest
     public static void cleanup()
         throws IOException
     {
-        MemoryManager.close();
+        MemoryManagerHelper.close();
     }
 
     @Test
     public void nioTest()
     {
         Random rnd = new Random();
-        int size = rnd.nextInt( 10 ) * (int) MemoryManager.capacity() / 100;
+        int size = rnd.nextInt( 10 ) * (int) MemoryManagerHelper.capacity() / 100;
         logger.info( "payload size=" + Ram.inKb( size ) );
-        Pointer<Object> p = MemoryManager.allocate( size );
+        Pointer<Object> p = MemoryManagerHelper.allocate( size );
         MemoryBuffer b = p.getMemoryBuffer();
         logger.info( "allocated" );
         assertNotNull( p );
@@ -84,7 +84,7 @@ public class NIOTest
         assertEquals( 0, b.readerIndex() );
         assertEquals( size, b.capacity() );
 
-        byte[] check = MemoryManager.retrieve( p );
+        byte[] check = MemoryManagerHelper.retrieve( p );
 
         assertNotNull( check );
 

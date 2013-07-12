@@ -38,7 +38,7 @@ public class UnsafeMemoryManagerServiceImpl<V>
 
     protected static final long NEVER_EXPIRES = 0L;
 
-    protected static Logger logger = LoggerFactory.getLogger( MemoryManager.class );
+    protected static Logger logger = LoggerFactory.getLogger( MemoryManagerHelper.class );
 
     private final Set<Pointer<V>> pointers = Collections.newSetFromMap( new ConcurrentHashMap<Pointer<V>, Boolean>() );
 

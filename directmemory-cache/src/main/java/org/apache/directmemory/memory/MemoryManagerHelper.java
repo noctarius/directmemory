@@ -21,11 +21,11 @@ import java.io.IOException;
  * under the License.
  */
 
-public class MemoryManager
+public class MemoryManagerHelper
 {
     private static final MemoryManagerService<Object> memoryManager = new MemoryManagerServiceImpl<Object>();
 
-    private MemoryManager()
+    private MemoryManagerHelper()
     {
         // static class
     }
