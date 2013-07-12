@@ -51,7 +51,12 @@ public class UnsafeMemoryManager<V>
 
     private long capacity;
 
-    @Override
+    /**
+     * Initialize the internal structure. Need to be called before the service can be used.
+     * 
+     * @param numberOfBuffers : number of internal bucket
+     * @param size : size in B of internal buckets
+     */
     public void init( int numberOfBuffers, int size )
     {
         this.capacity = numberOfBuffers * size;

@@ -27,14 +27,6 @@ public interface MemoryManager<V>
 {
 
     /**
-     * Initialize the internal structure. Need to be called before the service can be used.
-     * 
-     * @param numberOfBuffers : number of internal bucket
-     * @param size : size in B of internal buckets
-     */
-    void init( int numberOfBuffers, int size );
-
-    /**
      * Store function family. Store the given payload at a certain offset in a MemoryBuffer, returning the pointer to
      * the value.
      * 

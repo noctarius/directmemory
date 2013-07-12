@@ -34,7 +34,7 @@ public class MemoryManagerHelper
 
     public static void init( int numberOfBuffers, int size )
     {
-        memoryManager.init( numberOfBuffers, size );
+        ( (AllocatorMemoryManager<Object>) memoryManager ).init( numberOfBuffers, size );
     }
 
     public static Pointer<Object> store( byte[] payload, int expiresIn )

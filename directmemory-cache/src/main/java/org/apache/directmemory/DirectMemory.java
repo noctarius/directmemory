@@ -30,8 +30,9 @@ import org.apache.directmemory.cache.CacheService;
 import org.apache.directmemory.cache.CacheServiceImpl;
 import org.apache.directmemory.measures.Ram;
 import org.apache.directmemory.memory.MemoryManager;
+import org.apache.directmemory.memory.MemoryManagerFactory;
+import org.apache.directmemory.memory.MemoryManagerStrategy;
 import org.apache.directmemory.memory.Pointer;
-import org.apache.directmemory.memory.allocator.AllocatorMemoryManager;
 import org.apache.directmemory.serialization.Serializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,7 +88,8 @@ public final class DirectMemory<K, V>
 
     public DirectMemory<K, V> setNumberOfBuffers( int numberOfBuffers )
     {
-        checkArgument( numberOfBuffers > 0, "Impossible to create a CacheService with a number of buffers lesser than 1" );
+        checkArgument( numberOfBuffers > 0,
+                       "Impossible to create a CacheService with a number of buffers lesser than 1" );
         this.numberOfBuffers = numberOfBuffers;
         return this;
     }
@@ -108,7 +110,8 @@ public final class DirectMemory<K, V>
 
     public DirectMemory<K, V> setConcurrencyLevel( int concurrencyLevel )
     {
-        checkArgument( concurrencyLevel > 0, "Impossible to create a CacheService with a concurrencyLevel lesser than 1" );
+        checkArgument( concurrencyLevel > 0,
+                       "Impossible to create a CacheService with a concurrencyLevel lesser than 1" );
         this.concurrencyLevel = concurrencyLevel;
         return this;
     }
@@ -143,19 +146,6 @@ public final class DirectMemory<K, V>
 
     public CacheService<K, V> newCacheService()
     {
-        if ( map == null )
-        {
-            map = new MapMaker().concurrencyLevel( concurrencyLevel ).initialCapacity( initialCapacity ).makeMap();
-        }
-        if ( memoryManager == null )
-        {
-            memoryManager = new AllocatorMemoryManager<V>();
-        }
-        if ( serializer == null )
-        {
-            serializer = createNewSerializer();
-        }
-
         logger.info( "******************************** initializing *******************************" );
         logger.info( "         ____  _                 __  __  ___" );
         logger.info( "        / __ \\(_)________  _____/ /_/  |/  /___  ____ ___  ____  _______  __" );
@@ -165,7 +155,19 @@ public final class DirectMemory<K, V>
         logger.info( "                                                                   /____/   " );
         logger.info( "********************************************************************************" );
 
-        memoryManager.init( numberOfBuffers, size );
+        if ( map == null )
+        {
+            map = new MapMaker().concurrencyLevel( concurrencyLevel ).initialCapacity( initialCapacity ).makeMap();
+        }
+        if ( memoryManager == null )
+        {
+            MemoryManagerFactory<V> factory = MemoryManagerStrategy.Allocator.newInstance();
+            memoryManager = factory.build( concurrencyLevel, numberOfBuffers, size );
+        }
+        if ( serializer == null )
+        {
+            serializer = createNewSerializer();
+        }
 
         logger.info( "initialized" );
         logger.info( format( "number of buffer(s): \t%1d  with %2s each", numberOfBuffers, Ram.inMb( size ) ) );
