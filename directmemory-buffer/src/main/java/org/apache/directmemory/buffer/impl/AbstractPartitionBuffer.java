@@ -44,6 +44,12 @@ public abstract class AbstractPartitionBuffer
     protected volatile long readerIndex = 0;
 
     @Override
+    public void close()
+    {
+        free();
+    }
+
+    @Override
     public boolean readable()
     {
         return writerIndex - readerIndex > 0;

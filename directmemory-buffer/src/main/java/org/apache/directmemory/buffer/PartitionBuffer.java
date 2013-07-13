@@ -19,10 +19,11 @@ package org.apache.directmemory.buffer;
  * under the License.
  */
 
+import java.io.Closeable;
 import java.nio.ByteOrder;
 
 public interface PartitionBuffer
-    extends ReadablePartitionBuffer, WritablePartitionBuffer
+    extends ReadablePartitionBuffer, WritablePartitionBuffer, Closeable
 {
 
     long capacity();
@@ -35,6 +36,8 @@ public interface PartitionBuffer
 
     void free();
 
+    void close();
+    
     ByteOrder byteOrder();
 
     void byteOrder( ByteOrder byteOrder );

@@ -1,5 +1,7 @@
 package org.apache.directmemory.buffer;
 
+import java.io.Closeable;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,7 +21,7 @@ package org.apache.directmemory.buffer;
  * under the License.
  */
 
-public interface PartitionBufferPool
+public interface PartitionBufferPool extends Closeable
 {
 
     PartitionBuffer getPartitionBuffer();
