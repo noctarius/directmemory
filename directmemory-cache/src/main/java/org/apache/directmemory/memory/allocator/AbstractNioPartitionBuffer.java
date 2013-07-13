@@ -111,7 +111,6 @@ abstract class AbstractNioPartitionBuffer
     public int readBytes( byte[] bytes, int offset, int length )
     {
         byteBuffer.get( bytes, offset, length );
-        readerIndex += length;
         return length;
     }
 
@@ -138,7 +137,6 @@ abstract class AbstractNioPartitionBuffer
     {
         length = Math.min( length, bytes.length - offset );
         byteBuffer.put( bytes, offset, length );
-        writerIndex += length;
     }
 
     protected ByteBuffer getByteBuffer()

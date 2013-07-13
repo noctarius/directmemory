@@ -24,6 +24,7 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 
 import org.apache.directmemory.DirectMemory;
+import org.apache.directmemory.memory.MemoryManager;
 import org.apache.directmemory.memory.Pointer;
 import org.apache.directmemory.memory.unsafe.UnsafeMemoryManager;
 import org.junit.Test;
@@ -56,8 +57,10 @@ public class BasicTest
     public void putRetrieveAndUpdateWithUnsafe()
         throws IOException
     {
+        UnsafeMemoryManager<Long> umm = new UnsafeMemoryManager<Long>();
+        umm.init( 10, 10000 );
         CacheService<String, Long> cache =
-            new DirectMemory<String, Long>().setNumberOfBuffers( 10 ).setSize( 1000 ).setInitialCapacity( 10000 ).setConcurrencyLevel( 4 ).setMemoryManager( new UnsafeMemoryManager<Long>() ).newCacheService();
+            new DirectMemory<String, Long>().setSize( 1000 ).setConcurrencyLevel( 4 ).setMemoryManager( umm ).newCacheService();
 
         assertNull( cache.retrieve( "a" ) );
         assertNotNull( cache.put( "a", 3L ) );

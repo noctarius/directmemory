@@ -71,7 +71,7 @@ public class BaseUnsafeTest
 
         Random rnd = new Random();
 
-        int size = rnd.nextInt( 10 ) * (int) mem.capacity() / 100;
+        int size = rnd.nextInt( 10 ) * (int) mem.capacity() / 100 + 1;
 
         logger.info( "size=" + size );
 

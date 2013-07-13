@@ -78,7 +78,7 @@ public class LazyUnsafeAllocator
     @Override
     public void free( PartitionBuffer partitionBuffer )
     {
-        used.addAndGet( -partitionBuffer.capacity() );
+        used.addAndGet( -partitionBuffer.maxCapacity() );
         partitionBuffer.free();
         partitionBuffers.remove( partitionBuffer );
     }
@@ -91,6 +91,11 @@ public class LazyUnsafeAllocator
             throw new BufferOverflowException();
         }
 
+        if (size == 0)
+        {
+            throw new IllegalArgumentException( "size must not be 0" );
+        }
+        
         long baseAddress = unsafe.allocateMemory( size );
         UnsafePartitionBuffer partitionBuffer = new UnsafePartitionBuffer( baseAddress, size );
         partitionBuffers.add( partitionBuffer );

@@ -128,7 +128,7 @@ public class UnsafePartitionBuffer
         {
             throw new IllegalStateException( "Allocated memory area is too small to write to!" );
         }
-        UNSAFE.copyMemory( buffer, BufferUtils.BYTE_ARRAY_OFFSET, null, baseAddress + writerIndex, length );
+        UNSAFE.copyMemory( bytes, BufferUtils.BYTE_ARRAY_OFFSET, null, baseAddress + writerIndex, length );
     }
 
     @Override

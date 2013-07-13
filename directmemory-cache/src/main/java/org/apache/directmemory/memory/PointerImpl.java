@@ -116,7 +116,7 @@ public class PointerImpl<T>
     @Override
     public long getSize()
     {
-        return buffer.capacity();
+        return buffer.maxCapacity();
     }
 
     @Override
