@@ -84,6 +84,12 @@ public class PartitionBufferPoolImpl
     }
 
     @Override
+    public PartitionBuffer getPartitionBuffer( long size )
+    {
+        return new PoolPartitionBuffer( this, size, ByteOrder.BIG_ENDIAN );
+    }
+
+    @Override
     public void freePartitionBuffer( PartitionBuffer partitionBuffer )
     {
         partitionBuffer.free();

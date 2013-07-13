@@ -34,9 +34,15 @@ class PoolPartitionBuffer
 
     public PoolPartitionBuffer( PartitionBufferPoolImpl partitionBufferPool, ByteOrder byteOrder )
     {
+        this( partitionBufferPool, partitionBufferPool.getSliceByteSize() - 1, byteOrder );
+    }
+
+    public PoolPartitionBuffer( PartitionBufferPoolImpl partitionBufferPool, long size, ByteOrder byteOrder )
+    {
         this.partitionBufferPool = partitionBufferPool;
         this.byteOrder = byteOrder;
-        resize( 1 );
+        int slices = (int) ( ( size / sliceByteSize() ) + ( size % sliceByteSize() != 0 ? 1 : 0 ) );
+        resize( slices );
     }
 
     @Override

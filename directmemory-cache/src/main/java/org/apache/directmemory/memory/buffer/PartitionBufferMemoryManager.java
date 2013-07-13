@@ -107,7 +107,7 @@ public class PartitionBufferMemoryManager<V>
     @Override
     public Pointer<V> store( byte[] payload, long expiresIn )
     {
-        PartitionBuffer buffer = bufferPool.getPartitionBuffer();
+        PartitionBuffer buffer = bufferPool.getPartitionBuffer( payload.length );
         PointerImpl<V> pointer = new PointerImpl<V>( buffer, 1 );
         pointer.expiresIn = expiresIn;
         buffer.writeBytes( payload );
