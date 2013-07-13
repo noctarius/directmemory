@@ -1,8 +1,5 @@
 package org.apache.directmemory.buffer.utils;
 
-import org.apache.directmemory.buffer.ReadablePartitionBuffer;
-import org.apache.directmemory.buffer.WritablePartitionBuffer;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -21,6 +18,9 @@ import org.apache.directmemory.buffer.WritablePartitionBuffer;
  * specific language governing permissions and limitations
  * under the License.
  */
+
+import org.apache.directmemory.buffer.ReadablePartitionBuffer;
+import org.apache.directmemory.buffer.WritablePartitionBuffer;
 
 public final class Int64Compressor
 {
