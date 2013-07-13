@@ -47,11 +47,13 @@ public class WriteXImplementationTestCase
             Object[] v = new Object[values.length + 1];
             System.arraycopy( values, 0, v, 0, values.length );
             v[values.length] = ByteOrder.BIG_ENDIAN;
+            v[0] = v[0] + "{BIG_ENDIAN}";
             mutations.add( v );
 
             v = new Object[values.length + 1];
             System.arraycopy( values, 0, v, 0, values.length );
             v[values.length] = ByteOrder.LITTLE_ENDIAN;
+            v[0] = v[0] + "{LITTLE_ENDIAN}";
             mutations.add( v );
         }
 
