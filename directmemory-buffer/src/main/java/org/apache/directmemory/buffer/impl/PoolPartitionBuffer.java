@@ -74,7 +74,6 @@ class PoolPartitionBuffer
                 sliceOffset += readable;
             }
         }
-        readerIndex += length;
         return length;
     }
 
@@ -106,7 +105,6 @@ class PoolPartitionBuffer
                 sliceOffset += writeable;
             }
         }
-        writerIndex += length;
     }
 
     @Override

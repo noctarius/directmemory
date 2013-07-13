@@ -8,17 +8,26 @@ public class ThreadLocalPartitionSliceSelector
     implements PartitionSliceSelector
 {
 
+    private static final boolean ENABLE_TLA_STATISTICS = Boolean.getBoolean( "directmemory.buffer.stats.tla.enabled" );
+
     private final ThreadLocal<Partition> partitionAssignment = new ThreadLocal<Partition>();
 
-    private final AccessStatistics accessStatistics = new AccessStatistics();
+    private final AccessStatistics accessStatistics;
 
     private volatile boolean[] assigned;
+
+    public ThreadLocalPartitionSliceSelector()
+    {
+        accessStatistics = ENABLE_TLA_STATISTICS ? new AccessStatistics() : null;
+    }
 
     @Override
     public PartitionSlice selectPartitionSlice( Partition[] partitions )
     {
-        accessStatistics.access++;
-
+        if ( ENABLE_TLA_STATISTICS )
+        {
+            accessStatistics.access++;
+        }
         Partition partition = partitionAssignment.get();
         if ( partition != null && partition.available() > 0 )
         {
@@ -44,7 +53,10 @@ public class ThreadLocalPartitionSliceSelector
                         PartitionSlice slice = partition.get();
                         if ( slice != null )
                         {
-                            accessStatistics.reallocatePartition++;
+                            if ( ENABLE_TLA_STATISTICS )
+                            {
+                                accessStatistics.reallocatePartition++;
+                            }
                             return slice;
                         }
                     }
@@ -58,7 +70,10 @@ public class ThreadLocalPartitionSliceSelector
                     PartitionSlice slice = partitions[index].get();
                     if ( slice != null )
                     {
-                        accessStatistics.collisions++;
+                        if ( ENABLE_TLA_STATISTICS )
+                        {
+                            accessStatistics.collisions++;
+                        }
                         return slice;
                     }
                 }
@@ -74,7 +89,10 @@ public class ThreadLocalPartitionSliceSelector
         if ( partition.available() == 0 )
         {
             assigned[partitionIndex] = false;
-            System.out.println( accessStatistics.toString() );
+            if ( ENABLE_TLA_STATISTICS )
+            {
+                System.out.println( accessStatistics.toString() );
+            }
         }
     }
 

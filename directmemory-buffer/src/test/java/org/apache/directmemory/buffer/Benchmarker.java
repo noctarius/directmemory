@@ -9,6 +9,7 @@ import org.apache.directmemory.buffer.PartitionBufferBuilder;
 import org.apache.directmemory.buffer.PartitionBufferPool;
 import org.apache.directmemory.buffer.spi.PartitionFactory;
 import org.apache.directmemory.buffer.spi.PartitionSliceSelector;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -20,6 +21,7 @@ import com.carrotsearch.junitbenchmarks.Clock;
 import com.carrotsearch.junitbenchmarks.annotation.BenchmarkHistoryChart;
 import com.carrotsearch.junitbenchmarks.annotation.LabelType;
 
+@Ignore
 @RunWith( Parameterized.class )
 public class Benchmarker
     extends AbstractBenchmark

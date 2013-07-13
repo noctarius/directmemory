@@ -12,7 +12,6 @@ import org.apache.directmemory.buffer.spi.PartitionSliceSelector;
 import org.apache.directmemory.buffer.utils.BufferUtils;
 import org.junit.Test;
 
-
 public class WriteXImplementationTestCase
 {
 
@@ -23,7 +22,7 @@ public class WriteXImplementationTestCase
         PartitionSliceSelector partitionSliceSelector = new RoundRobinPartitionSliceSelector();
         PartitionFactory partitionFactory = ByteBufferPooledPartition.DIRECT_BYTEBUFFER_PARTITION_FACTORY;
         PartitionBufferBuilder builder = new PartitionBufferBuilder( partitionFactory, partitionSliceSelector );
-        PartitionBufferPool pool = builder.allocatePool( "500M", 50, "256K" );
+        PartitionBufferPool pool = builder.allocatePool( "50M", 50, "256K" );
 
         try
         {
@@ -41,6 +40,7 @@ public class WriteXImplementationTestCase
             {
                 partitionBuffer.writeByte( 7 );
             }
+            partitionBuffer.flush();
             assertEquals( BufferUtils.descriptorToByteSize( "256K" ) * 21, partitionBuffer.maxCapacity() );
             assertEquals( BufferUtils.descriptorToByteSize( "256K" ) * 20 + 1, partitionBuffer.capacity() );
             System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getAllocatedMemory()
@@ -69,7 +69,7 @@ public class WriteXImplementationTestCase
         PartitionSliceSelector partitionSliceSelector = new RoundRobinPartitionSliceSelector();
         PartitionFactory partitionFactory = ByteBufferPooledPartition.DIRECT_BYTEBUFFER_PARTITION_FACTORY;
         PartitionBufferBuilder builder = new PartitionBufferBuilder( partitionFactory, partitionSliceSelector );
-        PartitionBufferPool pool = builder.allocatePool( "500M", 50, "256K" );
+        PartitionBufferPool pool = builder.allocatePool( "50M", 50, "256K" );
 
         try
         {
@@ -87,6 +87,7 @@ public class WriteXImplementationTestCase
             {
                 partitionBuffer.writeShort( (short) 15555 );
             }
+            partitionBuffer.flush();
             assertEquals( BufferUtils.descriptorToByteSize( "256K" ) * 21, partitionBuffer.maxCapacity() );
             assertEquals( BufferUtils.descriptorToByteSize( "256K" ) * 20 + 2, partitionBuffer.capacity() );
             System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getAllocatedMemory()
@@ -113,9 +114,9 @@ public class WriteXImplementationTestCase
         throws Exception
     {
         PartitionSliceSelector partitionSliceSelector = new RoundRobinPartitionSliceSelector();
-        PartitionFactory partitionFactory = ByteBufferPooledPartition.DIRECT_BYTEBUFFER_PARTITION_FACTORY;
+        PartitionFactory partitionFactory = ByteBufferPooledPartition.HEAP_BYTEBUFFER_PARTITION_FACTORY;
         PartitionBufferBuilder builder = new PartitionBufferBuilder( partitionFactory, partitionSliceSelector );
-        PartitionBufferPool pool = builder.allocatePool( "500M", 50, "256K" );
+        PartitionBufferPool pool = builder.allocatePool( "50M", 50, "256K" );
 
         try
         {
@@ -133,14 +134,25 @@ public class WriteXImplementationTestCase
             {
                 partitionBuffer.writeInt( 755550 );
             }
+            partitionBuffer.flush();
             assertEquals( BufferUtils.descriptorToByteSize( "256K" ) * 21, partitionBuffer.maxCapacity() );
             assertEquals( BufferUtils.descriptorToByteSize( "256K" ) * 20 + 4, partitionBuffer.capacity() );
+            assertEquals( BufferUtils.descriptorToByteSize( "256K" ) * 20 + 4, partitionBuffer.writerIndex() );
             System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getAllocatedMemory()
                 + " bytes), unused " + pool.getFreeSliceCount() );
 
+            int rounds = (int) ( bytes / 4 + 1 );
             for ( int i = 0; i < bytes / 4 + 1; i++ )
             {
-                assertEquals( "Wrong value at position " + i, 755550, partitionBuffer.readInt() );
+                try
+                {
+                    assertEquals( "Wrong value at position " + i, 755550, partitionBuffer.readInt() );
+                    assertEquals( ( i + 1 ) * 4, partitionBuffer.readerIndex() );
+                }
+                catch ( Throwable t )
+                {
+                    throw new Exception( "Failure at position " + i + " / " + rounds, t );
+                }
             }
 
             pool.freePartitionBuffer( partitionBuffer );

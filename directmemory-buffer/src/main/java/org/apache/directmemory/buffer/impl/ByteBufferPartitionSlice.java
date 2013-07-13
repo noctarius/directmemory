@@ -67,9 +67,9 @@ class ByteBufferPartitionSlice
         byteBuffer.position( position );
         byteBuffer.put( array, offset, bytes );
         byteBuffer.position( oldPosition );
-        if ( oldPosition + bytes > writerIndex )
+        if ( position + bytes > writerIndex )
         {
-            writerIndex = oldPosition + bytes;
+            writerIndex = position + bytes;
             byteBuffer.position( writerIndex );
         }
     }
@@ -105,9 +105,9 @@ class ByteBufferPartitionSlice
         byteBuffer.position( position );
         byteBuffer.get( array, offset, length );
         byteBuffer.position( oldPosition );
-        if ( oldPosition + bytes > readerIndex )
+        if ( position + bytes > readerIndex )
         {
-            readerIndex = oldPosition + bytes;
+            readerIndex = position + bytes;
             byteBuffer.position( readerIndex );
         }
     }
