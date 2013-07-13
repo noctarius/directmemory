@@ -19,19 +19,20 @@ package org.apache.directmemory.cache;
  * under the License.
  */
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
+import java.io.Serializable;
+
 import org.apache.directmemory.DirectMemory;
 import org.apache.directmemory.measures.Ram;
-import org.apache.directmemory.memory.MemoryManager;
 import org.apache.directmemory.memory.Pointer;
 import org.apache.directmemory.memory.RoundRobinAllocationPolicy;
 import org.apache.directmemory.memory.allocator.AllocationPolicy;
 import org.apache.directmemory.memory.allocator.AllocatorMemoryManager;
 import org.junit.Test;
-
-import java.io.IOException;
-import java.io.Serializable;
-
-import static org.junit.Assert.*;
 
 public class CacheServiceImplTest
 {
@@ -41,9 +42,10 @@ public class CacheServiceImplTest
         throws IOException
     {
         AllocationPolicy allocationPolicy = new RoundRobinAllocationPolicy();
-        MemoryManager<byte[]> memoryManager = new AllocatorMemoryManager<byte[]>( allocationPolicy, true );
+        AllocatorMemoryManager<byte[]> memoryManager = new AllocatorMemoryManager<byte[]>( allocationPolicy, true );
+        memoryManager.init( 1, Ram.Mb( 1 ) );
         CacheService<Integer, byte[]> cache =
-            new DirectMemory<Integer, byte[]>().setMemoryManager( memoryManager ).setNumberOfBuffers( 1 ).setSize( Ram.Mb( 1 ) ).newCacheService();
+            new DirectMemory<Integer, byte[]>().setMemoryManager( memoryManager ).newCacheService();
 
         for ( int i = 0; i < 1000; i++ )
         {
@@ -88,9 +90,10 @@ public class CacheServiceImplTest
         throws InterruptedException, IOException
     {
         AllocationPolicy allocationPolicy = new RoundRobinAllocationPolicy();
-        MemoryManager<MyBean> memoryManager = new AllocatorMemoryManager<MyBean>( allocationPolicy, true );
+        AllocatorMemoryManager<MyBean> memoryManager = new AllocatorMemoryManager<MyBean>( allocationPolicy, true );
+        memoryManager.init( 1, Ram.Mb( 1 ) );
         CacheService<Integer, MyBean> cache =
-            new DirectMemory<Integer, MyBean>().setMemoryManager( memoryManager ).setNumberOfBuffers( 1 ).setSize( Ram.Mb( 1 ) ).newCacheService();
+            new DirectMemory<Integer, MyBean>().setMemoryManager( memoryManager ).newCacheService();
         /*
          * let the scan run every 10s
          */

@@ -222,7 +222,7 @@ public class MemoryManagerImplTest
         Pointer<Object> pointer = null;
         do
         {
-            byte[] payload = MemoryTestUtils.generateRandomPayload( R.nextInt( BUFFER_SIZE / 4 + 1 ) );
+            byte[] payload = MemoryTestUtils.generateRandomPayload( R.nextInt( BUFFER_SIZE / 4 + 1 ) + 1 );
             pointer = memoryManagerService.store( payload );
             if ( pointer != null && R.nextBoolean() )
             {

@@ -399,8 +399,7 @@ public abstract class AbstractMemoryManagerServiceTest
         final PartitionBuffer buffer1 = allocatedPointer1.getPartitionBuffer();
         assertNotNull( buffer1 );
         assertEquals( 0, buffer1.writerIndex() );
-        assertEquals( size1, buffer1.capacity() );
-        assertEquals( size1, buffer1.capacity() );
+        assertEquals( size1, buffer1.maxCapacity() );
         buffer1.writeBytes( allocatedPayload1 );
         assertEquals( new String( allocatedPayload1 ), new String( mms.retrieve( allocatedPointer1 ) ) );
 
@@ -410,7 +409,7 @@ public abstract class AbstractMemoryManagerServiceTest
         assertNotNull( allocatedPointer2 );
         final PartitionBuffer buffer2 = allocatedPointer2.getPartitionBuffer();
         assertNotNull( buffer2 );
-        assertEquals( size2, buffer2.capacity() );
+        assertEquals( size2, buffer2.maxCapacity() );
         buffer2.writeBytes( allocatedPayload2 );
         assertEquals( new String( allocatedPayload2 ), new String( mms.retrieve( allocatedPointer2 ) ) );
 

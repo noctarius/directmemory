@@ -19,12 +19,14 @@ package org.apache.directmemory.cache;
  * under the License.
  */
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.io.IOException;
 
 import org.apache.directmemory.DirectMemory;
-import org.apache.directmemory.memory.MemoryManager;
 import org.apache.directmemory.memory.Pointer;
 import org.apache.directmemory.memory.unsafe.UnsafeMemoryManager;
 import org.junit.Test;
