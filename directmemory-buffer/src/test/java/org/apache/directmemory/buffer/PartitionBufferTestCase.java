@@ -61,7 +61,7 @@ public class PartitionBufferTestCase
         throws Exception
     {
         PartitionBufferBuilder builder = new PartitionBufferBuilder( partitionFactory, partitionSliceSelector );
-        PartitionBufferPool pool = builder.allocatePool( "500M", 50, "512K" );
+        PartitionBufferPool pool = builder.allocatePool( "50M", 50, "512K" );
 
         try
         {
@@ -99,7 +99,7 @@ public class PartitionBufferTestCase
         throws Exception
     {
         PartitionBufferBuilder builder = new PartitionBufferBuilder( partitionFactory, partitionSliceSelector );
-        PartitionBufferPool pool = builder.allocatePool( "500M", 50, "256K" );
+        PartitionBufferPool pool = builder.allocatePool( "50M", 50, "256K" );
 
         try
         {

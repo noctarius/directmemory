@@ -29,7 +29,6 @@ import java.util.Collection;
 import java.util.Random;
 
 import org.apache.directmemory.memory.allocator.AllocatorMemoryManagerFactory;
-import org.apache.directmemory.memory.buffer.PartitionBufferMemoryManagerFactory;
 import org.apache.directmemory.memory.unsafe.UnsafeMemoryManagerFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,7 +47,7 @@ public class MemoryManagerImplTest
     public static Collection<Object[]> data()
     {
         return Arrays.asList( new Object[][] { { AllocatorMemoryManagerFactory.class },
-            { UnsafeMemoryManagerFactory.class }, { PartitionBufferMemoryManagerFactory.class } } );
+            { UnsafeMemoryManagerFactory.class } } );
     }
 
     private final Class<? extends MemoryManagerFactory<Object>> memoryManagerFactoryClass;
