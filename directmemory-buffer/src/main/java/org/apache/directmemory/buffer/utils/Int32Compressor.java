@@ -37,6 +37,10 @@ public final class Int32Compressor
 
     public static final byte INT32_COMPRESSED_TRIPPLE = 4;
 
+    public static final byte INT32_MIN_VALUE = 5;
+
+    public static final byte INT32_MAX_VALUE = 6;
+
     public static final int INT32_MAX_SINGLE = 0x7F;
 
     public static final int INT32_MIN_SINGLE = ~INT32_MAX_SINGLE + 1;
@@ -51,7 +55,15 @@ public final class Int32Compressor
 
     public static void writeInt32( int value, WritablePartitionBuffer buffer )
     {
-        if ( value >= INT32_MIN_SINGLE && value <= INT32_MAX_SINGLE )
+        if ( value == Integer.MIN_VALUE )
+        {
+            buffer.writeByte( INT32_MIN_VALUE );
+        }
+        else if ( value == Integer.MAX_VALUE )
+        {
+            buffer.writeByte( INT32_MAX_VALUE );
+        }
+        else if ( value >= INT32_MIN_SINGLE && value <= INT32_MAX_SINGLE )
         {
             value = value < 0 ? ( ~value + 1 ) | ( 1 << 7 ) : value;
             buffer.writeByte( INT32_COMPRESSED_SINGLE );
@@ -87,6 +99,12 @@ public final class Int32Compressor
         byte type = buffer.readByte();
         switch ( type )
         {
+            case INT32_MIN_VALUE:
+                return Integer.MIN_VALUE;
+
+            case INT32_MAX_VALUE:
+                return Integer.MAX_VALUE;
+
             case INT32_COMPRESSED_SINGLE:
             {
                 int data = buffer.readByte() & 0xFF;

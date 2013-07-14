@@ -45,6 +45,10 @@ public final class Int64Compressor
 
     public static final byte INT64_COMPRESSED_SEVENTH = 8;
 
+    public static final byte INT64_MIN_VALUE = 9;
+
+    public static final byte INT64_MAX_VALUE = 10;
+
     public static final long INT64_MAX_SINGLE = 0x7F;
 
     public static final long INT64_MIN_SINGLE = ~INT64_MAX_SINGLE + 1;
@@ -75,7 +79,15 @@ public final class Int64Compressor
 
     public static void writeInt64( long value, WritablePartitionBuffer buffer )
     {
-        if ( value >= INT64_MIN_SINGLE && value <= INT64_MAX_SINGLE )
+        if ( value == Long.MIN_VALUE )
+        {
+            buffer.writeByte( INT64_MIN_VALUE );
+        }
+        else if ( value == Long.MAX_VALUE )
+        {
+            buffer.writeByte( INT64_MAX_VALUE );
+        }
+        else if ( value >= INT64_MIN_SINGLE && value <= INT64_MAX_SINGLE )
         {
             value = value < 0 ? ( ~value + 1 ) | ( 1L << 7 ) : value;
             buffer.writeByte( INT64_COMPRESSED_SINGLE );
@@ -157,6 +169,12 @@ public final class Int64Compressor
         byte type = buffer.readByte();
         switch ( type )
         {
+            case INT64_MIN_VALUE:
+                return Long.MIN_VALUE;
+
+            case INT64_MAX_VALUE:
+                return Long.MAX_VALUE;
+
             case INT64_COMPRESSED_SINGLE:
             {
                 long data = buffer.readByte() & 0xFFL;
