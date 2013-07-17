@@ -101,7 +101,7 @@ public class PartitionBufferMemoryManager<V>
     @Override
     public long capacity()
     {
-        return bufferPool.getAllocatedMemory();
+        return bufferPool.getTotalByteSize();
     }
 
     @Override
