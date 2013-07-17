@@ -22,7 +22,7 @@ package org.apache.directmemory.buffer.spi;
 public interface PartitionFactory
 {
 
-    Partition newPartition( int partitionIndex, int sliceByteSize, int slices,
+    Partition newPartition( int partitionIndex, long totalByteSize, int sliceByteSize, int slices,
                             PartitionSliceSelector partitionSliceSelector );
 
 }

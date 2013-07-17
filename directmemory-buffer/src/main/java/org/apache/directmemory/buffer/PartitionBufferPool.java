@@ -21,32 +21,34 @@ import java.io.Closeable;
  * under the License.
  */
 
-public interface PartitionBufferPool extends Closeable {
+public interface PartitionBufferPool
+    extends Closeable
+{
 
-	PartitionBuffer getPartitionBuffer();
+    PartitionBuffer getPartitionBuffer();
 
-	PartitionBuffer getPartitionBuffer(long size);
+    PartitionBuffer getPartitionBuffer( long size );
 
-	void freePartitionBuffer(PartitionBuffer partitionBuffer);
+    void freePartitionBuffer( PartitionBuffer partitionBuffer );
 
-	long getAllocatedMemory();
+    long getTotalByteSize();
 
-	int getPartitionByteSize();
+    int getPartitionByteSize();
 
-	int getPartitionCount();
+    int getPartitionCount();
 
-	int getSliceCountPerPartition();
+    int getSliceCountPerPartition();
 
-	int getSliceCount();
+    int getSliceCount();
 
-	int getSliceByteSize();
+    int getSliceByteSize();
 
-	int getUsedSliceCount();
+    int getUsedSliceCount();
 
-	int getFreeSliceCount();
+    int getFreeSliceCount();
 
-	void close();
+    void close();
 
-	boolean isPooled();
+    boolean isPooled();
 
 }

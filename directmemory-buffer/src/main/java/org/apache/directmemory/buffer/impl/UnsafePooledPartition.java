@@ -33,7 +33,7 @@ public class UnsafePooledPartition
     {
 
         @Override
-        public Partition newPartition( int partitionIndex, int sliceByteSize, int slices,
+        public Partition newPartition( int partitionIndex, long totalByteSize, int sliceByteSize, int slices,
                                        PartitionSliceSelector partitionSliceSelector )
         {
             return new UnsafePooledPartition( partitionIndex, slices, sliceByteSize, partitionSliceSelector );

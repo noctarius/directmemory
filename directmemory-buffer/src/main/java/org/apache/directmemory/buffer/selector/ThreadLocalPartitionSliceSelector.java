@@ -19,6 +19,7 @@ package org.apache.directmemory.buffer.selector;
  * under the License.
  */
 
+import org.apache.directmemory.buffer.BufferUnderflowException;
 import org.apache.directmemory.buffer.spi.Partition;
 import org.apache.directmemory.buffer.spi.PartitionSlice;
 import org.apache.directmemory.buffer.spi.PartitionSliceSelector;
@@ -50,7 +51,11 @@ public class ThreadLocalPartitionSliceSelector
         Partition partition = partitionAssignment.get();
         if ( partition != null && partition.available() > 0 )
         {
-            return partition.get();
+            PartitionSlice slice = partition.get();
+            if ( slice != null )
+            {
+                return slice;
+            }
         }
 
         synchronized ( this )
@@ -99,7 +104,7 @@ public class ThreadLocalPartitionSliceSelector
             }
         }
 
-        throw new RuntimeException( "Could not retrieve a new partition slice" );
+        throw new BufferUnderflowException( "Could not retrieve a new partition slice" );
     }
 
     @Override

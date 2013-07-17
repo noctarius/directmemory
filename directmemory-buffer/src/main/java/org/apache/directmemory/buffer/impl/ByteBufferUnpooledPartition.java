@@ -33,10 +33,11 @@ public class ByteBufferUnpooledPartition
     {
 
         @Override
-        public Partition newPartition( int partitionIndex, int sliceByteSize, int slices,
+        public Partition newPartition( int partitionIndex, long totalByteSize, int sliceByteSize, int slices,
                                        PartitionSliceSelector partitionSliceSelector )
         {
-            return new ByteBufferUnpooledPartition( partitionIndex, slices, sliceByteSize, true, partitionSliceSelector );
+            return new ByteBufferUnpooledPartition( partitionIndex, totalByteSize, slices, sliceByteSize, true,
+                                                    partitionSliceSelector );
         }
     };
 
@@ -44,20 +45,20 @@ public class ByteBufferUnpooledPartition
     {
 
         @Override
-        public Partition newPartition( int partitionIndex, int sliceByteSize, int slices,
+        public Partition newPartition( int partitionIndex, long totalByteSize, int sliceByteSize, int slices,
                                        PartitionSliceSelector partitionSliceSelector )
         {
-            return new ByteBufferUnpooledPartition( partitionIndex, slices, sliceByteSize, false,
+            return new ByteBufferUnpooledPartition( partitionIndex, totalByteSize, slices, sliceByteSize, false,
                                                     partitionSliceSelector );
         }
     };
 
     private final boolean directMemory;
 
-    private ByteBufferUnpooledPartition( int partitionIndex, int slices, int sliceByteSize, boolean directMemory,
-                                         PartitionSliceSelector partitionSliceSelector )
+    private ByteBufferUnpooledPartition( int partitionIndex, long totalByteSize, int slices, int sliceByteSize,
+                                         boolean directMemory, PartitionSliceSelector partitionSliceSelector )
     {
-        super( partitionIndex, slices, sliceByteSize, partitionSliceSelector, false );
+        super( partitionIndex, totalByteSize, slices, sliceByteSize, partitionSliceSelector, false );
 
         this.directMemory = directMemory;
     }

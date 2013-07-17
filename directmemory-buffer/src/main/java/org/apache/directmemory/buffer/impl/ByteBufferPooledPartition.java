@@ -33,7 +33,7 @@ public class ByteBufferPooledPartition
     {
 
         @Override
-        public Partition newPartition( int partitionIndex, int sliceByteSize, int slices,
+        public Partition newPartition( int partitionIndex, long totalByteSize, int sliceByteSize, int slices,
                                        PartitionSliceSelector partitionSliceSelector )
         {
             return new ByteBufferPooledPartition( partitionIndex, slices, sliceByteSize, true, partitionSliceSelector );
@@ -44,7 +44,7 @@ public class ByteBufferPooledPartition
     {
 
         @Override
-        public Partition newPartition( int partitionIndex, int sliceByteSize, int slices,
+        public Partition newPartition( int partitionIndex, long totalByteSize, int sliceByteSize, int slices,
                                        PartitionSliceSelector partitionSliceSelector )
         {
             return new ByteBufferPooledPartition( partitionIndex, slices, sliceByteSize, false, partitionSliceSelector );

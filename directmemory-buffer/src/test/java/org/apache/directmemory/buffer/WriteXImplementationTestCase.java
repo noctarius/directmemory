@@ -82,7 +82,7 @@ public class WriteXImplementationTestCase
         PartitionBufferPool pool = buildPartitionBufferPool();
         try
         {
-            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getAllocatedMemory()
+            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getTotalByteSize()
                 + " bytes), unused " + pool.getFreeSliceCount() );
 
             long bytes = BufferUtils.descriptorToByteSize( "256K" ) * 20;
@@ -91,7 +91,7 @@ public class WriteXImplementationTestCase
             partitionBuffer.byteOrder( byteOrder );
 
             assertEquals( BufferUtils.descriptorToByteSize( "256K" ), partitionBuffer.maxCapacity() );
-            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getAllocatedMemory()
+            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getTotalByteSize()
                 + " bytes), unused " + pool.getFreeSliceCount() );
 
             for ( int i = 0; i < bytes + 1; i++ )
@@ -102,7 +102,7 @@ public class WriteXImplementationTestCase
             partitionBuffer.flush();
             assertEquals( BufferUtils.descriptorToByteSize( "256K" ) * 21, partitionBuffer.maxCapacity() );
             assertEquals( BufferUtils.descriptorToByteSize( "256K" ) * 20 + 1, partitionBuffer.capacity() );
-            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getAllocatedMemory()
+            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getTotalByteSize()
                 + " bytes), unused " + pool.getFreeSliceCount() );
 
             for ( int i = 0; i < bytes + 1; i++ )
@@ -119,7 +119,7 @@ public class WriteXImplementationTestCase
             }
 
             pool.freePartitionBuffer( partitionBuffer );
-            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getAllocatedMemory()
+            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getTotalByteSize()
                 + " bytes), unused " + pool.getFreeSliceCount() );
 
         }
@@ -136,7 +136,7 @@ public class WriteXImplementationTestCase
         PartitionBufferPool pool = buildPartitionBufferPool();
         try
         {
-            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getAllocatedMemory()
+            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getTotalByteSize()
                 + " bytes), unused " + pool.getFreeSliceCount() );
 
             long bytes = BufferUtils.descriptorToByteSize( "256K" ) * 20;
@@ -145,7 +145,7 @@ public class WriteXImplementationTestCase
             partitionBuffer.byteOrder( byteOrder );
 
             assertEquals( BufferUtils.descriptorToByteSize( "256K" ), partitionBuffer.maxCapacity() );
-            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getAllocatedMemory()
+            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getTotalByteSize()
                 + " bytes), unused " + pool.getFreeSliceCount() );
 
             for ( int i = 0; i < bytes / 2 + 1; i++ )
@@ -156,7 +156,7 @@ public class WriteXImplementationTestCase
             partitionBuffer.flush();
             assertEquals( BufferUtils.descriptorToByteSize( "256K" ) * 21, partitionBuffer.maxCapacity() );
             assertEquals( BufferUtils.descriptorToByteSize( "256K" ) * 20 + 2, partitionBuffer.capacity() );
-            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getAllocatedMemory()
+            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getTotalByteSize()
                 + " bytes), unused " + pool.getFreeSliceCount() );
 
             int rounds = (int) ( bytes / 2 + 1 );
@@ -174,7 +174,7 @@ public class WriteXImplementationTestCase
             }
 
             pool.freePartitionBuffer( partitionBuffer );
-            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getAllocatedMemory()
+            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getTotalByteSize()
                 + " bytes), unused " + pool.getFreeSliceCount() );
 
         }
@@ -191,7 +191,7 @@ public class WriteXImplementationTestCase
         PartitionBufferPool pool = buildPartitionBufferPool();
         try
         {
-            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getAllocatedMemory()
+            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getTotalByteSize()
                 + " bytes), unused " + pool.getFreeSliceCount() );
 
             long bytes = BufferUtils.descriptorToByteSize( "256K" ) * 20;
@@ -200,7 +200,7 @@ public class WriteXImplementationTestCase
             partitionBuffer.byteOrder( byteOrder );
 
             assertEquals( BufferUtils.descriptorToByteSize( "256K" ), partitionBuffer.maxCapacity() );
-            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getAllocatedMemory()
+            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getTotalByteSize()
                 + " bytes), unused " + pool.getFreeSliceCount() );
 
             for ( int i = 0; i < bytes / 4 + 1; i++ )
@@ -212,7 +212,7 @@ public class WriteXImplementationTestCase
             assertEquals( BufferUtils.descriptorToByteSize( "256K" ) * 21, partitionBuffer.maxCapacity() );
             assertEquals( BufferUtils.descriptorToByteSize( "256K" ) * 20 + 4, partitionBuffer.capacity() );
             assertEquals( BufferUtils.descriptorToByteSize( "256K" ) * 20 + 4, partitionBuffer.writerIndex() );
-            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getAllocatedMemory()
+            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getTotalByteSize()
                 + " bytes), unused " + pool.getFreeSliceCount() );
 
             int rounds = (int) ( bytes / 4 + 1 );
@@ -230,7 +230,7 @@ public class WriteXImplementationTestCase
             }
 
             pool.freePartitionBuffer( partitionBuffer );
-            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getAllocatedMemory()
+            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getTotalByteSize()
                 + " bytes), unused " + pool.getFreeSliceCount() );
 
         }
@@ -247,7 +247,7 @@ public class WriteXImplementationTestCase
         PartitionBufferPool pool = buildPartitionBufferPool();
         try
         {
-            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getAllocatedMemory()
+            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getTotalByteSize()
                 + " bytes), unused " + pool.getFreeSliceCount() );
 
             long bytes = BufferUtils.descriptorToByteSize( "256K" ) * 20;
@@ -256,7 +256,7 @@ public class WriteXImplementationTestCase
             partitionBuffer.byteOrder( byteOrder );
 
             assertEquals( BufferUtils.descriptorToByteSize( "256K" ), partitionBuffer.maxCapacity() );
-            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getAllocatedMemory()
+            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getTotalByteSize()
                 + " bytes), unused " + pool.getFreeSliceCount() );
 
             for ( int i = 0; i < bytes / 4 + 1; i++ )
@@ -268,7 +268,7 @@ public class WriteXImplementationTestCase
             assertEquals( BufferUtils.descriptorToByteSize( "256K" ) * 21, partitionBuffer.maxCapacity() );
             assertEquals( BufferUtils.descriptorToByteSize( "256K" ) * 20 + 4, partitionBuffer.capacity() );
             assertEquals( BufferUtils.descriptorToByteSize( "256K" ) * 20 + 4, partitionBuffer.writerIndex() );
-            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getAllocatedMemory()
+            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getTotalByteSize()
                 + " bytes), unused " + pool.getFreeSliceCount() );
 
             int rounds = (int) ( bytes / 4 + 1 );
@@ -288,7 +288,7 @@ public class WriteXImplementationTestCase
             }
 
             pool.freePartitionBuffer( partitionBuffer );
-            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getAllocatedMemory()
+            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getTotalByteSize()
                 + " bytes), unused " + pool.getFreeSliceCount() );
 
         }
@@ -305,7 +305,7 @@ public class WriteXImplementationTestCase
         PartitionBufferPool pool = buildPartitionBufferPool();
         try
         {
-            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getAllocatedMemory()
+            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getTotalByteSize()
                 + " bytes), unused " + pool.getFreeSliceCount() );
 
             long bytes = BufferUtils.descriptorToByteSize( "256K" ) * 20;
@@ -314,7 +314,7 @@ public class WriteXImplementationTestCase
             partitionBuffer.byteOrder( byteOrder );
 
             assertEquals( BufferUtils.descriptorToByteSize( "256K" ), partitionBuffer.maxCapacity() );
-            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getAllocatedMemory()
+            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getTotalByteSize()
                 + " bytes), unused " + pool.getFreeSliceCount() );
 
             for ( int i = 0; i < bytes / 8 + 1; i++ )
@@ -326,7 +326,7 @@ public class WriteXImplementationTestCase
             assertEquals( BufferUtils.descriptorToByteSize( "256K" ) * 21, partitionBuffer.maxCapacity() );
             assertEquals( BufferUtils.descriptorToByteSize( "256K" ) * 20 + 8, partitionBuffer.capacity() );
             assertEquals( BufferUtils.descriptorToByteSize( "256K" ) * 20 + 8, partitionBuffer.writerIndex() );
-            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getAllocatedMemory()
+            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getTotalByteSize()
                 + " bytes), unused " + pool.getFreeSliceCount() );
 
             int rounds = (int) ( bytes / 8 + 1 );
@@ -344,7 +344,7 @@ public class WriteXImplementationTestCase
             }
 
             pool.freePartitionBuffer( partitionBuffer );
-            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getAllocatedMemory()
+            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getTotalByteSize()
                 + " bytes), unused " + pool.getFreeSliceCount() );
 
         }
@@ -361,7 +361,7 @@ public class WriteXImplementationTestCase
         PartitionBufferPool pool = buildPartitionBufferPool();
         try
         {
-            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getAllocatedMemory()
+            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getTotalByteSize()
                 + " bytes), unused " + pool.getFreeSliceCount() );
 
             long bytes = BufferUtils.descriptorToByteSize( "256K" ) * 20;
@@ -370,7 +370,7 @@ public class WriteXImplementationTestCase
             partitionBuffer.byteOrder( byteOrder );
 
             assertEquals( BufferUtils.descriptorToByteSize( "256K" ), partitionBuffer.maxCapacity() );
-            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getAllocatedMemory()
+            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getTotalByteSize()
                 + " bytes), unused " + pool.getFreeSliceCount() );
 
             for ( int i = 0; i < bytes / 8 + 1; i++ )
@@ -382,7 +382,7 @@ public class WriteXImplementationTestCase
             assertEquals( BufferUtils.descriptorToByteSize( "256K" ) * 21, partitionBuffer.maxCapacity() );
             assertEquals( BufferUtils.descriptorToByteSize( "256K" ) * 20 + 8, partitionBuffer.capacity() );
             assertEquals( BufferUtils.descriptorToByteSize( "256K" ) * 20 + 8, partitionBuffer.writerIndex() );
-            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getAllocatedMemory()
+            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getTotalByteSize()
                 + " bytes), unused " + pool.getFreeSliceCount() );
 
             int rounds = (int) ( bytes / 8 + 1 );
@@ -402,7 +402,7 @@ public class WriteXImplementationTestCase
             }
 
             pool.freePartitionBuffer( partitionBuffer );
-            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getAllocatedMemory()
+            System.out.println( "Pool slices " + pool.getSliceCount() + "(" + pool.getTotalByteSize()
                 + " bytes), unused " + pool.getFreeSliceCount() );
 
         }

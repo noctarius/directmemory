@@ -22,6 +22,7 @@ package org.apache.directmemory.buffer.selector;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import org.apache.directmemory.buffer.BufferUnderflowException;
 import org.apache.directmemory.buffer.spi.Partition;
 import org.apache.directmemory.buffer.spi.PartitionSlice;
 import org.apache.directmemory.buffer.spi.PartitionSliceSelector;
@@ -50,7 +51,11 @@ public class RoundRobinPartitionSliceSelector
                 }
                 if ( partition.available() > 0 )
                 {
-                    return partition.get();
+                    PartitionSlice slice = partition.get();
+                    if ( slice != null )
+                    {
+                        return slice;
+                    }
                 }
                 retry++;
             }
@@ -60,7 +65,7 @@ public class RoundRobinPartitionSliceSelector
             lock.unlock();
         }
 
-        throw new RuntimeException( "Could not retrieve a new partition slice" );
+        throw new BufferUnderflowException( "Could not retrieve a new partition slice" );
     }
 
     @Override

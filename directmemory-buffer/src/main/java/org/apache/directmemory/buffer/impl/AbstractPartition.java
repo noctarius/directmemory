@@ -34,6 +34,8 @@ public abstract class AbstractPartition
 
     protected final int sliceByteSize;
 
+    protected final int slices;
+
     private final AtomicBoolean closed = new AtomicBoolean( false );
 
     private final boolean pooled;
@@ -43,6 +45,7 @@ public abstract class AbstractPartition
     {
         this.partitionIndex = partitionIndex;
         this.sliceByteSize = sliceByteSize;
+        this.slices = slices;
         this.partitionSliceSelector = partitionSliceSelector;
         this.pooled = pooled;
     }

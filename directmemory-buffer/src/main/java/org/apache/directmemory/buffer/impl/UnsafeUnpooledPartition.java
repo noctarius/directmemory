@@ -31,17 +31,18 @@ public class UnsafeUnpooledPartition
     {
 
         @Override
-        public Partition newPartition( int partitionIndex, int sliceByteSize, int slices,
+        public Partition newPartition( int partitionIndex, long totalByteSize, int sliceByteSize, int slices,
                                        PartitionSliceSelector partitionSliceSelector )
         {
-            return new UnsafeUnpooledPartition( partitionIndex, slices, sliceByteSize, partitionSliceSelector );
+            return new UnsafeUnpooledPartition( partitionIndex, totalByteSize, slices, sliceByteSize,
+                                                partitionSliceSelector );
         }
     };
 
-    private UnsafeUnpooledPartition( int partitionIndex, int slices, int sliceByteSize,
+    private UnsafeUnpooledPartition( int partitionIndex, long totalByteSize, int slices, int sliceByteSize,
                                      PartitionSliceSelector partitionSliceSelector )
     {
-        super( partitionIndex, slices, sliceByteSize, partitionSliceSelector, false );
+        super( partitionIndex, totalByteSize, slices, sliceByteSize, partitionSliceSelector, false );
     }
 
     @Override

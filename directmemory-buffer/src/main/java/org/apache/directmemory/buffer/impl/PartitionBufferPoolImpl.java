@@ -37,6 +37,10 @@ public class PartitionBufferPoolImpl
 
     private final Partition[] partitions;
 
+    private final long totalByteSize;
+
+    private final long partitionByteSize;
+
     private final int sliceByteSize;
 
     private final int slices;
@@ -47,13 +51,16 @@ public class PartitionBufferPoolImpl
 
         this.partitions = new Partition[partitions];
         this.partitionSliceSelector = partitionSliceSelector;
+        this.partitionByteSize = sliceByteSize * slices;
+        this.totalByteSize = partitions * partitionByteSize;
         this.sliceByteSize = sliceByteSize;
         this.slices = slices;
 
         // Initialize partitions
         for ( int i = 0; i < partitions; i++ )
         {
-            this.partitions[i] = partitionFactory.newPartition( i, sliceByteSize, slices, partitionSliceSelector );
+            this.partitions[i] =
+                partitionFactory.newPartition( i, partitionByteSize, sliceByteSize, slices, partitionSliceSelector );
         }
     }
 
@@ -96,9 +103,9 @@ public class PartitionBufferPoolImpl
     }
 
     @Override
-    public long getAllocatedMemory()
+    public long getTotalByteSize()
     {
-        return getPartitionCount() * getPartitionByteSize();
+        return totalByteSize;
     }
 
     @Override

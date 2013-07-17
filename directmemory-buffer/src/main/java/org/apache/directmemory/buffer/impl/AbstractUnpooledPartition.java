@@ -31,21 +31,24 @@ public abstract class AbstractUnpooledPartition
     extends AbstractPartition
 {
 
-    protected AbstractUnpooledPartition( int partitionIndex, int slices, int sliceByteSize,
-                                         PartitionSliceSelector partitionSliceSelector, boolean pooled )
-    {
-        super( partitionIndex, slices, sliceByteSize, partitionSliceSelector, pooled );
-    }
-
     private final AtomicInteger index = new AtomicInteger( 0 );
 
     private final Map<Integer, AbstractPartitionSlice> bufferPartitionSlices =
         new ConcurrentHashMap<Integer, AbstractPartitionSlice>();
 
+    private final long totalByteSize;
+
+    protected AbstractUnpooledPartition( int partitionIndex, long totalByteSize, int slices, int sliceByteSize,
+                                         PartitionSliceSelector partitionSliceSelector, boolean pooled )
+    {
+        super( partitionIndex, slices, sliceByteSize, partitionSliceSelector, pooled );
+        this.totalByteSize = totalByteSize;
+    }
+
     @Override
     public int available()
     {
-        return Integer.MAX_VALUE;
+        return slices - used();
     }
 
     @Override
@@ -63,6 +66,10 @@ public abstract class AbstractUnpooledPartition
     @Override
     public PartitionSlice get()
     {
+        if ( bufferPartitionSlices.size() * sliceByteSize + sliceByteSize > totalByteSize )
+        {
+            return null;
+        }
         AbstractPartitionSlice slice = createPartitionSlice( nextSlice(), sliceByteSize );
         bufferPartitionSlices.put( slice.index, slice );
         return slice;
@@ -80,7 +87,7 @@ public abstract class AbstractUnpooledPartition
             throw new IllegalArgumentException( "Given slice cannot be handled by this PartitionBufferPool" );
         }
         AbstractPartitionSlice partitionSlice = (AbstractPartitionSlice) slice;
-        bufferPartitionSlices.remove( partitionSlice );
+        bufferPartitionSlices.remove( partitionSlice.index );
         partitionSlice.free();
     }
 
