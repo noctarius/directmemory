@@ -270,7 +270,7 @@ public final class BufferUtils
 
     public static boolean isPowerOfTwo( long value )
     {
-        return value > 0 && ( ( ~value ) & 1 ) == 1;
+        return value > 0 && (value & -value) == value;
     }
 
     public static long descriptorToByteSize( String descriptor )
