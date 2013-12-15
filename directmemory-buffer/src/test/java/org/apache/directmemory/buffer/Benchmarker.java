@@ -67,7 +67,7 @@ public class Benchmarker
         this.partitionSliceSelector = partitionSliceSelectorClass.newInstance();
 
         this.builder = new PartitionBufferBuilder( partitionFactory, partitionSliceSelector );
-        this.pool = builder.allocatePool( "2M", Runtime.getRuntime().availableProcessors() * 8, "8K" );
+        this.pool = builder.allocatePool( "20M", Runtime.getRuntime().availableProcessors() * 8, "8K" );
     }
 
     @Test
@@ -80,8 +80,9 @@ public class Benchmarker
 
         try
         {
-            byte[] block = new byte[10 * ( 10 + random.nextInt( 1024 ) )];
+            byte[] block = new byte[10240];
             partitionBuffer.writeBytes( fill( block ) );
+            partitionBuffer.flush();
 
             byte[] result = new byte[block.length];
             partitionBuffer.readBytes( result );

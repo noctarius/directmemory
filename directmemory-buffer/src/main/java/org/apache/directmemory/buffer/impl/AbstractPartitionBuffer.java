@@ -19,15 +19,16 @@ package org.apache.directmemory.buffer.impl;
  * under the License.
  */
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-
 import org.apache.directmemory.buffer.PartitionBuffer;
 import org.apache.directmemory.buffer.ReadablePartitionBuffer;
+import org.apache.directmemory.buffer.utils.BooleanArrayCompressor;
 import org.apache.directmemory.buffer.utils.BufferUtils;
 import org.apache.directmemory.buffer.utils.Int32Compressor;
 import org.apache.directmemory.buffer.utils.Int64Compressor;
 import org.apache.directmemory.buffer.utils.UnicodeUtils;
+
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 public abstract class AbstractPartitionBuffer
     implements PartitionBuffer
@@ -65,6 +66,12 @@ public abstract class AbstractPartitionBuffer
     public boolean readBoolean()
     {
         return read() == 1;
+    }
+
+    @Override
+    public boolean[] readCompressedBooleanArray()
+    {
+        return BooleanArrayCompressor.readBooleanArray( this );
     }
 
     @Override
@@ -187,6 +194,12 @@ public abstract class AbstractPartitionBuffer
     public void writeBoolean( boolean value )
     {
         put( (byte) ( value ? 1 : 0 ) );
+    }
+
+    @Override
+    public void writeCompressedBooleanArray( boolean[] booleans )
+    {
+        BooleanArrayCompressor.writeBooleanArray( booleans, this );
     }
 
     @Override

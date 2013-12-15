@@ -42,6 +42,8 @@ public interface WritablePartitionBuffer
 
     void writeBoolean( boolean value );
 
+    void writeCompressedBooleanArray( boolean[] booleans );
+
     void writeChar( int value );
 
     void writeDouble( double value );

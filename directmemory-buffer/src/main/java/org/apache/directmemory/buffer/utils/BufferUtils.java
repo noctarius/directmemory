@@ -268,9 +268,9 @@ public final class BufferUtils
         }
     }
 
-    public static boolean isPowerOfTwo( long value )
+    public static boolean isMultipleOfEight(long value)
     {
-        return value > 0 && (value & -value) == value;
+        return value >= 0 && ( value & (8 - 1 ) ) == 0;
     }
 
     public static long descriptorToByteSize( String descriptor )
@@ -319,6 +319,14 @@ public final class BufferUtils
 
         throw new IllegalArgumentException( "Descriptor character " + descriptorChar
             + " is unknown (only B, K, M, G, T allowed)" );
+    }
+
+    public static String humanReadableByteCount(long bytes) {
+        int unit = 1024;
+        if (bytes < unit) return bytes + " B";
+        int exp = (int) (Math.log(bytes) / Math.log(unit));
+        char pre = "KMGTPE".charAt(exp-1);
+        return String.format("%.1f %s", bytes / Math.pow(unit, exp), pre);
     }
 
     private static short buildShort( byte b1, byte b0 )

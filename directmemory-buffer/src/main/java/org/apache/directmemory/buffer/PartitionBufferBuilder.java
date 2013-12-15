@@ -29,6 +29,10 @@ import org.apache.directmemory.buffer.utils.BufferUtils;
 public final class PartitionBufferBuilder
 {
 
+    private static final String NOT_MULTIPLE_OF_EIGHT = "%s is not a multiple of 8";
+    private static final String SIZE_PER_X_EXCEEDS_MAX = "Byte size per %s exceeds allowed %s maximum";
+    private static final String X_NOT_DIVISOR_OF_Y = "%s is not a divisor of %s";
+
     private static final int DEFAULT_PARTITIONS_COUNT = Runtime.getRuntime().availableProcessors();
 
     private final PartitionFactory partitionFactory;
@@ -70,13 +74,13 @@ public final class PartitionBufferBuilder
     public PartitionBufferPool allocatePool( String memorySizeDescriptor, int partitions, String sliceSizeDescriptor )
     {
         long sliceByteSize = BufferUtils.descriptorToByteSize( sliceSizeDescriptor );
-        if ( !BufferUtils.isPowerOfTwo( sliceByteSize ) )
+        if ( !BufferUtils.isMultipleOfEight(sliceByteSize) )
         {
-            throw new IllegalArgumentException( "sliceByteSize is not a power of 2" );
+            throwNotMultipleOfEight( "sliceByteSize" );
         }
         if ( sliceByteSize > Integer.MAX_VALUE )
         {
-            throw new IllegalArgumentException( "Bytesize per slice will be a value larger than allowed slice maximum" );
+            throwSizePerXExceedsMax( "slice" );
         }
 
         return allocatePool( memorySizeDescriptor, partitions, (int) sliceByteSize );
@@ -90,13 +94,13 @@ public final class PartitionBufferBuilder
     public PartitionBufferPool allocatePool( long memoryByteSize, int partitions, String sliceSizeDescriptor )
     {
         long sliceByteSize = BufferUtils.descriptorToByteSize( sliceSizeDescriptor );
-        if ( !BufferUtils.isPowerOfTwo( sliceByteSize ) )
+        if ( !BufferUtils.isMultipleOfEight(sliceByteSize) )
         {
-            throw new IllegalArgumentException( "sliceByteSize is not a power of 2" );
+            throwNotMultipleOfEight( "sliceByteSize" );
         }
         if ( sliceByteSize > Integer.MAX_VALUE )
         {
-            throw new IllegalArgumentException( "Bytesize per slice will be a value larger than allowed slice maximum" );
+            throwSizePerXExceedsMax( "slice" );
         }
 
         return allocatePool( memoryByteSize, partitions, (int) sliceByteSize );
@@ -110,9 +114,9 @@ public final class PartitionBufferBuilder
     public PartitionBufferPool allocatePool( String memorySizeDescriptor, int partitions, int sliceByteSize )
     {
         long memoryByteSize = BufferUtils.descriptorToByteSize( memorySizeDescriptor );
-        if ( !BufferUtils.isPowerOfTwo( memoryByteSize ) )
+        if ( !BufferUtils.isMultipleOfEight(memoryByteSize) )
         {
-            throw new IllegalArgumentException( "memoryByteSize is not a power of 2" );
+            throwNotMultipleOfEight( "memoryByteSize" );
         }
 
         return allocatePool( memoryByteSize, partitions, sliceByteSize );
@@ -132,27 +136,38 @@ public final class PartitionBufferBuilder
 
         if ( memoryByteSize % partitions != 0 )
         {
-            throw new IllegalArgumentException( "partitions is not a divisor of memoryByteSize" );
+            throwNotDivisorOf( "partitions", "memoryByteSize" );
         }
 
         long partitionByteSize = memoryByteSize / partitions;
-        if ( !BufferUtils.isPowerOfTwo( partitionByteSize ) )
+        if ( !BufferUtils.isMultipleOfEight(partitionByteSize) )
         {
-            throw new IllegalArgumentException( "partitionByteSize is not a power of 2" );
+            throwNotMultipleOfEight( "partitionByteSize" );
         }
         if ( partitionByteSize > Integer.MAX_VALUE )
         {
-            throw new IllegalArgumentException(
-                                                "Bytesize per partition will be a value larger than allowed partition maximum" );
+            throwSizePerXExceedsMax( "partition" );
         }
 
         if ( partitionByteSize % sliceByteSize != 0 )
         {
-            throw new IllegalArgumentException( "sliceByteSize is not a divisor of the bytesize per partition" );
+            throwNotDivisorOf( "sliceByteSize", "partitionByteSize" );
         }
 
         int slices = (int) ( partitionByteSize / sliceByteSize );
         return new PartitionBufferPoolImpl( partitions, sliceByteSize, slices, partitionFactory, partitionSliceSelector );
+    }
+
+    private void throwNotMultipleOfEight( String parameter ) {
+        throw new IllegalArgumentException( String.format( NOT_MULTIPLE_OF_EIGHT, parameter ) );
+    }
+
+    private void throwSizePerXExceedsMax( String parameter ) {
+        throw new IllegalArgumentException( String.format( SIZE_PER_X_EXCEEDS_MAX, parameter, parameter ) );
+    }
+
+    private void throwNotDivisorOf( String parameter1, String parameter2 ) {
+        throw new IllegalArgumentException( String.format( X_NOT_DIVISOR_OF_Y, parameter1, parameter2 ) );
     }
 
 }

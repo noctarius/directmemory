@@ -19,16 +19,19 @@ package org.apache.directmemory.buffer.impl;
  * under the License.
  */
 
+import org.apache.directmemory.buffer.spi.PartitionSlice;
+
 import java.nio.ByteOrder;
 import java.util.Arrays;
-
-import org.apache.directmemory.buffer.spi.PartitionSlice;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 class PoolPartitionBuffer
     extends AbstractPartitionBuffer
 {
 
     private final PartitionBufferPoolImpl partitionBufferPool;
+
+    private final AtomicBoolean freed = new AtomicBoolean( false );
 
     private volatile PartitionSlice[] slices = new PartitionSlice[0];
 
@@ -54,6 +57,7 @@ class PoolPartitionBuffer
     @Override
     public void clear()
     {
+        checkInternalState();
         writerIndex = 0;
         readerIndex = 0;
         if ( slices.length > 1 )
@@ -73,6 +77,7 @@ class PoolPartitionBuffer
     @Override
     public int readBytes( byte[] bytes, int offset, int length )
     {
+        checkInternalState();
         length = Math.min( length, bytes.length - offset );
         int baseSliceIndex = sliceIndex( readerIndex );
         PartitionSlice slice = slices[baseSliceIndex];
@@ -105,10 +110,8 @@ class PoolPartitionBuffer
     @Override
     public void writeBytes( byte[] bytes, int offset, int length )
     {
-        if ( offset == writerIndex )
-        {
-            flush();
-        }
+        checkInternalState();
+        flush();
         int baseSliceIndex = slices.length - 1;
         PartitionSlice slice = slices[baseSliceIndex];
         if ( slice.writeableBytes() >= length )
@@ -169,6 +172,10 @@ class PoolPartitionBuffer
     @Override
     public void free()
     {
+        if ( !freed.compareAndSet( false, true ) )
+        {
+            return;
+        }
         synchronized ( slices )
         {
             for ( PartitionSlice slice : slices )
@@ -182,6 +189,7 @@ class PoolPartitionBuffer
     @Override
     public void flush()
     {
+        checkInternalState();
         if ( bufferPos > 0 )
         {
             long position = writerIndex - bufferPos;
@@ -220,6 +228,7 @@ class PoolPartitionBuffer
     @Override
     protected void put( long position, byte value )
     {
+        checkInternalState();
         if ( bufferPos == buffer.length )
         {
             flush();
@@ -255,6 +264,7 @@ class PoolPartitionBuffer
     @Override
     protected byte read( long position )
     {
+        checkInternalState();
         if ( position > writerIndex )
         {
             throw new IndexOutOfBoundsException( "Position " + position + " is not readable" );
@@ -283,6 +293,14 @@ class PoolPartitionBuffer
         if ( temp[temp.length - 1] != null )
         {
             slices = temp;
+        }
+    }
+
+    protected void checkInternalState()
+    {
+        if ( freed.get() )
+        {
+            throw new IllegalStateException( "buffer already freed" );
         }
     }
 

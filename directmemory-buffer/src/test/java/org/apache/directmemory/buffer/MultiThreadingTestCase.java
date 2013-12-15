@@ -19,29 +19,51 @@ package org.apache.directmemory.buffer;
  * under the License.
  */
 
+import org.apache.directmemory.buffer.spi.PartitionFactory;
+import org.apache.directmemory.buffer.spi.PartitionSliceSelector;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
+
+import java.util.Collection;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
-import org.apache.directmemory.buffer.PartitionBuffer;
-import org.apache.directmemory.buffer.PartitionBufferBuilder;
-import org.apache.directmemory.buffer.PartitionBufferPool;
-import org.apache.directmemory.buffer.impl.UnsafePooledPartition;
-import org.apache.directmemory.buffer.selector.ProcessorLocalPartitionSliceSelector;
-import org.apache.directmemory.buffer.spi.PartitionFactory;
-import org.apache.directmemory.buffer.spi.PartitionSliceSelector;
-
+@RunWith( Parameterized.class )
 public class MultiThreadingTestCase
 {
 
-    public static void main( String[] args )
+    @Parameters( name = "Execution {index} - {0}, {1}" )
+    public static Collection<Object[]> parameters()
+    {
+        return TestCaseConstants.EXECUTION_PARAMETER_MUTATIONS;
+    }
+
+    private final PartitionFactory partitionFactory;
+
+    private final PartitionSliceSelector partitionSliceSelector;
+
+    private final String executionCombiation;
+
+    public MultiThreadingTestCase( String name1, String name2, PartitionFactory partitionFactory,
+                                   Class<PartitionSliceSelector> partitionSliceSelectorClass )
+        throws InstantiationException, IllegalAccessException
+    {
+        this.executionCombiation = "Execution {" + name1 + "}, {" + name2 + "}";
+        this.partitionFactory = partitionFactory;
+        this.partitionSliceSelector = partitionSliceSelectorClass.newInstance();
+    }
+
+    @Test
+    public void testMultithreading()
         throws Exception
     {
         final int processorCount = Runtime.getRuntime().availableProcessors();
-
-        final PartitionFactory partitionFactory = UnsafePooledPartition.UNSAFE_PARTITION_FACTORY;
-        final PartitionSliceSelector partitionSliceSelector = new ProcessorLocalPartitionSliceSelector();
 
         final PartitionBufferBuilder builder = new PartitionBufferBuilder( partitionFactory, partitionSliceSelector );
         final PartitionBufferPool pool = builder.allocatePool( "1M", processorCount * 8, "8K" );
@@ -50,17 +72,25 @@ public class MultiThreadingTestCase
 
         final CountDownLatch latch = new CountDownLatch( processorCount * 5 );
 
+        final AtomicLong fullRuns = new AtomicLong( 0 );
+        final AtomicLong executedRuns = new AtomicLong( 0 );
+        final AtomicInteger lastMentionedPercent = new AtomicInteger( 0 );
+
         for ( int i = 0; i < processorCount * 5; i++ )
         {
             final int index = i;
             executorService.execute( new Runnable()
             {
-
                 private final Random random = new Random( -System.nanoTime() );
 
-                private final int maxRuns = index % 2 == 0 ? 10000 : 8000;
+                private final int maxRuns = 400;
 
                 private volatile int o = 0;
+
+                {
+                    fullRuns.addAndGet( maxRuns );
+                    System.out.println( "#" + index + " started with " + maxRuns + " runs." );
+                }
 
                 public void run()
                 {
@@ -80,10 +110,11 @@ public class MultiThreadingTestCase
 
                         try
                         {
-                            Thread.sleep( random.nextInt( 100 ) );
+                            Thread.sleep( 15 );
                         }
                         catch ( Exception e )
                         {
+                            // ignore
                         }
 
                         byte[] result = new byte[block.length];
@@ -105,6 +136,14 @@ public class MultiThreadingTestCase
                     {
                         latch.countDown();
                     }
+
+                    executedRuns.incrementAndGet();
+                    int percent = (int) ( ( executedRuns.longValue() * 100 ) / fullRuns.longValue() );
+                    int lastPercent = lastMentionedPercent.get();
+                    if ( lastPercent + 4 < percent && lastMentionedPercent.compareAndSet( lastPercent, percent ) )
+                    {
+                        System.out.println( String.format( "Finished %s%%", percent ) );
+                    }
                 }
 
                 private byte[] fill( byte[] block )
@@ -122,4 +161,5 @@ public class MultiThreadingTestCase
         pool.close();
         executorService.shutdown();
     }
+
 }

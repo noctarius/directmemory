@@ -36,6 +36,8 @@ public interface ReadablePartitionBuffer
 
     boolean readBoolean();
 
+    boolean[] readCompressedBooleanArray();
+
     char readChar();
 
     double readDouble();
