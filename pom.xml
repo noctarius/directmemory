@@ -39,6 +39,7 @@ under the License.
   <inceptionYear>2011</inceptionYear>
 
   <modules>
+    <module>directmemory-buffer</module>
     <module>directmemory-common</module>
     <module>directmemory-cache</module>
     <module>directmemory-tests</module>
