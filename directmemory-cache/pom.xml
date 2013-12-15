@@ -39,6 +39,7 @@ under the License.
   <properties>
     <osgi.import>
       !org.apache.directmemory*,
+      org.apache.directmemory.buffer*;version="${project.version},
       com.google.common.collect;version="[9.0,15)",
       com.google.common.base;version="[9.0,15)",
       org.aspectj*,

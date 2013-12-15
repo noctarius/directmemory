@@ -19,6 +19,8 @@ package org.apache.directmemory.memory.allocator;
  * under the License.
  */
 
+import org.apache.directmemory.buffer.PartitionBuffer;
+
 import java.io.IOException;
 import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
@@ -26,8 +28,6 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.concurrent.ConcurrentSkipListMap;
-
-import org.apache.directmemory.buffer.PartitionBuffer;
 
 /**
  * {@link Allocator} implementation that uses {@link FixedSizeByteBufferAllocator} of different size to allocate best

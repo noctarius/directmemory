@@ -10,7 +10,6 @@ with the License.  You may obtain a copy of the License at
 
   http://www.apache.org/licenses/LICENSE-2.0
 
-<<<<<<< HEAD
 Unless required by applicable law or agreed to in writing,
 software distributed under the License is distributed on an
 "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -49,7 +48,6 @@ under the License.
     <module>serializers</module>
     <module>itests</module>
     <module>examples</module>
-    <module>directmemory-buffer</module>
   </modules>
 
   <scm>
@@ -281,12 +279,6 @@ under the License.
         <groupId>com.h2database</groupId>
         <artifactId>h2</artifactId>
         <version>${h2.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-api</artifactId>
-        <version>1.7.4</version>
       </dependency>
 
       <!-- test dependencies -->
