@@ -40,7 +40,7 @@ import com.carrotsearch.junitbenchmarks.Clock;
 import com.carrotsearch.junitbenchmarks.annotation.BenchmarkHistoryChart;
 import com.carrotsearch.junitbenchmarks.annotation.LabelType;
 
-@Ignore
+//@Ignore
 @RunWith( Parameterized.class )
 public class Benchmarker
     extends AbstractBenchmark
@@ -72,7 +72,7 @@ public class Benchmarker
 
     @Test
     @BenchmarkHistoryChart( labelWith = LabelType.RUN_ID, maxRuns = 20 )
-    @BenchmarkOptions( warmupRounds = 1000, benchmarkRounds = 20000, clock = Clock.NANO_TIME, concurrency = 20 )
+    @BenchmarkOptions( warmupRounds = 1000, benchmarkRounds = 20000, clock = Clock.NANO_TIME, concurrency = BenchmarkOptions.CONCURRENCY_AVAILABLE_CORES )
     public void benchmark()
         throws Exception
     {

@@ -19,34 +19,34 @@ package org.apache.directmemory.buffer.selector;
  * under the License.
  */
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicReferenceArray;
-
+import com.kenai.jffi.CallContext;
+import com.kenai.jffi.CallingConvention;
+import com.kenai.jffi.HeapInvocationBuffer;
+import com.kenai.jffi.Type;
+import jnr.ffi.Platform;
 import org.apache.directmemory.buffer.BufferUnderflowException;
 import org.apache.directmemory.buffer.spi.Partition;
 import org.apache.directmemory.buffer.spi.PartitionSlice;
 import org.apache.directmemory.buffer.spi.PartitionSliceSelector;
 
-import com.sun.jna.Native;
-import com.sun.jna.Platform;
-import com.sun.jna.Structure;
+import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicReferenceArray;
 
 public class ProcessorLocalPartitionSliceSelector
     implements PartitionSliceSelector
 {
 
-    private final CpuAdapter cpuAdapter = getCpuAdapterSPI();
+    private static final NativeAdapter nativeAdapter = getNativeAdapterSPI();
 
     private final AtomicReferenceArray<Partition> cpuLocalPartition =
-        new AtomicReferenceArray<Partition>( cpuAdapter.getProcessorCount() );
+        new AtomicReferenceArray<Partition>( nativeAdapter.getProcessorCount() );
 
     private volatile int[] assigned = new int[0];
 
     @Override
     public PartitionSlice selectPartitionSlice( Partition[] partitions )
     {
-        int processorId = cpuAdapter.getCurrentProcessorId();
+        int processorId = nativeAdapter.getCurrentProcessorId();
         Partition partition = cpuLocalPartition.get( processorId );
         if ( partition != null && partition.available() > 0 )
         {
@@ -108,116 +108,32 @@ public class ProcessorLocalPartitionSliceSelector
         }
     }
 
-    private CpuAdapter getCpuAdapterSPI()
+    private static NativeAdapter getNativeAdapterSPI()
     {
+        CallContext callContext = CallContext.getCallContext( Type.VOID, new Type[0], CallingConvention.DEFAULT, false );
+        new HeapInvocationBuffer( callContext );
+
         String osName = System.getProperty( "os.name" );
         String osArch = System.getProperty( "os.arch" );
         String osVersion = System.getProperty( "os.version" );
 
-        if ( Platform.isLinux() )
+        int processorCount = Runtime.getRuntime().availableProcessors();
+        Platform platform = Platform.getNativePlatform();
+        Platform.OS os = platform.getOS();
+        if ( os == Platform.OS.LINUX )
         {
-            return new LinuxCpuAdapter();
+            return new LinuxNativeAdapter( processorCount );
         }
-        else if ( Platform.isWindows() )
+        else if ( os == Platform.OS.WINDOWS )
         {
             if ( osVersion != null && osVersion.startsWith( "6." ) )
             {
-                return new WindowsCpuAdapter();
+                return new WindowsNativeAdapter( processorCount );
             }
         }
 
-        throw new UnsupportedOperationSystemException( "OS " + osName + " (" + osVersion + " / " + osArch
-            + ") is unsupported for use of cpu local allocation strategy" );
-    }
-
-    private static interface CpuAdapter
-    {
-
-        int getProcessorCount();
-
-        int getCurrentProcessorId();
-
-    }
-
-    private static class LinuxCpuAdapter
-        implements CpuAdapter
-    {
-
-        public native int sched_getcpu();
-
-        static
-        {
-            Native.register( Platform.C_LIBRARY_NAME );
-        }
-
-        private final int processorCount = Runtime.getRuntime().availableProcessors();
-
-        @Override
-        public int getProcessorCount()
-        {
-            return processorCount;
-        }
-
-        @Override
-        public int getCurrentProcessorId()
-        {
-            return sched_getcpu();
-        }
-    }
-
-    private static class WindowsCpuAdapter
-        implements CpuAdapter
-    {
-
-        public native int GetCurrentProcessorNumber();
-
-        public native void GetCurrentProcessorNumberEx( PROCESSOR_NUMBER processorNumber );
-
-        static
-        {
-            Native.register( "kernel32" );
-        }
-
-        private final int processorCount = Runtime.getRuntime().availableProcessors();
-
-        private final boolean isLowCpuSystem;
-
-        private WindowsCpuAdapter()
-        {
-            isLowCpuSystem = getProcessorCount() <= 64;
-        }
-
-        @Override
-        public int getProcessorCount()
-        {
-            return processorCount;
-        }
-
-        @Override
-        public int getCurrentProcessorId()
-        {
-            if ( isLowCpuSystem )
-                return GetCurrentProcessorNumber();
-
-            PROCESSOR_NUMBER processorNumber = new PROCESSOR_NUMBER();
-            GetCurrentProcessorNumberEx( processorNumber );
-            return processorNumber.Group * processorCount + processorNumber.Number;
-        }
-    }
-
-    public static class PROCESSOR_NUMBER
-        extends Structure
-    {
-        public short Group;
-
-        public byte Number;
-
-        public byte Reserved;
-
-        protected List<?> getFieldOrder()
-        {
-            return Arrays.asList( "Group", "Number", "Reserved" );
-        }
+        throw new UnsupportedOperationSystemException(
+            "OS " + osName + " (" + osVersion + " / " + osArch + ") is unsupported for use of cpu local allocation strategy" );
     }
 
 }

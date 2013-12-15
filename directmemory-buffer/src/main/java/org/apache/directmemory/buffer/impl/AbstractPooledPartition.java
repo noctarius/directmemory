@@ -66,14 +66,11 @@ public abstract class AbstractPooledPartition
                 return null;
             }
 
-            synchronized ( usedSlices )
+            if ( !usedSlices.get( possibleMatch ) )
             {
-                if ( !usedSlices.get( possibleMatch ) )
+                if ( usedSlices.testAndSet( possibleMatch ) )
                 {
-                    if ( usedSlices.testAndSet( possibleMatch ) )
-                    {
-                        return get( possibleMatch ).lock();
-                    }
+                    return get( possibleMatch ).lock();
                 }
             }
         }
@@ -92,12 +89,9 @@ public abstract class AbstractPooledPartition
             throw new IllegalArgumentException( "Given slice cannot be handled by this PartitionBufferPool" );
         }
         AbstractPartitionSlice partitionSlice = (AbstractPartitionSlice) slice;
-        synchronized ( usedSlices )
-        {
-            slice.clear();
-            partitionSliceSelector.freePartitionSlice( this, partitionIndex, partitionSlice.unlock() );
-            usedSlices.clear( partitionSlice.index );
-        }
+        slice.clear();
+        partitionSliceSelector.freePartitionSlice( this, partitionIndex, partitionSlice.unlock() );
+        usedSlices.clear( partitionSlice.index );
     }
 
     @Override
@@ -108,14 +102,11 @@ public abstract class AbstractPooledPartition
             return;
         }
 
-        synchronized ( usedSlices )
+        for ( int i = 0; i < getSliceCount(); i++ )
         {
-            for ( int i = 0; i < getSliceCount(); i++ )
-            {
-                AbstractPartitionSlice partitionSlice = (AbstractPartitionSlice) get( i );
-                partitionSliceSelector.freePartitionSlice( this, partitionIndex, partitionSlice );
-                partitionSlice.free();
-            }
+            AbstractPartitionSlice partitionSlice = (AbstractPartitionSlice) get( i );
+            partitionSliceSelector.freePartitionSlice( this, partitionIndex, partitionSlice );
+            partitionSlice.free();
         }
     }
 
